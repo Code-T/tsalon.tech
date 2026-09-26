@@ -1,6 +1,6 @@
 ---
 title: overtrue 谈开源项目与开发者成长：从真实需求到长期维护
-summary: 整理 T Chat 第 16 期的两段完整录播：overtrue 从寻找开源创意、编码测试、文档、版本发布与持续维护，谈到自学 PHP、项目重构、职业选择、负责人协作、技术学习和团队工程实践，附原片时间码。
+summary: 整理 T Chat 第 16 期的两段录播：overtrue 从寻找开源创意、编码测试、文档、版本发布与持续维护，谈到自学 PHP、项目重构、职业选择、负责人协作、技术学习和团队工程实践。
 type: interview
 publishedAt: 2026-09-26
 updatedAt: 2026-09-26
@@ -27,12 +27,12 @@ featured: false
 draft: false
 allowSingleLocale: true
 seo:
-  title: overtrue 谈开源项目与开发者成长｜T Chat 完整回顾
-  description: 回顾 T Chat 第 16 期两段完整录播，整理 overtrue 关于开源创意、测试、文档、版本发布、推广维护，以及项目重构、职业选择、负责人协作和技术学习的经验，附原片时间码。
+  title: overtrue 谈开源项目与开发者成长｜T Chat 回顾
+  description: 回顾 T Chat 第 16 期两段录播，整理 overtrue 关于开源创意、测试、文档、版本发布、推广维护，以及项目重构、职业选择、负责人协作和技术学习的经验。
   noindex: false
 ---
 
-> 本文整理自 2022 年的 T Chat 录播，按主题编排，内容有所删节。文中经历、观点与技术状态以录制时为准，原片链接附于各节。
+> 本期视频发布于 2022 年。文中的技术状态、个人经历与观点均为当时情况。
 
 T Chat 第 16 期请到 overtrue，先分享如何从零开始打造开源项目，再讨论开发者怎样成长。在第一段自我介绍中，他谈到 EasyWeChat、Laravel 中文社区等开源经历，以及当时在腾讯 CDC 参与 CoDesign 的工作。选题围绕他反复经历的过程展开：一个自己用得上的工具，怎样变成别人能理解、能使用，也能长期依赖的项目。[第一段 00:03–02:51](https://www.bilibili.com/video/BV1s14y1K7HY?t=3)
 

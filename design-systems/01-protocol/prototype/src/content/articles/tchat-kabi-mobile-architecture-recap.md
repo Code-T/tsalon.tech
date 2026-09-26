@@ -1,6 +1,6 @@
 ---
 title: 卡比谈 B 站移动架构：模块化、Monorepo 与持续演进
-summary: 整理 T Chat 第 3 期三段完整录播：卡比从模块化的实际困难，谈到 Monorepo、接口生成、声明式 UI，再回答技术选型、架构师成长、重构、跨平台、单元测试、低代码、工具与招聘问题。
+summary: 整理 T Chat 第 3 期三段录播：卡比从模块化的实际困难，谈到 Monorepo、接口生成、声明式 UI，再回答技术选型、架构师成长、重构、跨平台、单元测试、低代码、工具与招聘问题。
 type: interview
 publishedAt: 2026-09-26
 updatedAt: 2026-09-26
@@ -33,12 +33,12 @@ featured: false
 draft: false
 allowSingleLocale: true
 seo:
-  title: 卡比谈 B 站移动架构与架构师成长｜T Chat 完整回顾
-  description: 回顾 T Chat 第 3 期完整分享与上下两段对谈，覆盖模块化、Monorepo、接口生成、声明式 UI、技术选型、重构、测试、跨平台、低代码与架构师成长，附三段原片时间码。
+  title: 卡比谈 B 站移动架构与架构师成长｜T Chat 回顾
+  description: 回顾 T Chat 第 3 期分享与上下两段对谈，覆盖模块化、Monorepo、接口生成、声明式 UI、技术选型、重构、测试、跨平台、低代码与架构师成长。
   noindex: false
 ---
 
-> 本文整理自 2022 年的 T Chat 录播，按主题编排，内容有所删节。文中经历、观点与技术状态以录制时为准，原片链接附于各节。
+> 本期视频发布于 2022 年。文中的技术状态、个人经历与观点均为当时情况。
 
 在 T Chat 第 3 期，卡比从几种常见的工程现象切入，讨论自己在 B 站做移动架构的实践。他在当期介绍中说，2014 年加入 B 站，从 iOS 开发出发，做过业务、播放器及技术架构，也持续接触 Android、Web 和服务端。[分享 00:02–00:56](https://www.bilibili.com/video/BV1jB4y1R7fj?t=2)
 

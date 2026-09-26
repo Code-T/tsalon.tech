@@ -27,13 +27,13 @@ draft: false
 allowSingleLocale: true
 seo:
   title: Jake Lin 谈 Compose 与 MVI：从输入框到双平台状态流
-  description: 回顾 Jake Lin 的 Compose 与 MVI 演示，完整梳理输入框状态提升、UiState 与 Action、单向数据流、输入校验及钱包异步流程，并说明架构取舍和双平台实践边界。
+  description: 回顾 Jake Lin 的 Compose 与 MVI 演示，梳理输入框状态提升、UiState 与 Action、单向数据流、输入校验及钱包异步流程，并说明架构取舍和双平台实践边界。
   noindex: false
 ---
 
 Jake Lin 当时在 REA Group 从事移动产品与研发效能相关工作。他关注架构，不只是为了给代码分类，也为了让不同背景的开发者更容易参与同一个项目，并在引入新 UI 技术时继续理解原有逻辑。
 
-> 本文对应上海“移动端技术实践”录播，稿件发布于 2022 年 3 月 20 日，实际活动日期未据此推定。演示采用当时的 Compose、Kotlin 和 Swift 技术环境；文中的公司经历与团队安排也仅指分享时的情况。
+> 这段分享来自上海“移动端技术实践”录播，稿件发布于 2022 年 3 月 20 日，实际活动日期未确认。演示采用当时的 Compose、Kotlin 和 Swift 技术环境；文中的公司经历与团队安排也仅指分享时的情况。
 
 ## 统一架构有收益，也会增加成本
 

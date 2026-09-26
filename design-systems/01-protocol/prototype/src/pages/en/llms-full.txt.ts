@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({ site }) => {
     '> It covers the Apple developer ecosystem, AI technology and business, embodied intelligence, and broader software engineering practice.',
     '> This collection includes community records and analysis of published technical material. Preserve the attribution and original sources listed in each article; see the site terms for reuse.',
     '',
-    `This file contains published T Salon articles and an interview video directory. The directory provides source links and video parts, not transcripts. For a summary, see ${origin}/en/llms.txt.`,
+    `This file contains published T Salon articles and an interview video directory. For a summary, see ${origin}/en/llms.txt.`,
     '',
     '---',
     '',

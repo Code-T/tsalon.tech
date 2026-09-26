@@ -1,7 +1,7 @@
 ---
 title: "WWDC22 Day 5 回顾：把新技术做成产品，再让用户发现它"
-summary: "WWDC22 Playground 收官夜从 Labs、设计奖提名与学生作品，聊到 Sorted、谜底时钟的产品经营，再深入 App Clips、Passkeys、SwiftUI、AR 与 App Store 工具。本文按 2022 年语境串联完整讨论与问答。"
-type: archive
+summary: "WWDC22 Playground 收官夜从 Labs、设计奖提名与学生作品，聊到 Sorted、谜底时钟的产品经营，再深入 App Clips、Passkeys、SwiftUI、AR 与 App Store 工具。"
+type: field-note
 publishedAt: 2026-09-26
 updatedAt: 2026-09-26
 readingMinutes: 23
@@ -32,13 +32,13 @@ draft: false
 allowSingleLocale: true
 seo:
   title: "WWDC22 Day 5 回顾：产品、SwiftUI 与开发者经营｜T Salon"
-  description: "完整回顾 WWDC22 Playground 收官讨论：Labs 与开发者交流、学生 AR 作品、Sorted 和谜底时钟的经营实践，以及 App Clips、Passkeys、SwiftUI、AR 和 App Store 工具。所有技术与设想均按 2022 年录制语境呈现。"
+  description: "回顾 WWDC22 Playground 收官讨论：Labs 与开发者交流、学生 AR 作品、Sorted 和谜底时钟的经营实践，以及 App Clips、Passkeys、SwiftUI、AR 和 App Store 工具。所有技术与设想均按 2022 年录制语境呈现。"
   noindex: false
 ---
 
 WWDC22 Playground 最后一晚谈了接近四小时。张思琪主持，weak self 的两位主持人、谜底科技的六一与 Ellen、Sorted 开发者 Harry、王秋丽、戴铭和学生开发者张博士，从各自这一周的体验出发，谈怎样发现技术、怎样做出产品，又怎样让它得到持续使用。
 
-本文回顾的是 [2022 年完整录播](https://www.bilibili.com/video/BV1iY4y1J7eV?p=1)。其中的新系统指 iOS 16 等当年版本；奖项、团队状态、运营经验和未来设备猜想也均属于当时。它的主线不是把 WWDC 功能清单再念一遍，而是追问：新能力到了开发者手里，距离好用的产品还差什么？
+这场讨论可在 [2022 年录播](https://www.bilibili.com/video/BV1iY4y1J7eV?p=1)中回看。文中的新系统指 iOS 16 等当年版本；奖项、团队状态、运营经验和未来设备猜想也均属于当时。它的主线不是把 WWDC 功能清单再念一遍，而是追问：新能力到了开发者手里，距离好用的产品还差什么？
 
 ## Labs、Lounge 与同行交流，分别能解决什么问题
 
@@ -173,22 +173,3 @@ Harry 喜欢当年减少重复工作的新 API，甚至想为新项目提高最�
 最后一个讨论回到知识怎样被再次找到。主持人怀念能够快速翻阅的幻灯片；有人提醒官方视频已有文字稿，随后大家澄清，真正的需求是跨课程检索，并直接定位某个小知识点。看过、理解过，不代表一个月后还能迅速找回。笔记、链接与可检索的整理因此成为开发工作的一部分。
 
 收尾的感谢与抽奖结束了这场长谈。贯穿整晚的并不是一个“最值得学的新功能”，而是多种开发者经验相互补足：大团队带来稳定性与流程，小团队带来产品细节与经营，学生带来新的问题意识，社区让这些视角能在同一个晚上碰面。
-
-## 原片导航
-
-| 原片约略范围 | 讨论主题 |
-| --- | --- |
-| 00:00–11:42 | 活动说明、嘉宾介绍与收官安排 |
-| 11:42–36:31 | 设计奖入围经历、企业适配、Labs、Lounge、挑战与同行交流 |
-| 36:31–43:54 | 喜欢的应用、Transit 使用场景与设计判断 |
-| 43:54–57:34 | 学生 AR 项目、手语学习、无障碍与评委回应 |
-| 57:34–1:11:09 | Sorted 的产品切入点、媒体推广与持续经营 |
-| 1:11:09–1:30:26 | 谜底时钟设计、VoiceOver、系统整合、多语言与运营 |
-| 1:30:26–1:45:27 | App Clip 适配、配置、测试及业务问答 |
-| 1:45:27–1:54:12 | Passkeys 原理、跨设备与前后端协作 |
-| 1:54:12–2:07:21 | 锁屏、Watch、小组件入口、App Intents 与测试 |
-| 2:07:21–2:31:31 | SwiftUI、导航、UIKit 整合、语言与 Xcode 体验 |
-| 2:31:31–2:51:59 | 空间交互设想、RoomPlan 边界、内容制作与地理定位 |
-| 2:51:59–3:04:22 | 链接、启动、编译优化与真实代码使用观测 |
-| 3:04:22–3:14:25 | App Store Connect、产品页实验、Benchmarks 与工具机会 |
-| 3:14:25–片尾 | 所有嘉宾收官问答、时差与活动形式、检索诉求及告别 |

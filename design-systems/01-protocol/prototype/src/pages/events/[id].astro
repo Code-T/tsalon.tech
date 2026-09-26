@@ -14,7 +14,7 @@ const { Content } = await render(event);
 const speakers = await getEntries(event.data.speakers);
 const start = event.data.startDate;
 const { ended, registrationOpen, status } = getEventState(event.data.endDate, event.data.registration);
-const visibleFaq = getVisibleEventFaq(event.data.faq, registrationOpen);
+const visibleFaq = ended ? [] : getVisibleEventFaq(event.data.faq, registrationOpen);
 const relatedArticles = (await getCollection('articles', ({ data }) => !data.draft)).filter((article) => article.data.relatedEvents.some((related) => related.id === event.id));
 const statusLabel = ended ? '已结束' : status === 'waitlist' ? '候补报名' : registrationOpen ? '正在报名' : '报名已关闭';
 const statusClass = ended ? 'is-ended' : registrationOpen ? 'is-open' : 'is-upcoming';

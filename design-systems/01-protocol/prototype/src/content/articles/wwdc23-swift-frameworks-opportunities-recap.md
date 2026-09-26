@@ -35,12 +35,12 @@ draft: false
 allowSingleLocale: true
 seo:
   title: WWDC23 开发者讨论：Swift、UIKit 与空间计算｜T Salon
-  description: 梳理108分钟完整讨论，覆盖Swift宏与所有权、SwiftUI和SwiftData、UIKit Result Builder演示、地区开发者生态，以及Vision Pro发布初期的交互和产品机会，附原片时间码。
+  description: 梳理108分钟讨论，覆盖Swift宏与所有权、SwiftUI和SwiftData、UIKit Result Builder演示、地区开发者生态，以及Vision Pro发布初期的交互和产品机会。
 ---
 
 WWDC23 带来的变化同时发生在几个层面：Swift 开始提供更强的代码生成与所有权控制能力，SwiftUI 的状态、动画和数据接口继续扩展，Vision Pro 则让开发者重新思考应用能出现在哪些地方。这场《新技术，新特性，新机会》先拆解技术，再用 UIKit 现场编码检验其中一种思路，最后把话题放回开发者的工作环境与产品选择。
 
-本文整理自 2023 年的活动录播，按主题编排，内容有所删节。原片于 2023 年 6 月 15 日发布，约 108 分钟；技术体验、就业观察和产品预期均保留当时语境。尤其 Vision Pro 部分发生在产品发布初期，嘉宾讨论的是预期与机会，并非长期使用评测。
+录播于 2023 年 6 月 15 日发布，时长约 108 分钟；技术体验、就业观察和产品预期均保留当时语境。尤其 Vision Pro 部分发生在产品发布初期，嘉宾讨论的是预期与机会，并非长期使用评测。
 
 ## Swift 宏：让重复代码成为编译期可以处理的工作
 

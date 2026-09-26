@@ -20,7 +20,7 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## 机器可读入口',
     `- 本站 AI 摘要：${origin}/llms.txt（本文件）`,
-    `- 本站文章纯文本：${origin}/llms-full.txt（含已发布文章正文及视频目录；视频目录不含逐字稿）`,
+    `- 本站文章纯文本：${origin}/llms-full.txt（已发布文章正文与视频目录）`,
     `- 结构化索引：${origin}/content-index.json`,
     `- 站点地图：${origin}/sitemap-index.xml`,
     `- English version: ${origin}/en/llms.txt`,
@@ -59,7 +59,7 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## T Chat video interviews',
     ...talks.flatMap((entry) => [
-      `- [第 ${entry.data.episode} 期：${entry.data.title}](${origin}/articles/${entry.id}/) — 嘉宾：${entry.data.speaker}。视频目录，未提供逐字稿。`,
+      `- [第 ${entry.data.episode} 期：${entry.data.title}](${origin}/articles/${entry.id}/) — 嘉宾：${entry.data.speaker}。`,
       ...entry.data.videoParts.map((part) => `  - [${part.title}](${part.url}) · 上传于 ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} 秒`),
     ]),
     '',

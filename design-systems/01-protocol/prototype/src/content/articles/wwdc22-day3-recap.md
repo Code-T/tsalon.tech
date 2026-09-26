@@ -1,7 +1,7 @@
 ---
 title: WWDC22 动手实践：从 Swift Charts 到 AR 墙面挂画，理解新框架的收益与边界
 summary: 回顾老司机技术带来的 WWDC22.playground Day 3，两场 Code Lab 分别比较 Swift Charts 与手绘图表、演示 AR 墙面挂画；圆桌继续讨论 SwiftUI 数据流、WidgetKit、开发者模式、专注模式与 Xcode 工具。
-type: archive
+type: field-note
 publishedAt: 2026-09-26
 updatedAt: 2026-09-26
 readingMinutes: 15
@@ -32,11 +32,11 @@ draft: false
 allowSingleLocale: true
 seo:
   title: WWDC22 Day 3：Swift Charts、SwiftUI 性能与 ARKit 实践回顾
-  description: 完整整理两场 Code Lab 与后续圆桌，从数据图表、SwiftUI 更新范围到 AR 会话、锚点和交互，再到 WidgetKit、Developer Mode、Focus Filters、布局和 Xcode 工具，附原片时间码。
+  description: 回顾两场 Code Lab 与后续圆桌，从数据图表、SwiftUI 更新范围到 AR 会话、锚点和交互，再到 WidgetKit、Developer Mode、Focus Filters、布局和 Xcode 工具。
   noindex: false
 ---
 
-> 本文回顾 2022 年老司机技术参与组织的 WWDC22.playground Day 3，以编辑转述呈现当时的 Beta 与技术探索。演示中的具体结果、嘉宾对框架实现的研究，与 Apple 公开承诺的接口范围分别说明。
+> 2022 年老司机技术参与组织的 WWDC22.playground Day 3 聚焦当时的 Beta 与技术探索。演示结果和嘉宾对框架实现的研究，应与 Apple 公开承诺的接口范围区分。
 
 新框架发布时，最吸引人的往往是一段很短的演示代码。但真正把它用进产品，需要继续回答几个问题：它替开发者做掉了什么工作，代价转移到了哪里，遇到性能或兼容问题时又能看见多少？
 
@@ -149,19 +149,3 @@ WWDC22.playground Day 3 用两场实践和一轮圆桌回答这些问题。思�
 Day 3 从一张折线图开始，到在墙面上放一幅图，再延伸到锁屏、开发设备和构建工具。它的共同问题始终很具体：框架负责哪些工作，开发者仍需要负责哪些决定，出现意外时又怎样把问题拆开？
 
 思华的实践提醒人们，不要被调用处很短的封装迷惑，要看整个实现和维护范围；子琪的实践则提醒人们，不要把一次视觉结果当成稳定的世界模型，要处理能力条件和持续更新。后面的圆桌把这两种态度带回产品：新入口能带来便利，也可能带来约束；工具更加自动化，并不意味着可以停止观察和验证。
-
-## 原片导航
-
-| 原片位置 | 已整理内容 |
-| --- | --- |
-| 00:01–09:59 | 社区组织、参与准则、当年问卷和互动；嘉宾及两场实践安排 |
-| 10:00–25:39 | Swift Charts 与手工绘图的逐步对比、样式、坐标与不同图形表达 |
-| 25:40–37:13 | SwiftUI 内部研究视角、UIKit 局部接入、团队使用经验与预览 |
-| 37:13–49:55 | 数据依赖、意外计算、观察工具、动画与渲染优化的边界 |
-| 49:55–57:50 | WidgetKit、锁屏、Live Activities 早期想法与隐私考量 |
-| 57:50–65:20 | ARSession、配置、锚点、渲染选型与墙面示例建立 |
-| 65:20–73:55 | 平面新增更新移除、设备差异、触摸投射、坐标与闪烁问题 |
-| 73:55–78:50 | 转场互动、RoomPlan 与 ARKit 6 的关注点 |
-| 78:50–94:08 | Developer Mode、Focus Filters、自定义布局、Xcode、内存与 Bitcode |
-| 94:08–96:40 | Background Assets、观众 LiDAR 问答 |
-| 96:40–99:39 | 当年示例代码获取提示、问卷、致谢与下一场预告 |
