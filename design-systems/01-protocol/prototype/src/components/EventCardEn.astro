@@ -1,15 +1,15 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { formatEventDate, getEventState } from '../lib/event-display';
 
 interface Props { event: CollectionEntry<'eventsEn'>; }
 const { event } = Astro.props;
-const ended = event.data.endDate.getTime() < Date.now() || event.data.registration.status === 'archived';
-const registrationOpen = !ended && ['open', 'waitlist'].includes(event.data.registration.status);
+const { ended, registrationOpen, status } = getEventState(event.data.endDate, event.data.registration);
 const href = `/en/events/${event.id}/`;
-const cta = ended ? 'Event recap' : registrationOpen ? 'Register now' : 'Event details';
-const state = ended ? 'Ended' : registrationOpen ? 'Open' : 'Upcoming';
+const cta = ended ? 'Event archive' : status === 'waitlist' ? 'Join waitlist' : registrationOpen ? 'Register now' : 'Event details';
+const state = ended ? 'Ended' : status === 'waitlist' ? 'Waitlist open' : registrationOpen ? 'Registration open' : 'Registration closed';
 const stateClass = ended ? 'is-ended' : registrationOpen ? 'is-open' : 'is-upcoming';
-const date = event.data.startDate.toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric', timeZone: event.data.timezone });
+const date = formatEventDate(event.data.startDate, 'en', event.data.timezone, { year: 'numeric', month: 'short', day: 'numeric' });
 const mode = event.data.attendanceMode === 'offline' ? 'In person' : event.data.attendanceMode === 'online' ? 'Online' : 'Hybrid';
 ---
 <a

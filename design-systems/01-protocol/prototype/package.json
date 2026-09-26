@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "export ASTRO_TELEMETRY_DISABLED=1; rm -rf .vercel ../../../.vercel && node scripts/content-i18n-check.mjs && astro check && astro build && node scripts/postbuild-sitemap.mjs && node scripts/site-locale-check.mjs && node scripts/site-heading-check.mjs && mv .vercel ../../../",
+    "build": "node scripts/build.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "content:new": "node scripts/content-new.mjs",
@@ -16,6 +16,8 @@
     "site:locale": "node scripts/site-locale-check.mjs",
     "site:headings": "node scripts/site-heading-check.mjs",
     "site:links": "node scripts/site-link-check.mjs",
+    "test:site": "node --test scripts/event-display.test.mjs scripts/reset-radar.test.mjs scripts/reset-window.test.mjs",
+    "test:site:http": "node --test scripts/canonical-redirect.test.mjs",
     "events:sync": "node scripts/sync-huodongxing-events.mjs",
     "test:token-agent": "node --test scripts/codex-ledger.test.mjs scripts/token-agent.test.mjs scripts/token-agent-installers.test.mjs scripts/tokenrank-domain.test.mjs scripts/codex-ledger-store.test.mjs scripts/redis-generation.test.mjs scripts/tokenrank-metrics.test.mjs scripts/tokenrank-upload.test.mjs scripts/upload-body.test.mjs scripts/upload-cadence.test.mjs",
     "test:tokenrank-domain": "node --test scripts/tokenrank-domain.test.mjs",

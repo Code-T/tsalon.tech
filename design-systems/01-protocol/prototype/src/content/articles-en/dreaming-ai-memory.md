@@ -1,48 +1,54 @@
 ---
-title: "Dreaming Update: AI Memory Requires Annual Management"
-summary: "In April 2025, OpenAI introduced an early version of Dreaming to ChatGPT, allowing it to reference chat logs. In June, OpenAI upgraded the Dreaming architecture."
+title: What ChatGPT Dreaming Reveals About Managing Memory Over Years
+summary: OpenAI’s Dreaming update puts memory on a months-to-years timescale. We examine freshness, correction and deletion, while distinguishing documented MemOS Cloud operations from modules that remain under development.
 type: news
 publishedAt: 2026-09-11
-readingMinutes: 3
+readingMinutes: 7
 author: editorial-team
 topics:
   - AI
   - Agent
-cover: "/images/articles/dreaming-ai-memory-cover.jpg"
-coverAlt: "Dreaming Update: AI Memory Requires Annual Management"
+cover: /images/articles/dreaming-ai-memory-cover.jpg
+coverAlt: ChatGPT Dreaming and long-term memory management
 citations:
-  - label: SegmentFault Original
+  - label: OpenAI — ChatGPT memory dreaming
+    url: https://openai.com/index/chatgpt-memory-dreaming/
+  - label: MemTensor — public SegmentFault article
     url: https://segmentfault.com/a/1190000048267587
+  - label: MemOS Cloud changelog
+    url: https://memos-docs.openmem.net/changelog/
+  - label: MemOS parametric memory module status
+    url: https://memos-docs.openmem.net/open_source/modules/memories/parametric_memory/
+  - label: MemOS Cloud Add Message metadata
+    url: https://memos-docs.openmem.net/cn/memos_cloud/mem_operations/add_message/
+  - label: MemOS Cloud isolation and filters
+    url: https://memos-docs.openmem.net/memos_cloud/introduction/isolation_filters/
 featured: true
 draft: false
 translationOf: dreaming-ai-memory
 translationStatus: reviewed
 tldr:
-  - "OpenAI introduced an early Dreaming build to ChatGPT in April 2025 and upgraded it in June 2026, targeting memory staleness, correctness, and long-term cost."
-  - "AI memory shifts from 'saving information' to 'managing state': write, recall, update, correct, and delete."
-  - "Dreaming points to three lasting capabilities: freshness, continuity, and relevance."
-  - "MemOS turns memory into an independent system layer (plaintext / activated / parametric memory) with write, search, feedback, and delete APIs; enterprises still own permissions and compliance."
+  - OpenAI’s June 4, 2026 Dreaming update focuses on freshness, continuity and relevance.
+  - Years describe the usage horizon; changes and corrections should be handled when relevant information changes.
+  - MemOS Cloud Dream Core has a release record, while the open-source parametric memory module remains under development.
 faq:
-  - question: "What is Dreaming and what problem does it solve?"
-    answer: "A background memory-organizing capability OpenAI added to ChatGPT that keeps synthesizing, updating, and recalling user information outside the conversation; the upgrade targets stale memories, correctness, and long-term cost at scale."
-  - question: "How is AI memory different from the context window, RAG, and vector databases?"
-    answer: "The context window holds one inference's input, RAG retrieves from external sources, vector DBs store and search by similarity; a long-term memory system manages cross-time state across write, update, permissions, audit, and deletion."
-  - question: "What modules should a production Agent memory architecture include?"
-    answer: "Typically memory write/extract, identity and scope isolation, retrieval and reranking, conflict and staleness handling, feedback and update, deletion and forgetting, permissions and audit, plus latency, cost, and quality evaluation."
-  - question: "What is MemOS?"
-    answer: "A 'memory operating system' from MemTensor that organizes memory spread across model context, app code, and databases into independent infrastructure, exposing message write, search, feedback, and delete interfaces."
+  - question: Does managing memory over years mean an annual cleanup?
+    answer: No. Years describe the usage horizon. Changes in preferences, plans or permissions should trigger the appropriate update, suspension or deletion.
+  - question: Are all three MemOS memory types fully available?
+    answer: No such blanket claim follows from the documentation. Its design covers textual, activation and parametric memory, but the parametric module is still marked as under development at this review date.
 seo:
-  title: "Dreaming Update: AI Memory Requires Annual Management"
-  description: "In April 2025, OpenAI introduced an early version of Dreaming to ChatGPT, allowing it to reference chat logs. In June, OpenAI upgraded the Dreaming architecture."
+  title: "Managing AI Memory Over Years: Lessons from ChatGPT Dreaming"
+  description: Examine freshness, continuity, correction and deletion in long-term memory, with clear boundaries between MemOS design goals, Cloud operations and unfinished modules.
+updatedAt: 2026-09-26
 ---
 
 In April 2025, OpenAI introduced an early version of Dreaming to ChatGPT, letting the system reference chat history in the background and continuously organize information about the user. In June this year, OpenAI upgraded the Dreaming architecture, focusing on stale memories, information correctness, and the cost of long-term, large-scale use.
 
 This upgrade is not about whether a single preference can be saved. When a user says "I'm going to Singapore next week," the system should know the plan has become the past once the trip ends. When a user once avoided spicy food but later changes their taste, the old preference needs updating too. Over long-term use, the system must also **find the part of a large history that the current task actually needs.**
 
-AI memory is now managed on a yearly scale, and the focus of competition is shifting with it. Systems must continuously synthesize, update, and recall the right information, and let users and enterprises view, correct, and delete it.
+The relevant horizon spans months and years, rather than an annual maintenance schedule. Updates and corrections should occur as information changes. Systems must continuously synthesize, update, and recall the right information, and let users and enterprises view, correct, and delete it.
 
-This is also a problem every enterprise Agent must face. The context window, RAG, and vector databases each do important work, but none alone covers the write, update, permission, audit, and deletion needs of long-term memory.
+Agents that reuse information across sessions need to address these questions. The context window, RAG, and vector databases each do important work, but none alone covers the write, update, permission, audit, and deletion needs of long-term memory.
 
 ## From saving information to managing state
 
@@ -56,49 +62,37 @@ What enterprises buy or build is, in the end, a memory system that can run long-
 
 ## The three long-term capabilities Dreaming points to
 
-OpenAI summarizes the goals of the new Dreaming as **freshness, continuity,** and **relevance**.
+[OpenAI’s account](https://openai.com/index/chatgpt-memory-dreaming/) describes **freshness, continuity,** and **relevance**. The discussion of permissions, feedback and scheduling below is our engineering analysis, not a list of OpenAI’s internal implementation details.
 
 Freshness handles stale memories. Trips end, tasks complete, user preferences change, and company rules update. A long-term memory system needs to recognize relationships between old and new information, and update, downweight, archive, or forget memories — so it must keep time information, version relationships, feedback entry points, and lifecycle policies.
 
-Continuity handles cross-session use. Raw conversations are usually long, with much repetition, and much of it is only valid at the time. Jamming all of it into the next context raises token cost and drowns important facts in noise. The system needs to identify facts, preferences, events, relationships, and task states from the raw messages, then call the right parts for the current scenario.
+Continuity handles cross-session use. Raw conversations are usually long, with much repetition, and much of it is only valid at the time. Putting all of it into the next context expands the input and may obscure important facts; actual cost also depends on the model and caching. The system needs to identify facts, preferences, events, relationships, and task states from the raw messages, then call the right parts for the current scenario.
 
 Relevance handles "what to use now." Retrieving semantically similar content does not mean it should enter the current reasoning. The user's identity, business scenario, time, permissions, task stage, and information confidence all affect whether a memory should be recalled. Long-term memory needs retrieval ability and a scheduling mechanism.
 
-## MemOS turns memory into an independent system capability
+## MemOS Cloud: released operations and their scope
 
-MemTensor has long focused on large-model long-term memory and continual learning, and defines MemOS as a memory operating system for the Agent era.
+The [MemOS changelog](https://memos-docs.openmem.net/changelog/) records Cloud Dream Core on May 21, 2026. Fine Mode writes can create context nodes; the Dream phase binds and summarizes context and records a Dream diary, while search can retrieve nodes according to configuration. This is a MemOS Cloud capability. A similar name does not establish the same implementation as OpenAI Dreaming.
 
-MemOS already provides Dreaming capability to process written conversations and memories in the background. MemOS Dream Core can generate Dream context nodes after a Fine Mode write, complete context binding and summarization during the Dream phase, and record a Dream diary. Search Memory can recall relevant context nodes by configuration.
+Cloud write, search, feedback and deletion APIs make maintenance explicit application operations. The [Add Message documentation](https://memos-docs.openmem.net/cn/memos_cloud/mem_operations/add_message/) also describes metadata such as `info`. Sources, tags and application-supplied validation results can support retrieval and investigation; storing them does not establish that the service verified their truth.
 
-This capability folds the scattered facts, preferences, task progress, and context relationships from multi-turn conversations into a continuous organization flow. After new information enters the system, it can first complete the memory write, then Dreaming integrates it in the background; when a later task initiates retrieval, the system can return relevant content combined with the already-generated context nodes.
+Permissions require separate treatment. The [isolation and filtering documentation](https://memos-docs.openmem.net/memos_cloud/introduction/isolation_filters/) distinguishes project, user and Agent scopes. `conversation_id` supports session relevance rather than mandatory isolation. Metadata and tags do not automatically replace server-side authorization.
 
-In MemOS, Add Message provides the write entry, Dreaming handles background integration, Search Memory handles task-based recall, and Add Feedback and Delete Memory support later correction and cleanup. Thus memory moves from a raw record in a single conversation into a long-term state that can be continuously updated, retrieved, and governed.
+These descriptions reflect public documentation checked on September 26, 2026, not our own end-to-end performance or access-control tests. Applications still need to check update results, deletion scope and copies held elsewhere.
 
-The model handles understanding, reasoning, and generation; the Agent handles planning tasks, calling tools, and executing actions; MemOS handles cross-time information, placing the **production, organization, scheduling, governance, and evolution of memory** into an independent system layer.
+## Separate the memory design from module maturity
 
-MemOS sits between Agentic AI and large language models, organizing the memory capabilities that were scattered across application code, databases, and conversation history. It can identify long-term-valid information from conversations, documents, tasks, and business events; manage different types of memory by purpose and form; and select the currently needed information by combining user, task, scenario, time, and permissions. At the same time, questions of source, logs, version, permissions, privacy, deletion, and forgetting can also enter the same memory governance flow.
+MemOS describes textual memory, activation memory and parametric memory. Textual records support inspection, revision and provenance; activation memory concerns reuse during inference; parametric memory concerns capabilities formed through training. This design distinction does not mean each form supports the same deletion or conversion operations. “Textual” describes the representation, not an encryption guarantee.
 
-MemOS Cloud already provides public interfaces covering write, retrieval, feedback, and deletion.
+At this review date, the [parametric memory documentation](https://memos-docs.openmem.net/open_source/modules/memories/parametric_memory/) remains marked as under development and describes a design and prototype stage. The full conversion and governance of all three forms should not be presented as one delivered Cloud capability. Evaluate modules, versions and deployment forms individually.
 
-Taking `add/message` as an example, an application can hand a message to MemOS for processing. Public documentation states that this process can perform information extraction, conflict checking, and memory storage on the content; the application can also supplement business scope and isolation information through `info`, tags, user identifiers, and Agent identifiers.
-
-These interfaces **turn write, retrieval, feedback, and deletion into actions the application can manage.** Enterprises still need to configure permission models, approval rules, log retention, data isolation, and compliance policies within their own architecture.
-
-## Why layered memory is needed
-
-Different information is saved and recalled in different ways. MemOS divides memory into **plaintext memory, activated memory,** and **parametric memory**.
-
-Plaintext memory is easy to view, update, revise, and trace; activated memory can be reused efficiently during reasoning; parametric memory carries stable capabilities formed through training or long-term accumulation. MemOS organizes the three types of memory in the same scheduling system, and the system can manage and convert between different memory forms according to tasks and runtime conditions.
-
-This design must handle three practical requirements at once: information must be viewable, modifiable, and traceable; memory recall must not introduce unacceptable latency into real-time reasoning; and long-accumulated experience needs a chance to form stable capabilities.
-
-Vector databases and graph databases can take on storage duties. How memory is produced, when it is called, how it is updated, and who governs it still require an upper-layer system.
+The context window holds one inference’s input. RAG can retrieve documents, tool knowledge or historical memories; vector and graph databases can provide storage and queries. The application still decides what to retain, when it applies and who may use it. Not every use case needs every memory form.
 
 ## Enterprise Agents face different memory rules
 
-Personal products and enterprise Agents face different constraints. The gaming industry and AI NPCs care more about character setting, shared experiences, and relationship evolution; enterprise knowledge management and office collaboration care more about cross-session task continuity, project context, and permission boundaries; on-device intelligent hardware must balance cross-device continuity and local privacy; AI customer service needs to connect service histories across different channels; finance and industrial scenarios care more about permissions, source, audit, privatization, and data deletion.
+Personal products and enterprise Agents face different constraints. The gaming industry and AI NPCs care more about character setting, shared experiences, and relationship evolution; enterprise knowledge management and office collaboration care more about cross-session task continuity, project context, and permission boundaries; on-device intelligent hardware must balance cross-device continuity and local privacy; AI customer service needs to connect service histories across different channels; finance and industrial scenarios care more about permissions, source, audit, private deployment, and data deletion.
 
-MemOS targets cloud, privatized, on-device, and device-cloud collaboration usage forms. Specific available capabilities, functional boundaries, and delivery conditions should follow the project version and official documentation.
+Cloud, self-hosted and on-device deployments have different data boundaries. Check capabilities and delivery conditions individually rather than inferring them from a product name.
 
 Different businesses do not need the same memory strategy. A unified infrastructure can provide governance boundaries, letting applications choose production, scheduling, and storage methods according to their own data, tasks, and compliance requirements.
 
@@ -110,46 +104,8 @@ Continuity focuses on whether truly valuable history persists across sessions; f
 
 A demo that successfully remembers a user's birthday cannot cover state changes months later, multi-user isolation, and large-scale concurrency. Long-term intelligence relies on a mechanism that can continuously handle these problems.
 
-## Frequently Asked Questions
+## Check whether the change reached later tasks
 
-### Why do AIs forget user preferences and past conversations?
+For the travel example, an evaluation can ask whether a cancelled trip still appears as a future plan, whether a corrected preference reappears in its old form, and whether deletion is reflected in related summaries and application copies according to their retention rules.
 
-Most models do not naturally retain cross-session state. After the current session ends, historical information must be saved by an external system and supplied in later tasks. Even with complete chat logs saved, the system still has to handle effective-information extraction, expired updates, conflict identification, and scenario-based recall.
-
-### What is the difference between AI memory, the context window, RAG, and vector databases?
-
-The context window holds a single inference's input; RAG retrieves material from external knowledge sources; vector databases provide storage and similarity search. A long-term memory system manages cross-time information state, covering write, update, feedback, permissions, audit, deletion, and forgetting.
-
-### What modules should a production-grade Agent memory architecture include?
-
-Common modules include memory write and extraction, identity and scope isolation, retrieval and reranking, conflict and freshness handling, feedback and update, deletion and forgetting, permissions and audit, plus latency, cost, and quality evaluation. A real architecture also needs to connect with models, Agent orchestration, business data, and compliance systems.
-
-### What is MemOS?
-
-MemOS is the memory operating system advanced by MemTensor, aiming to organize the memory capabilities scattered across model context, application code, and databases into independent infrastructure. Public documentation already provides entries for message write, memory retrieval, feedback, deletion, and memory module orchestration.
-
-## Conclusion
-
-As AI begins to participate in personal life and enterprise processes over the long term, memory directly affects task quality, user experience, and production credibility.
-
-**The system needs to know which information is worth saving, which content is outdated, what the current task should call, and how incorrect memories are corrected or deleted.**
-
-Starting from Memory3-related memory mechanism research, MemTensor advances memory system engineering through MemOS, and continues to explore directions such as Agent and memory infrastructure, and memory-native general foundation models. The goal is to keep AI's understanding continuous, accurate, and manageable over longer periods of time.
-
-## Related links
-
-**MemOS official site:** [memos.openmem.net](https://memos.openmem.net)
-
-**GitHub:** [github.com/MemTensor/MemOS](https://github.com/MemTensor/MemOS)
-
-**Documentation:** [memos-docs.openmem.net](https://memos-docs.openmem.net)
-
----
-
-#### About MemTensor
-
-MemTensor (Shanghai) Technology Co., Ltd. ("MemTensor") is a new-generation large-model and long-term intelligence infrastructure enterprise incubated by the Shanghai AI Innovation Institute, with an academician of the Chinese Academy of Sciences as chief advisor.
-
-With "low hallucination, personalization, and self-learning evolution" as its core, the company has long focused on large-model long-term memory and continual learning, building a progressive technical route from theory through systems engineering to the model layer, around Memory3-related memory mechanism research, the MemOS memory operating system, Agent and memory infrastructure productization, and memory-native general foundation models, pushing AI from one-time generation toward long-term intelligence.
-
-The company has established deep collaboration with partners such as China Merchants, HaiCheng, and Honor, and achieved commercial deployment in key industries including AI companionship, gaming, on-device intelligent hardware, finance, and industry, with nearly 200 million RMB in cumulative financing from investors including CICC, Futeng, Huawei Hubble, SenseTime, and Heyu.
+These are editorial evaluation scenarios, not test results from T Salon. They turn long-term reliability into observable questions rather than treating one successful retrieval as evidence of years of reliable use.

@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { formatEventDate, formatEventTimeRange } from '../../../lib/event-display';
 
 export async function getStaticPaths() {
   const events = await getCollection('activityArchive');
@@ -10,8 +11,9 @@ export async function getStaticPaths() {
 interface Props { event: CollectionEntry<'activityArchive'>; }
 const { event } = Astro.props;
 const start = event.data.startDate;
-const dateLabel = start.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
-const timeLabel = `${start.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })}—${event.data.endDate.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+const dateLabel = formatEventDate(start, 'zh-CN', 'Asia/Shanghai', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
+const yearLabel = formatEventDate(start, 'en', 'Asia/Shanghai', { year: 'numeric' });
+const timeLabel = formatEventTimeRange(start, event.data.endDate);
 const locationLabel = event.data.mode === 'online' ? '线上活动' : `${event.data.province} · ${event.data.city}`;
 const description = event.data.summary;
 const eventUrl = new URL(`/events/archive/${event.id}/`, Astro.site).toString();
@@ -24,7 +26,6 @@ const eventJsonLd = {
   endDate: event.data.endDate.toISOString(),
   url: eventUrl,
   sameAs: event.data.sourceUrl,
-  eventStatus: 'https://schema.org/EventCompleted',
   eventAttendanceMode: event.data.mode === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
   location: event.data.mode === 'online'
     ? { '@type': 'VirtualLocation', name: '线上活动', url: event.data.sourceUrl }
@@ -41,7 +42,6 @@ const eventJsonLd = {
       },
   organizer: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
   performer: { '@type': 'Organization', name: 'T Salon' },
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY', url: eventUrl, availability: 'https://schema.org/InStock', validFrom: event.data.startDate.toISOString() },
   image: new URL(event.data.cover, Astro.site).toString(),
 };
 ---
@@ -55,7 +55,7 @@ const eventJsonLd = {
         <h1>{event.data.title}</h1>
         <p class="lead">{event.data.summary}</p>
       </div>
-      <div class="page-title-side"><span class="mono">T SALON / {start.getFullYear()}</span></div>
+      <div class="page-title-side"><span class="mono">T SALON / {yearLabel}</span></div>
       <div class="page-title-main event-quickfacts">
         <div class="quickfact"><span class="mono">DATE</span><strong>{dateLabel}</strong></div>
         <div class="quickfact"><span class="mono">TIME</span><strong>{timeLabel}</strong></div>
@@ -66,7 +66,7 @@ const eventJsonLd = {
 
     <figure class="container page-cover archive-event-cover">
       <img src={event.data.cover} alt={event.data.coverAlt} />
-      <figcaption class="mono">活动海报 · {start.getFullYear()}</figcaption>
+      <figcaption class="mono">活动海报 · {yearLabel}</figcaption>
     </figure>
 
     <section class="content-container archive-event-detail">
@@ -87,7 +87,7 @@ const eventJsonLd = {
         <p class="eyebrow">活动详情</p>
         <h2 id="archive-event-story-title">活动详情</h2>
       </header>
-      <article class="archive-event-prose" set:html={event.data.contentHtml} />
+      <div><p class="event-archive-notice">活动已结束。以下为当时发布的活动介绍，保留原始议程与变更通知；其中报名、名额及入群信息已失效。</p><article class="archive-event-prose" set:html={event.data.contentHtml} /></div>
       <footer>
         <a href={event.data.sourceUrl} target="_blank" rel="noreferrer">查看原活动页面 <span>↗</span></a>
       </footer>

@@ -171,13 +171,13 @@ const timeDays = timeFilter === 'all' ? 30 : (parseInt(timeFilter.replace('d', '
 const dailyAiTimeMinutes = Math.floor(aiTimeMinutes / timeDays);
 ---
 
-<BaseLayout alternatePath={`/en/tokenrank/?time=${timeFilter}&metric=${metricFilter}`} title="Token 排行榜 — T Salon" description="全网 AI 开发者 Token 消耗风云榜，实时统计各路大神的本地 AI 代码生成量。" image="/images/home-community-group.webp" jsonLd={seoJsonLd}>
+<BaseLayout alternatePath="/en/tokenrank/" languageSwitchPath={`/en/tokenrank/?time=${timeFilter}&metric=${metricFilter}`} title="Token 排行榜 — T Salon" description="社区参与者上报的 AI 编程用量，按含缓存、不含缓存及预估费用查看，附统计口径与数据说明。" image="/images/home-community-group.webp" jsonLd={seoJsonLd}>
   <main class="container page-content">
     
     <header class="page-title" style="margin-bottom: 1.5rem; border-bottom: none; padding-bottom: 0;">
       <div class="page-title-main">
         <h1>Token 排行榜</h1>
-        <p class="page-subtitle">开发者本地 AI 编码能耗大比拼</p>
+        <p class="page-subtitle">社区参与者上报的 AI 编程用量</p><p><a href="/tokenrank/methodology/">统计口径与数据说明 →</a></p>
       </div>
       <div class="page-title-side">
         <span class="mono">STATS / TOKEN RANK</span>

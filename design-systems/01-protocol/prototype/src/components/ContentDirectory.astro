@@ -1,0 +1,73 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { talkSpeakerEn, talkTitleEn } from '../data/en';
+import topicDefinitions from '../data/topics.json';
+import { topicSlugFor } from '../lib/topics';
+interface Props { locale?: 'zh' | 'en'; }
+const en = Astro.props.locale === 'en';
+type Article = CollectionEntry<'articles'> | CollectionEntry<'articlesEn'>;
+const articles: Article[] = (en ? await getCollection('articlesEn', ({ data }) => !data.draft) : await getCollection('articles', ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const talks = (await getCollection('talks')).sort((a, b) => b.data.order - a.data.order);
+const prefix = en ? '/en' : '';
+const labels: Record<string, string> = en
+  ? { news: 'Community news', insight: 'Technology observation', interview: 'Interview', 'field-note': 'Event recap', guide: 'Practitioner viewpoint', archive: 'Archive' }
+  : { news: '社区动态', insight: '技术观察', interview: '人物访谈', 'field-note': '活动回顾', guide: '嘉宾观点', archive: '社区档案' };
+const lead = articles.find((item) => item.data.featured && item.data.type === 'field-note') ?? articles.find((item) => item.data.featured) ?? articles[0];
+const groups = [
+  { id: 'field-notes', title: en ? 'Event recaps' : '活动回顾', entries: articles.filter((item) => item.data.type === 'field-note') },
+  { id: 'observations', title: en ? 'Technology observations' : '技术观察', entries: articles.filter((item) => ['insight', 'guide'].includes(item.data.type)) },
+  { id: 'community-stories', title: en ? 'Community stories' : '社区动态与其他内容', entries: articles.filter((item) => !['field-note', 'insight', 'guide'].includes(item.data.type)) },
+];
+const dateLabel = (date: Date) => date.toISOString().slice(0, 10);
+const availableTopics = topicDefinitions.filter((topic) => articles.filter((article) => article.data.topics.some((name) => topicSlugFor(name) === topic.slug)).length >= 2);
+---
+<main class="content-index-page">
+  <header class="content-editorial-hero"><div class="content-index-shell content-editorial-hero-inner">
+    <div class="content-editorial-mark" aria-hidden="true"><span>&lt;</span><i></i><span>&gt;</span></div>
+    <div class="content-editorial-copy"><p class="eyebrow">T SALON / STORIES & IDEAS</p><h1>{en ? 'Stories & ideas' : '内容与观点'}</h1><p>{en ? 'Event recaps, guest interviews and technology observations about the problems developers work on.' : '活动回顾、嘉宾访谈与技术观察，记录开发者的具体问题和实践。'}</p></div>
+  </div></header>
+  <nav class="content-index-shell content-scope content-directory-nav" aria-label={en ? 'Content sections' : '内容分类'}>
+    <span class="mono">{en ? 'BROWSE' : '浏览内容'}</span>
+    <a href="#all-content">{en ? 'All content' : '全部'}</a>
+    <a href="#field-notes">{en ? 'Event recaps' : '活动回顾'}</a>
+    <a href="#tchat">{en ? 'T Chat interviews' : 'T Chat 访谈'}</a>
+    <a href="#observations">{en ? 'Technology observations' : '技术观察'}</a>
+  </nav>
+  <nav class="content-index-shell topic-navigation" aria-label={en ? 'Topics' : '话题合集'}>
+    <span>{en ? 'Topics:' : '按话题浏览：'}</span>
+    {availableTopics.map((topic) => <a href={`${prefix}/topics/${topic.slug}/`}>{en ? topic.name : topic.nameZh}</a>)}
+  </nav>
+  {lead && <section class="content-index-shell content-lead" aria-labelledby="content-lead-title">
+    {lead.data.cover !== '/images/default-cover.svg' && <figure class="content-lead-media"><img src={lead.data.cover} alt={lead.data.coverAlt} loading="eager" /><figcaption class="mono">{lead.data.coverAlt}</figcaption></figure>}
+    <div class="content-lead-copy"><div><p class="eyebrow">{en ? 'EDITOR’S PICK' : '编辑推荐'} / {labels[lead.data.type]}</p><h2 id="content-lead-title">{lead.data.title}</h2><a class="content-lead-link" href={`${prefix}/articles/${lead.id}/`}>{en ? 'Read the story' : '阅读文章'} <span aria-hidden="true">→</span></a></div>
+      <div class="content-lead-side"><p>{lead.data.summary}</p><div class="content-lead-meta mono"><time datetime={dateLabel(lead.data.publishedAt)}>{dateLabel(lead.data.publishedAt)}</time><span>{en ? 'T Salon Editorial' : 'T Salon 编辑部'}</span></div></div>
+    </div>
+  </section>}
+  <div id="all-content">
+    {groups.map((group) => <section id={group.id} class="content-published" aria-labelledby={`${group.id}-title`}><div class="content-index-shell">
+      <header class="content-published-head"><div><p class="mono">{en ? 'LATEST IN THIS SECTION' : '按发布时间排列'}</p><h2 id={`${group.id}-title`}>{group.title}</h2></div><p>{group.entries.length} {en ? 'stories' : '篇内容'}</p></header>
+      <div class="content-published-list">{group.entries.map((article, index) => <a href={`${prefix}/articles/${article.id}/`}>
+        <span class="content-published-number mono">{String(index + 1).padStart(2, '0')}</span>
+        <div><p class="mono">{labels[article.data.type]} · {dateLabel(article.data.publishedAt)} · {en ? 'T Salon Editorial' : 'T Salon 编辑部'}</p><h3>{article.data.title}</h3><p>{article.data.summary}</p></div><span class="content-published-arrow" aria-hidden="true">→</span>
+      </a>)}</div>
+    </div></section>)}
+    <section id="tchat" class="content-series-directory" aria-labelledby="tchat-title"><div class="content-index-shell">
+      <header class="content-published-head"><div><p class="mono">T CHAT / {talks.length} {en ? 'EPISODES' : '期'}</p><h2 id="tchat-title">{en ? 'Guest interviews' : '嘉宾访谈'}</h2></div><p>{en ? 'Original Chinese recordings on bilibili. Each Chinese episode page lists the available video parts.' : '在 B 站回看主题分享与嘉宾对谈，进入每期页面查看原视频分段。'}</p></header>
+      <ol class="talk-directory-list">{talks.map((talk) => <li><a href={`/articles/${talk.id}/`} hreflang="zh-CN">
+        <span class="talk-directory-number mono">{String(talk.data.episode).padStart(2, '0')}</span>
+        <div class="talk-directory-copy"><p class="mono">{en ? talkSpeakerEn[talk.id] : talk.data.speaker} · {en ? 'Chinese video & page' : '中文视频'}{talk.data.uploadedAt && ` · ${en ? 'Uploaded' : '上传于'} ${talk.data.uploadedAt.slice(0, 10)}`}</p><h3>{en ? talkTitleEn[talk.id] : talk.data.title}</h3><p>{en ? `${talk.data.videoParts.length} available video part(s)` : talk.data.summary}</p></div><span class="talk-directory-action" aria-hidden="true">→</span>
+      </a></li>)}</ol>
+    </div></section>
+  </div>
+</main>
+<style>
+  .topic-navigation { display: flex; flex-wrap: wrap; gap: 1rem; padding-block: 1.25rem; font-size: .875rem; }
+  .topic-navigation a { text-decoration: underline; text-underline-offset: .25em; }
+  .content-directory-nav a { padding: var(--space-5); border-left: 1px solid var(--border-default); display: flex; align-items: center; font-size: var(--text-13); text-decoration: underline; text-underline-offset: .3em; }
+  .content-directory-nav a:hover, .content-directory-nav a:focus-visible { color: var(--color-signal); background: var(--background-subtle); }
+  section[id], #all-content { scroll-margin-top: 100px; }
+  @media (max-width: 768px) {
+    .content-directory-nav a { min-height: 62px; padding: var(--space-4); border-top: 1px solid var(--border-default); }
+    .content-directory-nav a:nth-child(2), .content-directory-nav a:nth-child(4) { border-left: 0; }
+  }
+</style>

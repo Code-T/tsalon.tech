@@ -26,7 +26,6 @@ const jsonLd = {
       url: `https://www.tsalon.tech/events/${event.id}/`,
       organizer: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
       performer: { '@type': 'Organization', name: 'T Salon' },
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY', url: `https://www.tsalon.tech/events/${event.id}/`, availability: 'https://schema.org/InStock', validFrom: event.data.startDate.toISOString() },
       eventAttendanceMode: event.data.attendanceMode === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : event.data.attendanceMode === 'hybrid' ? 'https://schema.org/MixedEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
       location: event.data.attendanceMode === 'online'
         ? { '@type': 'VirtualLocation', name: event.data.venue ?? 'T Salon 在线活动', url: 'https://space.bilibili.com/488340243' }
@@ -39,12 +38,10 @@ const jsonLd = {
       image: new URL(event.data.cover, Astro.site).toString(),
       startDate: event.data.startDate.toISOString(),
       endDate: event.data.endDate.toISOString(),
-      eventStatus: 'https://schema.org/EventCompleted',
       url: `https://www.tsalon.tech/events/archive/${event.id}/`,
       sameAs: event.data.sourceUrl,
       organizer: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
       performer: { '@type': 'Organization', name: 'T Salon' },
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY', url: `https://www.tsalon.tech/events/archive/${event.id}/`, availability: 'https://schema.org/InStock', validFrom: event.data.startDate.toISOString() },
       eventAttendanceMode: event.data.mode === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
       location: event.data.mode === 'online'
         ? { '@type': 'VirtualLocation', name: '线上活动', url: event.data.sourceUrl }
@@ -97,7 +94,7 @@ const jsonLd = {
               <p class="event-tile-series mono"><span>T CHAT / 线上</span><i class="event-tile-status is-ended">已结束</i></p>
               <h3>T Chat「我在大厂做研发」完整回顾</h3>
               <div class="event-tile-facts">
-                <span><i>日期</i>2022—2023</span>
+                <span><i>日期</i>2022</span>
                 <span><i>形式</i>线上 · 17 期</span>
               </div>
               <strong class="event-tile-action">系列回顾 <i>→</i></strong>

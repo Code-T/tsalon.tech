@@ -23,6 +23,8 @@ jobs:
           cache-dependency-path: design-systems/01-protocol/prototype/package-lock.json
       - run: npm ci
       - run: npm run content:validate
+      - run: npm run test:site
+      - run: npm run test:site:http
       - run: npm run build
       - run: npm run site:links
       - uses: actions/upload-artifact@v4

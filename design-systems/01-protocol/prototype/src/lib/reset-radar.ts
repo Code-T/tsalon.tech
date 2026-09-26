@@ -47,6 +47,7 @@ export interface ProviderStats {
   provider: 'codex' | 'claude';
   name: string;
   sourceAccount: string;
+  latestEvent: FormattedResetEvent | null;
   sinceLastReset: {
     days: number;
     hours: number;
@@ -64,7 +65,8 @@ export interface ProviderStats {
   };
   resets30d: number;
   cards30d: number;
-  typicalGapDays: number;
+  typicalGapDays: number | null;
+  cadenceIntervalCount: number;
   nextEstimated: {
     dateBeijing: string;
     timeBeijing: string;
@@ -77,8 +79,9 @@ export interface ProviderStats {
 }
 
 export interface ResetRadarData {
-  updatedAtBeijing: string;
-  updatedAtIso: string;
+  status: 'ready' | 'empty' | 'unavailable';
+  updatedAtBeijing: string | null;
+  updatedAtIso: string | null;
   codex: ProviderStats;
   claude: ProviderStats;
 }
@@ -90,6 +93,7 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 function toBeijingParts(date: Date) {
   const formatter = new Intl.DateTimeFormat('zh-CN', {
     timeZone: 'Asia/Shanghai',
+    year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
@@ -99,13 +103,14 @@ function toBeijingParts(date: Date) {
   const parts = formatter.formatToParts(date);
   const get = (type: string) => parts.find((p) => p.type === type)?.value || '';
   return {
+    year: get('year'),
     month: get('month'),
     day: get('day'),
     hour: get('hour'),
     minute: get('minute'),
-    displayDate: `${get('month')}-${get('day')}`,
+    displayDate: `${get('year')}-${get('month')}-${get('day')}`,
     displayTime: `${get('hour')}:${get('minute')}`,
-    full: `${get('month')}-${get('day')} ${get('hour')}:${get('minute')}`
+    full: `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}`
   };
 }
 
@@ -125,156 +130,165 @@ function formatTimeDiff(diffMs: number) {
   };
 }
 
+
+function nonEmptyText(value: unknown): string | undefined {
+  return typeof value === 'string' ? value.trim() || undefined : undefined;
+}
+
+function localizedText(value: unknown, locale: 'zh-CN' | 'en') {
+  return value && typeof value === 'object'
+    ? nonEmptyText((value as Record<string, unknown>)[locale]) : undefined;
+}
+
+function eventPostUrl(event: RawResetEvent): string | undefined {
+  const sources = Array.isArray(event.sources)
+    ? event.sources.filter((source) => source && typeof source === 'object' && nonEmptyText(source.url)) : [];
+  return nonEmptyText(sources.find((source) => source.role === 'landed')?.url) || nonEmptyText(sources[0]?.url);
+}
+
+function eventScope(event: RawResetEvent, locale: 'zh-CN' | 'en') {
+  const labels: Record<string, [string, string]> = {
+    all: ['全部用户', 'All users'],
+    paid: ['付费用户', 'Paid users'],
+    affected: ['受影响用户', 'Affected users'],
+    max: ['Max 方案', 'Max plans'],
+  };
+  const scope = nonEmptyText(event.scope);
+  return localizedText(event.scopeNote, locale) || (scope ? labels[scope]?.[locale === 'en' ? 1 : 0] : undefined)
+    || (locale === 'en' ? 'Not specified' : '未说明');
+}
+
+function eventReason(event: RawResetEvent, locale: 'zh-CN' | 'en') {
+  const note = localizedText(event.reasonNote, locale);
+  const reason = nonEmptyText(event.reason);
+  return note || (reason && !['unstated', 'unknown'].includes(reason.toLowerCase()) ? reason : undefined)
+    || (locale === 'en' ? 'Not specified in this record' : '该记录未说明');
+}
+
+function formatEvent(event: RawResetEvent, now: number): FormattedResetEvent {
+  const parts = toBeijingParts(new Date(event.landedAt));
+  const diff = formatTimeDiff(now - Date.parse(event.landedAt));
+  const globalReset = event.type === 'reset' && event.scope === 'all';
+  const scopedReset = ['paid', 'affected', 'max'].includes(event.scope);
+  return {
+    id: event.id,
+    provider: event.provider,
+    type: event.type,
+    typeLabelZh: event.type === 'card' ? '重置卡' : globalReset ? '全局重置' : scopedReset ? '指定范围重置' : '重置（范围未说明）',
+    typeLabelEn: event.type === 'card' ? 'Reset card' : globalReset ? 'Global reset' : scopedReset ? 'Scoped reset' : 'Reset (scope unspecified)',
+    scopeZh: eventScope(event, 'zh-CN'),
+    scopeEn: eventScope(event, 'en'),
+    reasonZh: eventReason(event, 'zh-CN'),
+    reasonEn: eventReason(event, 'en'),
+    landedAtBeijing: parts.full,
+    timeAgoZh: diff.textZh + ' 前',
+    timeAgoEn: diff.textEn + ' ago',
+    postUrl: eventPostUrl(event),
+  };
+}
+
 function computeProviderStats(
   provider: 'codex' | 'claude',
   allEvents: RawResetEvent[],
-  remoteStats?: any,
   remoteWatch?: any
 ): ProviderStats {
-  const events = allEvents
-    .filter((e) => e.provider === provider)
-    .sort((a, b) => new Date(b.landedAt).getTime() - new Date(a.landedAt).getTime());
-
   const now = Date.now();
-  const resetEvents = events.filter((e) => e.type === 'reset');
-  const lastResetEvent = resetEvents[0] || events[0];
+  // Aggregate timestamps do not identify an event. All display fields are
+  // derived from actual records; future notices belong in watch, not history.
+  const events = allEvents
+    .filter((event) => event && event.provider === provider
+      && ['reset', 'card'].includes(event.type)
+      && typeof event.landedAt === 'string'
+      && Number.isFinite(Date.parse(event.landedAt))
+      && Date.parse(event.landedAt) <= now)
+    .sort((a, b) => Date.parse(b.landedAt) - Date.parse(a.landedAt));
+  const resetEvents = events.filter((event) => event.type === 'reset');
+  const lastResetEvent = resetEvents[0];
+  const formattedEvents = events.slice(0, 30).map((event) => formatEvent(event, now));
 
-  // Since last reset
   let sinceLastReset = { days: 0, hours: 0, textZh: '暂无数据', textEn: 'No data' };
   let lastResetObj = {
     dateBeijing: '--',
     timeBeijing: '--',
-    scopeZh: '全部用户',
-    scopeEn: 'All users',
-    reasonZh: '常规重置',
-    reasonEn: 'Regular reset',
-    postUrl: undefined as string | undefined
+    scopeZh: '未说明',
+    scopeEn: 'Not specified',
+    reasonZh: '该记录未说明',
+    reasonEn: 'Not specified in this record',
+    postUrl: undefined as string | undefined,
   };
-
-  const lastResetAtIso = remoteStats?.lastResetAt || lastResetEvent?.landedAt;
-  if (lastResetAtIso) {
-    const lastTime = new Date(lastResetAtIso).getTime();
-    const diff = formatTimeDiff(now - lastTime);
-    sinceLastReset = {
-      days: diff.days,
-      hours: diff.hours,
-      textZh: diff.textZh,
-      textEn: diff.textEn
-    };
-
-    const bParts = toBeijingParts(new Date(lastTime));
+  if (lastResetEvent) {
+    const event = formatEvent(lastResetEvent, now);
+    const diff = formatTimeDiff(now - Date.parse(lastResetEvent.landedAt));
+    const parts = toBeijingParts(new Date(lastResetEvent.landedAt));
+    sinceLastReset = { days: diff.days, hours: diff.hours, textZh: diff.textZh, textEn: diff.textEn };
     lastResetObj = {
-      dateBeijing: bParts.displayDate,
-      timeBeijing: bParts.displayTime,
-      scopeZh: lastResetEvent?.scopeNote?.['zh-CN'] || (lastResetEvent?.scope === 'all' ? '全部用户' : lastResetEvent?.scope === 'paid' ? '付费用户' : '部分受影响用户'),
-      scopeEn: lastResetEvent?.scopeNote?.en || (lastResetEvent?.scope === 'all' ? 'All users' : lastResetEvent?.scope === 'paid' ? 'Paid plans' : 'Affected users'),
-      reasonZh: lastResetEvent?.reasonNote?.['zh-CN'] || lastResetEvent?.reason || '官方重置',
-      reasonEn: lastResetEvent?.reasonNote?.en || lastResetEvent?.reason || 'Usage reset',
-      postUrl: lastResetEvent?.sources?.find((s) => s.role === 'landed')?.url || lastResetEvent?.sources?.[0]?.url
+      dateBeijing: parts.displayDate,
+      timeBeijing: parts.displayTime,
+      scopeZh: event.scopeZh,
+      scopeEn: event.scopeEn,
+      reasonZh: event.reasonZh,
+      reasonEn: event.reasonEn,
+      postUrl: event.postUrl,
     };
   }
 
-  // 30 days stats
-  const resets30d = remoteStats?.resetsLast30Days ?? events.filter((e) => e.type === 'reset' && new Date(e.landedAt).getTime() >= now - 30 * 86400000).length;
-  const cards30d = remoteStats?.cardsLast30Days ?? events.filter((e) => e.type === 'card' && new Date(e.landedAt).getTime() >= now - 30 * 86400000).length;
-  const typicalGapDays = remoteStats?.medianGapHours ? Number((remoteStats.medianGapHours / 24).toFixed(1)) : (provider === 'codex' ? 3.3 : 7.1);
+  const resets30d = resetEvents.filter((event) => Date.parse(event.landedAt) >= now - 30 * 86400000).length;
+  const cards30d = events.filter((event) => event.type === 'card' && Date.parse(event.landedAt) >= now - 30 * 86400000).length;
 
-  // Next estimated reset
+  // Use up to 10 distinct, explicitly global resets, excluding cards and
+  // targeted resets. Missing history never falls back to a made-up cadence.
+  const globalTimes = [...new Set(resetEvents.filter((event) => event.scope === 'all')
+    .map((event) => Date.parse(event.landedAt)))].slice(0, 10);
+  const gaps = globalTimes.slice(1).map((time, index) => globalTimes[index] - time).sort((a, b) => a - b);
+  const middle = Math.floor(gaps.length / 2);
+  const medianGap = gaps.length ? (gaps.length % 2 ? gaps[middle] : (gaps[middle - 1] + gaps[middle]) / 2) : null;
+  const typicalGapDays = medianGap === null ? null : Number((medianGap / 86400000).toFixed(1));
   let nextEstimated = {
-    dateBeijing: '--',
-    timeBeijing: '--',
-    relativeTextZh: '--',
-    relativeTextEn: '--',
-    isOverdue: false
+    dateBeijing: '--', timeBeijing: '--',
+    relativeTextZh: '全局重置记录不足', relativeTextEn: 'Not enough global reset records',
+    isOverdue: false,
   };
-
-  const estimatedNextIso = remoteStats?.estimatedNextAt || (lastResetAtIso ? new Date(new Date(lastResetAtIso).getTime() + typicalGapDays * 86400000).toISOString() : null);
-  if (estimatedNextIso) {
-    const estTime = new Date(estimatedNextIso).getTime();
-    const estParts = toBeijingParts(new Date(estTime));
-    const remainingMs = estTime - now;
-
-    if (remainingMs > 0) {
-      const rem = formatTimeDiff(remainingMs);
-      nextEstimated = {
-        dateBeijing: estParts.displayDate,
-        timeBeijing: estParts.displayTime,
-        relativeTextZh: `约 ${rem.textZh} 后`,
-        relativeTextEn: `About ${rem.textEn} to go`,
-        isOverdue: false
-      };
-    } else {
-      const over = formatTimeDiff(Math.abs(remainingMs));
-      nextEstimated = {
-        dateBeijing: estParts.displayDate,
-        timeBeijing: estParts.displayTime,
-        relativeTextZh: `已逾期 ${over.textZh}`,
-        relativeTextEn: `Overdue by ${over.textEn}`,
-        isOverdue: true
-      };
-    }
+  if (medianGap !== null) {
+    const estimatedTime = globalTimes[0] + medianGap;
+    const parts = toBeijingParts(new Date(estimatedTime));
+    const remaining = estimatedTime - now;
+    const diff = formatTimeDiff(remaining);
+    nextEstimated = {
+      dateBeijing: parts.displayDate,
+      timeBeijing: parts.displayTime,
+      relativeTextZh: remaining > 0 ? '距参考点约 ' + diff.textZh : '参考点已过 ' + diff.textZh,
+      relativeTextEn: remaining > 0 ? 'Reference point in ' + diff.textEn : 'Reference point passed ' + diff.textEn + ' ago',
+      isOverdue: remaining <= 0,
+    };
   }
 
-  // Watch notice (Heads up from official announcement)
-  let watchNotice: WatchNotice | undefined = undefined;
+  let watchNotice: WatchNotice | undefined;
   if (remoteWatch) {
+    const scheduledTime = Date.parse(remoteWatch.scheduledAt);
     watchNotice = {
       isOpen: !!remoteWatch.open,
-      scheduledAtBeijing: remoteWatch.scheduledAt ? toBeijingParts(new Date(remoteWatch.scheduledAt)).full : undefined,
+      scheduledAtBeijing: Number.isFinite(scheduledTime) ? toBeijingParts(new Date(scheduledTime)).full : undefined,
       tweetUrl: remoteWatch.url,
       titleZh: remoteWatch.title?.['zh-CN'],
       titleEn: remoteWatch.title?.en,
-      text: remoteWatch.text
+      text: remoteWatch.text,
     };
   }
-
-  // Format events list for display
-  const formattedEvents: FormattedResetEvent[] = events.slice(0, 30).map((e) => {
-    const eDate = new Date(e.landedAt);
-    const bParts = toBeijingParts(eDate);
-    const diff = formatTimeDiff(now - eDate.getTime());
-
-    let scopeZh = '全部用户';
-    let scopeEn = 'All users';
-    if (e.scopeNote?.['zh-CN']) scopeZh = e.scopeNote['zh-CN'];
-    else if (e.scope === 'paid') scopeZh = '付费用户';
-    else if (e.scope === 'affected') scopeZh = '受影响用户';
-    else if (e.scope === 'max') scopeZh = 'Max 方案';
-
-    if (e.scopeNote?.en) scopeEn = e.scopeNote.en;
-    else if (e.scope === 'paid') scopeEn = 'Paid users';
-    else if (e.scope === 'affected') scopeEn = 'Affected users';
-    else if (e.scope === 'max') scopeEn = 'Max plans';
-
-    return {
-      id: e.id,
-      provider: e.provider,
-      type: e.type,
-      typeLabelZh: e.type === 'reset' ? '全局重置' : '重置卡',
-      typeLabelEn: e.type === 'reset' ? 'Usage reset' : 'Reset card',
-      scopeZh,
-      scopeEn,
-      reasonZh: e.reasonNote?.['zh-CN'] || e.reason,
-      reasonEn: e.reasonNote?.en || e.reason,
-      landedAtBeijing: bParts.full,
-      timeAgoZh: `${diff.textZh} 前`,
-      timeAgoEn: `${diff.textEn} ago`,
-      postUrl: e.sources?.find((s) => s.role === 'landed')?.url || e.sources?.[0]?.url
-    };
-  });
 
   return {
     provider,
     name: provider === 'codex' ? 'OpenAI Codex' : 'Anthropic Claude',
-    sourceAccount: provider === 'codex' ? '@thsottiaux · Tibo' : '@ClaudeDevs · Claude Developers',
+    sourceAccount: 'WhenReset.dev',
+    latestEvent: formattedEvents[0] || null,
     sinceLastReset,
     lastReset: lastResetObj,
     resets30d,
     cards30d,
     typicalGapDays,
+    cadenceIntervalCount: gaps.length,
     nextEstimated,
     watchNotice,
-    events: formattedEvents
+    events: formattedEvents,
   };
 }
 
@@ -285,37 +299,37 @@ export async function getResetRadarData(): Promise<ResetRadarData> {
   }
 
   let events: RawResetEvent[] = [];
-  let statsRemote: any = null;
   let watchRemote: any = null;
+  let fetchedAt: Date | null = null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4500);
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4500);
     const res = await fetch('https://whenreset.dev/api/resets', {
       headers: { 'User-Agent': 'TSalon-ResetRadar/1.0 (+https://tsalon.tech)' },
       signal: controller.signal
     });
-    clearTimeout(timeout);
-
     if (res.ok) {
       const json = await res.json();
-      if (json && typeof json === 'object') {
-        if (Array.isArray(json.events)) events = json.events;
-        if (json.stats) statsRemote = json.stats;
+      if (json && typeof json === 'object' && Array.isArray(json.events)) {
+        events = json.events;
+        fetchedAt = new Date();
         if (json.watch) watchRemote = json.watch;
       }
     }
   } catch (err) {
-    console.warn('[reset-radar] Failed to fetch live data from whenreset.dev, using fallback:', err);
+    console.warn('[reset-radar] Failed to fetch records from whenreset.dev:', err);
+  } finally {
+    clearTimeout(timeout);
   }
 
-  const codex = computeProviderStats('codex', events, statsRemote?.codex, watchRemote?.codex);
-  const claude = computeProviderStats('claude', events, statsRemote?.claude, watchRemote?.claude);
+  const codex = computeProviderStats('codex', events, watchRemote?.codex);
+  const claude = computeProviderStats('claude', events, watchRemote?.claude);
 
-  const bParts = toBeijingParts(new Date());
   const data: ResetRadarData = {
-    updatedAtBeijing: bParts.full,
-    updatedAtIso: new Date().toISOString(),
+    status: !fetchedAt ? 'unavailable' : codex.events.length || claude.events.length ? 'ready' : 'empty',
+    updatedAtBeijing: fetchedAt ? toBeijingParts(fetchedAt).full : null,
+    updatedAtIso: fetchedAt?.toISOString() || null,
     codex,
     claude
   };

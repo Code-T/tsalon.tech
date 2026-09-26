@@ -82,21 +82,22 @@ const pageUrl = new URL(`/articles/${currentId}/`, Astro.site).toString();
 const bvidMatch = talk?.data.videoUrl?.match(/BV[a-zA-Z0-9]+/);
 const bvid = bvidMatch ? bvidMatch[0] : null;
 
-const jsonLd = talk ? {
+const jsonLd = talk ? talk.data.videoParts.map((part) => ({
   '@context': 'https://schema.org',
   '@type': 'VideoObject',
-  name: talk.data.title,
+  name: `${talk.data.speaker}：${part.title}`,
   description: talk.data.summary,
   thumbnailUrl: [new URL(talk.data.cover, Astro.site).toString()],
-  contentUrl: talk.data.videoUrl,
-  embedUrl: bvid ? `https://player.bilibili.com/player.html?bvid=${bvid}&page=1&high_quality=1&danmaku=0` : talk.data.videoUrl,
-  url: pageUrl,
-  uploadDate: '2022-04-28T12:00:00.000Z',
+  embedUrl: `https://player.bilibili.com/player.html?bvid=${part.url.match(/BV[a-zA-Z0-9]+/)?.[0]}&page=1&danmaku=0`,
+  url: part.url,
+  mainEntityOfPage: pageUrl,
+  uploadDate: part.uploadedAt,
+  duration: `PT${part.durationSeconds}S`,
   publisher: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
   author: { '@type': 'Person', name: talk.data.speaker },
   about: talk.data.topics,
   inLanguage: 'zh-CN',
-} : {
+})) : {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: article!.data.title,
@@ -115,6 +116,7 @@ const jsonLd = talk ? {
   publisher: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
   inLanguage: 'zh-CN',
   about: article!.data.topics,
+  citation: article!.data.citations.map((source) => ({ '@type': 'CreativeWork', name: source.label, url: source.url })),
 };
 
 const breadcrumbJsonLd = {
@@ -140,16 +142,17 @@ const faqJsonLd = activeFaq.length > 0
       })),
     }
   : null;
-const pageJsonLd = [jsonLd, breadcrumbJsonLd, ...(faqJsonLd ? [faqJsonLd] : [])];
+const pageJsonLd = [...(Array.isArray(jsonLd) ? jsonLd : [jsonLd]), breadcrumbJsonLd, ...(faqJsonLd ? [faqJsonLd] : [])];
 
 const pageTitle = talk ? `${talk.data.title}｜T Chat 第 ${talk.data.episode} 期 — T Salon` : article!.data.seo.title;
 const pageDescription = talk
-  ? `${talk.data.speaker} 做客 T Chat「我在大厂做研发」第 ${talk.data.episode} 期。${talk.data.summary}`
+  ? `T Chat 第 ${talk.data.episode} 期原视频回看与分段目录。${talk.data.summary}`
   : article!.data.seo.description;
-const hasEnTranslation = Boolean(article && (await getEntry('articlesEn', article.id)));
+const translation = article ? (await getCollection('articlesEn', ({ data }) => !data.draft)).find((entry) => entry.data.translationOf === article.id) : undefined;
+const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${String(seconds % 60).padStart(2, '0')}秒`;
 ---
 
-<BaseLayout alternatePath={hasEnTranslation ? `/en/articles/${article!.id}/` : null} title={pageTitle} description={pageDescription} image={cover} noindex={article?.data.seo.noindex ?? false} jsonLd={pageJsonLd}>
+<BaseLayout alternatePath={translation ? `/en/articles/${translation.id}/` : null} title={pageTitle} description={pageDescription} image={cover} noindex={article?.data.seo.noindex ?? false} jsonLd={pageJsonLd}>
   <main class="content-detail-page">
     <nav class="content-detail-shell content-detail-breadcrumb" aria-label="面包屑">
       <a href="/articles/">内容</a><span aria-hidden="true">/</span><span>{contentKind}</span>
@@ -167,21 +170,28 @@ const hasEnTranslation = Boolean(article && (await getEntry('articlesEn', articl
         <div>
           <strong>{talk ? talk.data.speaker : author!.data.name}</strong>
           <span>{talk ? `「我在大厂做研发」· T Salon` : `${article!.data.publishedAt.toISOString().slice(0, 10)} · ${article!.data.readingMinutes} 分钟阅读`}</span>
+          {article?.data.updatedAt && <span>修订于 {article.data.updatedAt.toISOString().slice(0, 10)}</span>}
         </div>
       </div>
     </header>
 
-    <figure class="content-detail-shell content-detail-cover">
+    {cover !== '/images/default-cover.svg' && <figure class="content-detail-shell content-detail-cover">
       <div><img src={cover} alt={coverAlt} /></div>
-      <figcaption class="mono">T SALON / {talk ? `T CHAT ${String(talk.data.episode).padStart(2, '0')}` : '社区档案'}</figcaption>
-    </figure>
+      <figcaption class="mono">{coverAlt}</figcaption>
+    </figure>}
 
     <section class="content-detail-shell content-detail-body">
       <article class="prose content-detail-prose">
         {talk ? (
           <>
-            <p class="standfirst">{talk.data.speaker} 做客 T Chat「我在大厂做研发」第 {talk.data.episode} 期，围绕“{talk.data.title}”分享一线研发实践。</p>
-            <p>{talk.data.summary}</p>
+            <h2 id="videos">视频回看</h2>
+            <p>按原视频分段观看主题分享与对谈。下面标注的是 B 站视频上传日期。</p>
+            <ol class="video-parts">
+              {talk.data.videoParts.map((part) => <li>
+                <a href={part.url} target="_blank" rel="noopener noreferrer">{part.title} ↗</a>
+                <p>{durationLabel(part.durationSeconds)} · 上传于 <time datetime={part.uploadedAt}>{part.uploadedAt.slice(0, 10)}</time></p>
+              </li>)}
+            </ol>
 
             {bvid && (
               <div class="talk-video-embed">
@@ -289,7 +299,7 @@ const hasEnTranslation = Boolean(article && (await getEntry('articlesEn', articl
           </dl>
         </div>
 
-        {talk && <a class="content-detail-source" href={talk.data.videoUrl} target="_blank" rel="noreferrer">观看完整视频 <span>↗</span></a>}
+        {talk && <a class="content-detail-source" href="#videos">查看全部视频分段 <span>↓</span></a>}
         {article && article.data.citations.map((citation) => <a class="content-detail-source" href={citation.url} target="_blank" rel="noreferrer">{citation.label} <span>↗</span></a>)}
       </aside>
     </section>

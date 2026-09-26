@@ -1,8 +1,9 @@
 ---
 title: "Event Recap: From AI Demo to Production｜Engineering Practices for Agent and AI Native Applications"
-summary: "A recap of the 'From AI Demo to Production' offline event held in Shanghai on August 1st, featuring four guests sharing engineering practices on persistent Agent memory, multi-model collaboration, Vibe Coding, and Agent execution environments."
+summary: "A record of the August 1, 2026 'From AI Demo to Production' event in Shanghai, with four speakers' presentations and a live demo covering agent memory, model collaboration, Vibe Coding and execution environments."
 type: field-note
 publishedAt: 2026-08-03
+updatedAt: 2026-09-26
 readingMinutes: 5
 author: editorial-team
 topics:
@@ -20,30 +21,16 @@ featured: true
 draft: false
 translationOf: ai-demo-to-production-recap
 translationStatus: reviewed
-tldr:
-  - "A recap of the Aug 1 Shanghai 'From AI Demo to Production' event with four talks: persistent Agent memory, multi-model collaboration, Vibe Coding, and Agent execution environments."
-  - "Memmy / MemOS focuses on letting multiple AIs share one long-term memory (task progress, failures, reusable Skills)."
-  - "PPIO proposes 'Token Intelligence Density' plus multi-model consultation and smart routing to balance quality and cost."
-  - "Zion live-built a Vibe Coding diet assistant that writes to a real database and triggers notifications; FastGPT uses a Linux sandbox so Agents truly execute tasks."
-faq:
-  - question: "What engineering practices were discussed at the event?"
-    answer: "Four areas: persistent Agent memory (MemOS / Memmy), multi-model collaboration and smart routing (PPIO), Vibe Coding across the backend (Zion), and Agent execution environments (FastGPT Linux sandbox)."
-  - question: "What is Token Intelligence Density?"
-    answer: "A PPIO concept: whether spending one Token yields a better result. Through multi-model consultation and difficulty-based smart routing, the right task goes to the right model."
-  - question: "How does Vibe Coding cross the backend hurdle?"
-    answer: "The Zion Plugin lets a Coding Agent operate a visual backend directly: describe the need and it configures DB tables, permissions, Agents, and behavior flows, then generates frontend code and integrates real APIs."
-  - question: "Why do Agents need a real execution environment?"
-    answer: "Traditional workflows suit only fixed-path tasks; FastGPT gives each session an isolated Linux sandbox so Agents run code, read/write files, and continue after mid-task failures."
 seo:
   title: "Event Recap: From AI Demo to Production"
-  description: "On Aug 1st, we hosted the From AI Demo to Production event in Shanghai. Read insights shared by MemTensor, PPIO, Zion, and FastGPT on agents and AI applications."
+  description: "A recap of the August 1, 2026 Shanghai event, recording talks and a live demo from MemTensor, PPIO, Zion and FastGPT on agents and AI applications."
 ---
 
-On August 1st, we hosted the "From AI Demo to Production | Engineering Practices for Agent and AI Native Applications" offline event in Shanghai.
+On August 1, 2026, we hosted the "From AI Demo to Production | Engineering Practices for Agent and AI Native Applications" offline event in Shanghai.
 
 We invited four guests from MemTensor, PPIO, Zion, and FastGPT.
 
-Without too many grandiose trend predictions, everyone basically talked about what they are currently working on: how AI forms long-term memory, how multiple models cooperate, how Vibe Coding can overcome the backend hurdle, and how Agents truly execute tasks.
+The speakers focused on work they were doing at the time: long-term memory, collaboration between models, backend development with Vibe Coding, and agent execution environments. The account below records their presentations and the live demo from that event.
 
 The Q&A sessions on-site were also more active than expected. After several talks ended, many friends continued to surround the speakers for discussion, and the scheduled break naturally turned into another discussion session.
 
@@ -57,7 +44,7 @@ We might use Cursor, Claude Code, Codex, and various Agents at the same time eve
 
 Zong Yue shared Memmy and MemOS, focusing not just on "saving chat history", but on making AI remember how a task is progressed: what decisions were made previously, where it failed, how it finally recovered, and which experiences can be reused in the future.
 
-The records left from a single task can also gradually precipitate from original trajectories into strategies, scene cognition, and reusable Skills.
+In Zong Yue’s account, task traces can be developed into reusable strategies, contextual knowledge and skills.
 
 Of course, AI remembering more doesn't necessarily mean better. How to correct false memories, how to isolate data from different users and projects, and how to handle risks in historical content are also problems that must be solved before the memory system is truly put into use.
 
@@ -71,11 +58,11 @@ In her talk, Chen Jiaqi proposed a very interesting concept: Token Intelligence 
 
 Simply understood, it means whether you can get a better result by spending the same Token.
 
-The first method provided by PPIO is to let multiple models participate together. Different models make their own judgments, then extract consensus, find divergences, and finally fuse into a single answer. It's somewhat like inviting several experts specialized in different areas for a joint consultation.
+The first approach Chen described was to let multiple models participate together. Different models make their own judgments, then extract consensus, find divergences, and finally fuse into a single answer. It's somewhat like inviting several experts specialized in different areas for a joint consultation.
 
-The second method is intelligent routing.
+The second approach in the presentation was intelligent routing.
 
-Simple tasks like translation, polishing, and format conversion can be handed over to more suitable and lightweight models; when encountering in-depth research, code engineering, and complex decision-making, it switches to more capable models.
+Chen described routing translation, editing and formatting to lighter models, while reserving more capable models for research, software engineering and complex decisions.
 
 The point is not to blindly choose the cheapest model, but to assign suitable tasks to suitable models, making both the effect and cost more reasonable.
 
@@ -87,9 +74,7 @@ The third talk was delivered by Zion Developer Ecosystem Lead, Qin Mao Tim:
 
 It's getting faster and faster to build a frontend page with Cursor or Codex, but the database, APIs, authentication, AI Agents, and business logic behind the page still easily become an invisible black box that people are afraid to casually modify.
 
-The Zion Plugin shared by Tim allows Coding Agents to directly operate Zion's visual backend.
-
-Users only need to describe product requirements, and AI can configure database tables, permissions, AI Agents, and behavioral workflows, then generate frontend code, completing a real API integration.
+Tim presented the Zion Plugin as a way for coding agents to operate Zion's visual backend. He described a workflow that starts with a product requirement, configures database tables, permissions, agents and behavior flows, and then generates frontend code for API integration.
 
 The most engaging part of this talk was Tim directly performing a Vibe Coding demo live.
 
@@ -109,9 +94,9 @@ Rowan's talk focused on FastGPT Agent V2.
 
 Traditional workflows are suitable for tasks with clear paths: complete A first, then execute B, and finally reach C. But the execution paths of many real tasks cannot be completely determined in advance, and need to be constantly adjusted based on intermediate results.
 
-Agent V2 will first understand the goal, make a plan, and then call tools to execute. When finding the results are incorrect, it can also modify the plan and continue trying.
+Rowan described Agent V2 as first interpreting a goal and making a plan, then calling tools and revising the plan in response to intermediate results.
 
-To make Agents more than just advice-givers, FastGPT also provides an independent Linux sandbox for each session. Agents can run Python, Node.js, and Shell inside, read and modify files, install dependencies, and continue processing tasks based on execution results.
+The setup Rowan presented used a separate Linux sandbox for each session. His explanation covered running Python, Node.js and shell commands, reading and modifying files, installing dependencies and using execution results to continue a task.
 
 At the same time, session status, execution interruption, and task recovery also need to be managed.
 
@@ -127,16 +112,8 @@ When it came to break time, everyone didn't really disperse. Some continued to s
 
 For a community event, these interactions happening outside the speeches are also a very important part.
 
-## Thank You to Everyone Who Supported the Event
+## Thanks and event information
 
-Thank you to our four guests, Zong Yue, Chen Jiaqi, Qin Mao Tim, and Rowan, for being willing to bring the products, technical solutions, and real experiences they are practicing to the scene.
+Thank you to Zong Yue, Chen Jiaqi, Qin Mao Tim and Rowan, and to the organisers, partners, volunteers and everyone who brought questions and projects to the event.
 
-Thank you also for the support of all organizers, co-organizers, and partners, and thank you to every friend involved in preparation, communication, check-in, photography, and on-site execution.
-
-And most importantly, thank you to everyone who came to the event that day.
-
-Every registration, forward, and question, every post-event interaction, made this event not just four speeches on stage, but a true community meetup.
-
-The event is over, but new exchanges and collaborations may have just begun.
-
-Thank you all for your support, see you at the next one.
+The [event archive](/en/events/hdx-7870619038900/) preserves the original programme and venue details. The [original Chinese recap](https://mp.weixin.qq.com/s/z_9W5AsV0yLTlzt6f-QCTA) is the source for this account.

@@ -56,13 +56,23 @@
       "permanent": true
     },
     {
-      "source": "/reset",
+      "source": "/reset{/}?",
       "destination": "/whenreset/",
       "permanent": true
     },
     {
-      "source": "/whenrest",
+      "source": "/whenrest{/}?",
       "destination": "/whenreset/",
+      "permanent": true
+    },
+    {
+      "source": "/en/reset{/}?",
+      "destination": "/en/whenreset/",
+      "permanent": true
+    },
+    {
+      "source": "/en/whenrest{/}?",
+      "destination": "/en/whenreset/",
       "permanent": true
     },
     {

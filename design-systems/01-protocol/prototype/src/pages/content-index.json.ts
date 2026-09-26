@@ -9,7 +9,7 @@ export const GET: APIRoute = async ({ site }) => {
   const talks = await getCollection('talks');
   const articles = await getCollection('articles', ({ data }) => !data.draft);
   const latestUpdate = [
-    ...articles.map((entry) => entry.data.publishedAt),
+    ...articles.map((entry) => entry.data.updatedAt ?? entry.data.publishedAt),
     ...archiveEvents.map((entry) => entry.data.startDate),
     ...events.map((entry) => entry.data.startDate),
   ].reduce((latest, current) => (current.getTime() > latest.getTime() ? current : latest), new Date(0));
@@ -50,8 +50,8 @@ export const GET: APIRoute = async ({ site }) => {
       sourceName: entry.data.sourceName,
     })),
     eventSeries: series.map((entry) => ({ id: entry.id, name: entry.data.name, englishName: entry.data.englishName, status: entry.data.status, modes: entry.data.modes, topics: entry.data.topics, url: `${origin}/events/series/${entry.id}/` })),
-    content: articles.map((entry) => ({ id: entry.id, type: entry.data.type, title: entry.data.title, summary: entry.data.summary, topics: entry.data.topics, publishedAt: entry.data.publishedAt.toISOString(), url: `${origin}/articles/${entry.id}/` })),
-    videoArchive: talks.map((entry) => ({ id: entry.id, type: 'video-interview', title: entry.data.title, summary: entry.data.summary, guest: entry.data.speaker, series: entry.data.series, episode: entry.data.episode, topics: entry.data.topics, url: `${origin}/articles/${entry.id}/`, sourceUrl: entry.data.videoUrl })),
+    content: articles.map((entry) => ({ id: entry.id, type: entry.data.type, title: entry.data.title, summary: entry.data.summary, topics: entry.data.topics, publishedAt: entry.data.publishedAt.toISOString(), updatedAt: (entry.data.updatedAt ?? entry.data.publishedAt).toISOString(), url: `${origin}/articles/${entry.id}/` })),
+    videoArchive: talks.map((entry) => ({ id: entry.id, type: 'video-interview', title: entry.data.title, summary: entry.data.summary, guest: entry.data.speaker, series: entry.data.series, episode: entry.data.episode, topics: entry.data.topics, url: `${origin}/articles/${entry.id}/`, sourceUrl: entry.data.videoUrl, uploadedAt: entry.data.uploadedAt, videoParts: entry.data.videoParts })),
   };
   return new Response(JSON.stringify(body, null, 2), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
 };

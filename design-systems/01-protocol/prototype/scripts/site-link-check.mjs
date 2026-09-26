@@ -1,7 +1,21 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
-const root = resolve('dist');
+const root = resolve(existsSync('dist/client/index.html') ? 'dist/client' : 'dist');
+if (!existsSync(join(root, 'index.html'))) throw new Error('No built homepage found.');
+const serverRoutes = [];
+const findServerRoutes = (directory) => {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) findServerRoutes(path);
+    else if (/\.(astro|ts)$/.test(entry.name) && /export const prerender\s*=\s*false/.test(readFileSync(path, 'utf8'))) {
+      const route = path.slice(resolve('src/pages').length + 1).replaceAll('\\', '/').replace(/\.(astro|ts)$/, '').replace(/(?:^|\/)index$/, '');
+      const pattern = route.split('/').map((segment) => segment.startsWith('[') ? '[^/]+' : segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('/');
+      serverRoutes.push(new RegExp(`^/${pattern}/?$`));
+    }
+  }
+};
+findServerRoutes(resolve('src/pages'));
 const htmlFiles = [];
 const walk = (directory) => {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
@@ -18,7 +32,9 @@ for (const file of htmlFiles) {
   const hrefs = [...html.matchAll(/\shref="([^"]+)"/g)].map((match) => match[1]);
   for (const href of hrefs) {
     if (/^(?:https?:|mailto:|tel:|javascript:)/.test(href)) continue;
-    const [rawPath, hash] = href.split('#');
+    const [pathAndQuery, hash] = href.split('#');
+    const rawPath = pathAndQuery.split('?')[0];
+    if (serverRoutes.some((route) => route.test(rawPath))) continue;
     if (!rawPath && hash) {
       if (!new RegExp(`\\bid=["']${hash.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']`).test(html)) errors.push(`${file}: missing local anchor #${hash}`);
       continue;

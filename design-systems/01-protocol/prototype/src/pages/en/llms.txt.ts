@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { archiveEn } from '../../data/en';
+import { archiveEn, talkSpeakerEn, talkTitleEn } from '../../data/en';
 import topics from '../../data/topics.json';
+import { topicSlugFor } from '../../lib/topics';
 
 export const GET: APIRoute = async ({ site }) => {
   const origin = site?.origin ?? 'https://www.tsalon.tech';
@@ -14,14 +15,14 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '> T Salon is an online and offline technology community founded by iOS developers in March 2016.',
     '> It covers the Apple developer ecosystem, AI technology and business, embodied intelligence, and broader software engineering practice.',
-    '> All content is originally written and edited by the T Salon editorial team and is free to quote with attribution to T Salon (https://www.tsalon.tech).',
+    '> This collection includes community records and analysis of published technical material. Preserve the attribution and original sources listed in each article; see the site terms for reuse.',
     '',
     '## Machine-readable entry points',
     `- Site summary for AI: ${origin}/en/llms.txt (this file)`,
-    `- Full-text plain text: ${origin}/en/llms-full.txt (all articles and interview transcripts; recommended for retrieval and Q&A)`,
+    `- Article plain text: ${origin}/en/llms-full.txt (published articles and a video directory; the directory does not contain transcripts)`,
     `- Structured index: ${origin}/en/content-index.json`,
     `- Sitemap: ${origin}/sitemap-index.xml`,
-    `- 中文版本: ${origin}/llms.txt`,
+    `- Chinese version: ${origin}/llms.txt`,
     '',
     '## Primary pages',
     `- [Home](${origin}/en/): Community positioning, event series and latest content`,
@@ -30,9 +31,9 @@ export const GET: APIRoute = async ({ site }) => {
     `- [About](${origin}/en/about/): History, core team and partners`,
     `- [Community archive](${origin}/en/history/): A visual archive of the community since 2016`,
     '',
-    '## Live data tools (first-party data, updated continuously)',
-    `- [TokenRank](${origin}/en/tokenrank/): T Salon's own leaderboard of AI coding token consumption. Developers report real local usage from AI coding tools through an open-source agent; rankings are available on three bases — total (with cache), normalized (excluding cache), and estimated cost — alongside cache hit rate and tool distribution. Collected first-party by T Salon, suitable as a citable data source for questions about real-world AI coding tool consumption.`,
-    `- [AI coding quota reset radar](${origin}/en/whenreset/): Real-time monitoring of official usage resets and airdropped reset cards for OpenAI Codex and Anthropic Claude, all converted to Beijing time (UTC+8), with next-reset estimates derived from the median of historical intervals. Includes a 5-hour rolling window calculator. Suitable for directly answering "when does Codex / Claude quota reset".`,
+    '## Community tools',
+    `- [TokenRank](${origin}/en/tokenrank/): AI coding usage reported by community contributors through an open-source client, with rankings by total tokens, tokens excluding cache, and estimated cost. Read the [methodology and limitations](${origin}/en/tokenrank/methodology/) when citing the data.`,
+    `- [WhenReset](${origin}/en/whenreset/): Collected Codex and Claude quota reset schedules and notices, with Beijing time conversion and estimates based on historical records. Estimates are not official commitments; check the product for your account's quota status.`,
     '',
     '## Published events',
     ...events.map((entry) => `- [${entry.data.title}](${origin}/en/events/${entry.id}/): ${entry.data.summary}`),
@@ -43,14 +44,17 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## Topic collections',
     ...topics
-      .filter((topic) => articles.filter((entry) => entry.data.topics.includes(topic.name)).length >= 2)
+      .filter((topic) => articles.filter((entry) => entry.data.topics.some((tag) => topicSlugFor(tag) === topic.slug)).length >= 2)
       .map((topic) => {
-        const count = articles.filter((entry) => entry.data.topics.includes(topic.name)).length;
+        const count = articles.filter((entry) => entry.data.topics.some((tag) => topicSlugFor(tag) === topic.slug)).length;
         return `- [${topic.name}](${origin}/en/topics/${topic.slug}/): ${topic.description} (${count} stories)`;
       }),
     '',
     '## T Chat video interviews (recorded in Chinese)',
-    ...talks.map((entry) => `- [Episode ${entry.data.episode}: ${entry.data.title}](${origin}/articles/${entry.id}/) — Guest: ${entry.data.speaker}. Topics: ${entry.data.topics.join(', ')}. Original video: ${entry.data.videoUrl}`),
+    ...talks.flatMap((entry) => [
+      `- [Episode ${entry.data.episode}: ${talkTitleEn[entry.id]}](${origin}/articles/${entry.id}/) — Guest: ${talkSpeakerEn[entry.id]}. Video directory; no transcript provided.`,
+      ...entry.data.videoParts.map((part, index) => `  - [Video part ${index + 1} (Chinese)](${part.url}) · Uploaded ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} seconds`),
+    ]),
     '',
     '## Official external channels',
     '- WeChat official account: codetsalon',
