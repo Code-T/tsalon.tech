@@ -55,7 +55,7 @@ const availableTopics = topicDefinitions.filter((topic) => articles.filter((arti
       <header class="content-published-head"><div><p class="mono">T CHAT / {talks.length} {en ? 'EPISODES' : '期'}</p><h2 id="tchat-title">{en ? 'Guest interviews' : '嘉宾访谈'}</h2></div><p>{en ? 'Original Chinese recordings on bilibili. Each Chinese episode page lists the available video parts.' : '在 B 站回看主题分享与嘉宾对谈，进入每期页面查看原视频分段。'}</p></header>
       <ol class="talk-directory-list">{talks.map((talk) => <li><a href={`/articles/${talk.id}/`} hreflang="zh-CN">
         <span class="talk-directory-number mono">{String(talk.data.episode).padStart(2, '0')}</span>
-        <div class="talk-directory-copy"><p class="mono">{en ? talkSpeakerEn[talk.id] : talk.data.speaker} · {en ? 'Chinese video & page' : '中文视频'}{talk.data.uploadedAt && ` · ${en ? 'Uploaded' : '上传于'} ${talk.data.uploadedAt.slice(0, 10)}`}</p><h3>{en ? talkTitleEn[talk.id] : talk.data.title}</h3><p>{en ? `${talk.data.videoParts.length} available video part(s)` : talk.data.summary}</p></div><span class="talk-directory-action" aria-hidden="true">→</span>
+        <div class="talk-directory-copy"><p class="mono">{en ? talkSpeakerEn[talk.id] : talk.data.speaker} · {en ? 'Chinese video & page' : '中文视频'}{talk.data.uploadedAt && ` · ${en ? 'Archive published' : '稿件发布于'} ${talk.data.uploadedAt.slice(0, 10)}`}</p><h3>{en ? talkTitleEn[talk.id] : talk.data.title}</h3><p>{en ? `${talk.data.videoParts.length} available video part(s)` : talk.data.summary}</p></div><span class="talk-directory-action" aria-hidden="true">→</span>
       </a></li>)}</ol>
     </div></section>
   </div>

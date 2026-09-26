@@ -532,10 +532,16 @@
     "uploadedAt": "2022-04-30T17:40:31+08:00",
     "videoParts": [
       {
-        "title": "T Chat ｜ 老驴：我在 G 厂做研发",
-        "url": "https://www.bilibili.com/video/BV18Z4y1y7S6",
+        "title": "Part 1：提高团队代码质量",
+        "url": "https://www.bilibili.com/video/BV18Z4y1y7S6?p=1",
         "uploadedAt": "2022-04-30T17:40:31+08:00",
-        "durationSeconds": 2539
+        "durationSeconds": 1242
+      },
+      {
+        "title": "Part 2：1v1访谈",
+        "url": "https://www.bilibili.com/video/BV18Z4y1y7S6?p=2",
+        "uploadedAt": "2022-04-30T17:40:31+08:00",
+        "durationSeconds": 1297
       }
     ]
   }
