@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ site }) => {
     '    <title>T Salon</title>',
     `    <link>${origin}/</link>`,
     `    <atom:link href="${origin}/rss.xml" rel="self" type="application/rss+xml" />`,
-    '    <description>T Salon 面向开发者的线上与线下技术交流平台，覆盖 Apple 开发者生态、AI 技术与商业、具身智能与软件工程实践。全站内容原创。</description>',
+    '    <description>T Salon 面向开发者的线上与线下技术交流平台，发布活动回顾、嘉宾访谈与技术观察，覆盖 Apple 开发者生态、AI 与软件工程实践。</description>',
     '    <language>zh-CN</language>',
     '    <managingEditor>editorial@tsalon.tech (T Salon Editorial Team)</managingEditor>',
     `    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,

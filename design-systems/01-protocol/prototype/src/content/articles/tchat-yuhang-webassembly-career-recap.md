@@ -1,9 +1,9 @@
 ---
-title: 于航谈 WebAssembly 与前端成长：从技术实践到长期积累
-summary: 回顾于航在 2022 年 T Chat 中的技术分享与成长访谈，从 WebAssembly 的模块、编译工具和应用案例，到写作、表达与长期能力的积累，并附原片时间码。
+title: 于航谈 WebAssembly 与前端成长：技术回顾与访谈导览
+summary: 从 2022 年 T Chat 的加法示例、eBay 条码识别和 Shopify 历史架构，回看 WebAssembly 的实践路径；另附写作、表达与职业成长访谈的主题时间索引，方便对照原片观看。
 type: interview
 publishedAt: 2026-09-26
-readingMinutes: 9
+readingMinutes: 5
 author: editorial-team
 topics:
   - WebAssembly
@@ -26,76 +26,69 @@ citations:
 tldr: []
 faq: []
 featured: false
-draft: true
+draft: false
 allowSingleLocale: true
 seo:
   title: 于航谈 WebAssembly 与前端成长｜T Chat 回顾
-  description: 回顾于航在 2022 年 T Chat 中对 WebAssembly 工具链、eBay 与 Shopify 实践，以及写作、表达和前端成长的分享；附两段原始视频与对应时间码。
-  noindex: true
+  description: 整理于航在 2022 年 T Chat 中展示的 WebAssembly 加法示例、eBay 条码扫描和 Shopify 历史架构，并提供写作、表达与职业成长访谈的原片时间索引。
+  noindex: false
 ---
-> T Chat 回顾草稿，待校听。本文依据 2022 年录播、当期幻灯片和相关历史资料整理；音频尚未经过人工复核。
+> 本文依据 2022 年录播画面与原始资料整理技术回顾，并提供成长访谈的主题索引。访谈索引参考自动转录，未经逐句人工校听；文中问题由编辑整理，具体发言请对照原片。
 
-在这场 T Chat 中，于航（Jason Yu）带来了两部分内容：WebAssembly 年度分享，以及围绕写作、工作与前端成长的访谈。他当时在 PayPal 从事软件开发，也是《深入浅出 WebAssembly》的作者。[自我介绍，第一段 01:50](https://www.bilibili.com/video/BV1cD4y147QN?t=110)
+2022 年，于航（Jason Yu）在 T Chat 带来 WebAssembly 年度分享，并参与围绕写作、工作与前端成长的访谈。当期自我介绍页写明，他在 PayPal 从事软件开发，也是《深入浅出 WebAssembly》的作者。这里保留的是当时的身份与技术背景。[第一段 01:50，自我介绍](https://www.bilibili.com/video/BV1cD4y147QN?t=110)
 
-两段内容有一条相通的线索：技术实践需要理解原理，也需要判断使用条件；个人成长则需要把持续积累与具体机会结合起来。以下按主题回顾，所有技术状态和工作经历均保留在 2022 年的语境中。
+技术分享适合从一个小例子看起：一个加法函数怎样变成可以被浏览器调用的模块？沿着这条线，再看真实系统为什么引入 WebAssembly，以及它如何与已有代码和平台配合，会比单独记住工具名称更容易理解。
 
-## 从一个加法函数理解 WebAssembly
+## 从加法函数走到浏览器调用
 
-分享先以 JavaScript 的执行流程为背景，再进入 WebAssembly 的模块与调用方式。一个简单的加法函数贯穿了 WAT 文本表示、C++ 代码、Emscripten 编译工具链和浏览器端调用：先获得模块的二进制内容，再实例化模块，最后调用它导出的函数。[第一段 17:00–29:40](https://www.bilibili.com/video/BV1cD4y147QN?t=1020)
+演示中的加法函数连接了几种不同的表示与工具。在 WAT 文本示例中，函数接收两个整数参数，执行加法，并以 `add` 导出；随后，C++ 示例展示了返回两数之和的函数，配合 Emscripten 构建 WebAssembly 应用。[第一段 18:10，WAT 示例](https://www.bilibili.com/video/BV1cD4y147QN?t=1090)；[22:30，Emscripten](https://www.bilibili.com/video/BV1cD4y147QN?t=1350)；[26:00，C++ 示例](https://www.bilibili.com/video/BV1cD4y147QN?t=1560)
 
-这个例子把抽象概念拆成了可以逐步理解的环节。与函数计算不同，文件访问等能力还涉及运行模块的宿主环境。理解一项技术，不能只停在它能生成什么文件，还需要知道它怎样接收输入、使用外部能力和返回结果。[第一段 22:30–24:50](https://www.bilibili.com/video/BV1cD4y147QN?t=1350)
+浏览器端的画面展示了接下来的调用步骤：获取模块文件，把响应转换为二进制数据，使用 `WebAssembly.instantiate` 实例化，再通过导出对象调用 `add`。这使模块、加载和函数调用之间的关系变得具体。[第一段 28:40，浏览器端调用](https://www.bilibili.com/video/BV1cD4y147QN?t=1720)
 
-分享也区分了将程序编译为 WebAssembly，与先将解释器等运行时编译过去、再通过运行时执行程序的路径。语言出现在同一个生态中，背后的实现方式和成本未必相同。[第一段 30:00–34:00](https://www.bilibili.com/video/BV1cD4y147QN?t=1800)
+观看这组演示时，可以分别留意编写函数、构建模块和调用模块三个环节。
 
-## 案例里的价值：复用与组合
+## eBay：复用代码，也组合不同实现
 
-在 eBay 的网页条码扫描案例中，WebAssembly 的作用包括复用已有的原生代码。分享中的架构图展示了 ZBar、自有库与 JavaScript 库通过不同 Worker 协作的方案。eBay 的原始工程文章说明，这是商品 UPC 条码扫描场景，最终方案组合了不同识别实现，而不是仅靠替换一种编程语言解决问题。[第一段 40:30–44:10](https://www.bilibili.com/video/BV1cD4y147QN?t=2430)；[eBay 原始案例](https://innovation.ebayinc.com/stories/webassembly-at-ebay-a-real-world-use-case/)
+eBay 案例展示的是网页商品条码扫描。幻灯片中的架构图列出 ZBar、自有库和 JavaScript 库，由不同 Worker 承担识别工作。eBay 的原始工程文章进一步说明了 UPC 条码场景，以及结合多种实现获取识别结果的方案。[第一段 41:20，案例架构图](https://www.bilibili.com/video/BV1cD4y147QN?t=2480)；[eBay 原始案例](https://innovation.ebayinc.com/stories/webassembly-at-ebay-a-real-world-use-case/)
 
-Shopify 的案例把讨论带到浏览器之外。分享用 AssemblyScript、WebAssembly 模块与 Lucet 执行服务的示意图，解释可编程业务逻辑如何进入平台的执行流程。Shopify 在 2020 年的工程文章中也介绍了这套方案，重点涉及不受信代码的执行边界、宿主接口、性能与语言选择。[第一段 44:10–49:00](https://www.bilibili.com/video/BV1cD4y147QN?t=2650)；[Shopify 当年的说明](https://shopify.engineering/shopify-webassembly)
+这一案例让 WebAssembly 的代码复用价值有了具体对象：已有的原生识别库可以进入网页的工作流程，JavaScript 实现也继续参与其中。值得观察的既有单个库的能力，也有多个实现如何配合完成同一任务。
 
-这两个案例呈现的，是技术与已有系统如何配合。它们既不是所有场景的性能保证，也不意味着引入 WebAssembly 就完成了安全设计。
+当期幻灯片标题将场景写成了二维码扫描；这里依据 eBay 原文使用更准确的商品条码表述。
 
-谈到新的前端方案时，于航还把学习成本、团队能力和后续维护放进了讨论。技术能否运行，与团队能否持续维护，是选型时需要同时考虑的问题。[第一段 38:20–40:10](https://www.bilibili.com/video/BV1cD4y147QN?t=2300)
+## Shopify：把可编程逻辑放进平台
 
-分享后半段继续介绍 WASI（WebAssembly System Interface）及当时的生态进展，结尾则回到结合业务与团队情况选择使用的建议。[第一段 59:50–64:40](https://www.bilibili.com/video/BV1cD4y147QN?t=3590)；[第一段 71:30–72:20](https://www.bilibili.com/video/BV1cD4y147QN?t=4290)
+Shopify 的示意图把讨论带到浏览器之外。图中，开发者一侧的 AssemblyScript 代码形成 WebAssembly 模块，进入 Lucet 执行服务，再与 Shopify 的业务流程连接。示例涉及可编程的优惠逻辑。[第一段 45:00，Shopify 架构图](https://www.bilibili.com/video/BV1cD4y147QN?t=2700)
 
-## 从博客到书：先弄清楚，再讲清楚
+Shopify 在 2020 年的原始工程文章介绍了这套历史方案：平台需要执行合作方提供的代码，并考虑执行边界、宿主提供的接口以及性能和语言选择。它为理解幻灯片中的各个组成部分提供了背景。[Shopify 当年的说明](https://shopify.engineering/shopify-webassembly)
 
-第二段访谈从职业经历展开。于航回顾了早期接触编程、自建网站以及进入 Web 开发工作的过程。主持人关注其中的关键选择，他的回答也保留了偶然经历与实际环境的影响：方向往往是在持续尝试中逐渐形成的。[第二段 00:00–10:00](https://www.bilibili.com/video/BV1J841187sH?t=0)
+与 eBay 的网页扫描放在一起看，两个案例关注的问题各有侧重：一个组合已有识别实现，另一个让平台接纳可编程业务逻辑。这些历史设计展示了 WebAssembly 与已有系统配合的不同方式。
 
-谈到《深入浅出 WebAssembly》时，他把写作的困难落在两个具体问题上：书面向谁，以及怎样把自己理解的内容组织成读者能够进入的结构。从博客积累走向一本书，需要重新安排知识之间的关系。[第二段 10:00–12:30](https://www.bilibili.com/video/BV1J841187sH?t=600)
+## WASI：继续追问模块怎样接入环境
 
-内容的准确性同样需要投入。访谈提到社区提问、与相关开发者交流、阅读规范和编写实验等方式；得到回答后，仍要确认自己的理解和表达是否成立。写作在这里既是知识输出，也是重新检验理解的过程。[第二段 12:30–15:10](https://www.bilibili.com/video/BV1J841187sH?t=750)
+分享后半段出现了 WASI，即 WebAssembly System Interface。相邻幻灯片使用接口在不同操作系统上的实现示意，继续讨论程序与外部环境的连接。[第一段 59:50，WASI](https://www.bilibili.com/video/BV1cD4y147QN?t=3590)；[60:30，接口示意](https://www.bilibili.com/video/BV1cD4y147QN?t=3630)
 
-这本书的准确名称也能与于航在 2020 年亲自撰写的课程开篇词相互印证。该文介绍了他从技术研究走向写作、再开设《WebAssembly 入门课》的经历。[于航的课程开篇词](https://time.geekbang.org/column/article/282984)
+把这一部分与前面的模块调用和平台案例相连，可以带着一个问题观看：当模块进入不同环境时，哪些能力由模块自身实现，哪些需要环境提供？
 
-## 表达能力可以从小处练起
+## 写作与成长访谈：按问题观看
 
-对于写作与分享，访谈给出的起点并不复杂：观察别人怎样组织内容，从一个小知识点开始写清楚，再通过反复阅读与修改调整结构。知识点是什么、与哪些背景有关、能够解决或引出什么问题，都可以成为组织内容的线索。[第二段 16:00–18:40](https://www.bilibili.com/video/BV1J841187sH?t=960)
+第二段录播转向个人经历、技术写作、表达与工作环境。下表提供主题导航，以及编辑整理的观看问题。
 
-分享也可以从人数较少的场合和熟悉的主题开始。随着对内容越来越熟悉，再逐渐把完整讲稿变成关键点。日常会议里能否向同事说明自己的想法，也是在练习同一种表达能力。[第二段 18:40–21:40](https://www.bilibili.com/video/BV1J841187sH?t=1120)
+| 原片位置 | 讨论主题 | 观看时可关注的问题 |
+|---|---|---|
+| [00:00–10:00](https://www.bilibili.com/video/BV1J841187sH?t=0) | 编程经历与职业方向 | 回顾一段技术经历时，兴趣、尝试与实际环境分别处于什么位置？ |
+| [10:00–15:10](https://www.bilibili.com/video/BV1J841187sH?t=600) | 从博客到书、读者定位与内容核实 | 面向读者组织内容，与自己理解一个知识点，有哪些不同？哪些问题需要继续查证？ |
+| [16:00–21:40](https://www.bilibili.com/video/BV1J841187sH?t=960) | 写作、技术分享与日常表达 | 一次讲解的内容、顺序和表达方式，可以怎样分别观察？ |
+| [21:40–25:40](https://www.bilibili.com/video/BV1J841187sH?t=1300) | 工作之外的兴趣 | 访谈怎样从技术角色转向具体的人与生活？ |
+| [25:40–41:50](https://www.bilibili.com/video/BV1J841187sH?t=1540) | 团队环境、职业选择与岗位准备 | 哪些内容属于个人经历，哪些问题还需要向具体团队了解？ |
+| [41:50–49:53](https://www.bilibili.com/video/BV1J841187sH?t=2510) | 技术学习、架构与成长机会 | 具体工具的学习、可迁移的知识与组织中的机会，应怎样分开理解？ |
 
-工作之外的兴趣则让对话轻松下来。面对程序员的刻板印象，讨论回到了具体的人：技术工作之外可以有不同的爱好，个人兴趣与技术能力没有必要被简单捆绑。[第二段 21:40–25:40](https://www.bilibili.com/video/BV1J841187sH?t=1300)
+作为延伸阅读，于航在 2020 年撰写的《WebAssembly 入门课》开篇词介绍了《深入浅出 WebAssembly》的写作与课程背景。[于航的课程开篇词](https://time.geekbang.org/column/article/282984)
 
-## 先了解工作环境，再判断是否适合自己
-
-谈到 PayPal，于航以自己当时的团队体验，讨论了工作生活平衡、文化差异和协作方式，也谈到围绕主营业务决定哪些能力自建、哪些借助外部产品。这是个人对特定工作环境的观察，不能代表所有团队或今天的公司情况。[第二段 25:40–34:40](https://www.bilibili.com/video/BV1J841187sH?t=1540)
-
-后续讨论延伸到职业选择：了解一种环境真实的工作方式，以及自己可能不适应的地方，再作判断。对某家公司或某种职业路径的评价，只能作为了解情况的起点。[第二段 34:40–36:10](https://www.bilibili.com/video/BV1J841187sH?t=2080)
-
-访谈还涉及岗位相关的技术基础、理解问题与表达反馈的能力，以及工作所需的英语读写和沟通。语言与表达都需要持续练习。这些内容适合作为个人准备的参考，而不是现行招聘流程或门槛的说明。[第二段 36:10–41:50](https://www.bilibili.com/video/BV1J841187sH?t=2170)
-
-## 把长期能力落在具体工作中
-
-访谈最后，于航区分了框架某个版本的具体实现，与算法、架构设计和编程方式等可跨项目复用的知识。读源码可以服务于工作问题或个人兴趣；理解其中可以迁移的思路，才能让学习成果离开单一版本或单一框架仍然发挥作用。[第二段 41:50–44:45](https://www.bilibili.com/video/BV1J841187sH?t=2510)
-
-对架构能力的讨论也回到了代码本身：抽象、分层、组件关系、可维护性和可扩展性，都可以从日常功能与项目中练习。训练不必等到拥有某个头衔，或开始负责庞大的系统之后才发生。[第二段 44:45–46:40](https://www.bilibili.com/video/BV1J841187sH?t=2685)
-
-个人能力与组织机会也需要分开看。持续学习和准备是自己能够推进的部分，岗位空间和时机则并非完全由个人决定。访谈把关注点留在了积累能力、理解环境，并在机会出现时做好准备。[第二段 46:40–49:53](https://www.bilibili.com/video/BV1J841187sH?t=2800)
+涉及工作环境与职业选择的片段，宜结合当时背景、提问和回应一起观看。
 
 ## 观看完整录播
 
 - [技术分享：WebAssembly Annual Report 2022](https://www.bilibili.com/video/BV1cD4y147QN)
 - [访谈：于航谈前端专家成长](https://www.bilibili.com/video/BV1J841187sH)
 
-两段时间码分别从各自的视频起点计算。本文为主题回顾，未将机器转录句子作为经校听的直接引语。
+两段时间码分别从各自视频的起点计算。本文为主题回顾与导览，技术方案和工作经历保留在 2022 年语境中；对话的具体措辞与限定以原片为准。
