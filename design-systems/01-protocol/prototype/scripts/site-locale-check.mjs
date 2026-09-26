@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
-const root = resolve('dist/en');
+const root = resolve(existsSync('dist/client/en') ? 'dist/client/en' : 'dist/en');
 const files = [];
 const walk = (directory) => {
   if (!existsSync(directory)) return;
@@ -12,6 +12,7 @@ const walk = (directory) => {
   }
 };
 walk(root);
+if (files.length === 0) throw new Error('No English output found; run a build before checking its language.');
 
 const errors = [];
 for (const file of files) {

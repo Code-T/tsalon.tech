@@ -2,12 +2,13 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import topics from '../../../data/topics.json';
+import { topicSlugFor } from '../../../lib/topics';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articlesEn', ({ data }) => !data.draft);
   return topics.flatMap((topic) => {
     const items = articles
-      .filter((article) => article.data.topics.includes(topic.name))
+      .filter((article) => article.data.topics.some((name) => topicSlugFor(name) === topic.slug))
       .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
     return items.length >= 2 ? [{ params: { topic: topic.slug }, props: { topicMeta: topic, items } }] : [];
   });

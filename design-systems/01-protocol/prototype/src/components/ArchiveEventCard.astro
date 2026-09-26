@@ -1,9 +1,10 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { formatEventDate } from '../lib/event-display';
 
 interface Props { event: CollectionEntry<'activityArchive'>; }
 const { event } = Astro.props;
-const date = event.data.startDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replaceAll('/', '.');
+const date = formatEventDate(event.data.startDate, 'zh-CN').replaceAll('/', '.');
 ---
 <a class="event-tile" href={`/events/archive/${event.id}/`}>
   <figure class="event-tile-media">

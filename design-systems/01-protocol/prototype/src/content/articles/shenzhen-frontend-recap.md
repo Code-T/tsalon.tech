@@ -1,8 +1,9 @@
 ---
 title: 大前端时代的挑战与机遇（深圳场）：五位嘉宾的技术分享与现场回顾
-summary: 2022 年 5 月，T Salon在深圳邀请五位一线研发从业者，围绕前端监控、Flutter、小程序、工程化与 Webpack 性能展开分享。
+summary: 2022 年 5 月，T Salon 深圳活动汇集五位一线研发从业者的分享，其中卢依宁远程参与，议题覆盖前端监控、Flutter、小程序、工程化与 Webpack 性能。
 type: field-note
 publishedAt: 2022-05-10
+updatedAt: 2026-09-26
 readingMinutes: 9
 author: editorial-team
 topics:
@@ -14,29 +15,19 @@ coverAlt: 大前端时代的挑战与机遇深圳场活动现场观众交流
 citations:
   - label: 微信公众号原文
     url: https://mp.weixin.qq.com/s/f3ayHlx2JFlxVYXa7ZfR2w
+  - label: MPFlutter 项目官网
+    url: https://mpflutter.com/zh/
+  - label: 郭树煜 Flutter Web 分享文字稿（2022 年 5 月）
+    url: https://juejin.cn/post/7095294020900880420
 featured: true
 draft: false
-tldr:
-  - "2022 年 5 月 8 日深圳「大前端时代的挑战与机遇」回顾五位一线研发的五场分享。"
-  - "卢依宁谈前端监控如何影响业务（Sentry / ARMS / 自研对比与体系建设）。"
-  - "崔明辉演示用 Flutter 开发微信小程序（MPFlutter），并回应 Flutter for Web 的工程问题。"
-  - "张泽亚谈工程化要匹配团队阶段；郭树煜讲 Flutter Web 构建渲染；范文杰讲如何找到真正的 Webpack 瓶颈。"
-faq:
-  - question: "这场深圳前端活动有哪些分享主题？"
-    answer: "五个：前端监控如何影响业务、用 Flutter 开发微信小程序、前端工程化建设、Flutter Web 构建与渲染、Webpack 性能优化。"
-  - question: "MPFlutter 是什么？"
-    answer: "崔明辉（SVGA 作者）开源的架构，让 Flutter 可用于微信小程序开发，并回应了包体积、滑动性能与异步渲染等 Flutter for Web 常见问题。"
-  - question: "前端工程化有没有通用方案？"
-    answer: "张泽亚强调不存在适用于所有团队的银弹，工具与平台需匹配团队所处阶段、主要矛盾与投入能力，建设之前先判断真正要解决的问题。"
-  - question: "Webpack 性能优化该怎么做？"
-    answer: "范文杰建议从核心工作流程与性能分析入手，关注 Webpack 5 的变化与 Vite 速度优势背后的原因，重点是找到真正的性能瓶颈，而非照搬配置清单。"
 seo:
   title: 大前端时代的挑战与机遇｜T Salon 深圳活动回顾
   description: 回顾 T Salon深圳场的五场技术分享，内容覆盖前端监控、Flutter 小程序、前端工程化、Flutter Web 与 Webpack 性能优化。
   noindex: false
 ---
 
-2022 年 5 月 8 日，T Salon联合货拉拉开发者社区与智联猎头，在深圳举办「大前端时代的挑战与机遇」。五位来自一线研发团队与开源社区的嘉宾，分享了他们在前端监控、跨端开发、工程化建设和构建性能方面的真实实践。
+2022 年 5 月 8 日，T Salon联合货拉拉开发者社区与智联猎头，在深圳举办「大前端时代的挑战与机遇」。五位来自一线研发团队与开源社区的嘉宾分享了前端监控、跨端开发、工程化建设和构建性能方面的实践，其中卢依宁从上海远程参与。下文保留的是 2022 年 5 月的技术讨论语境。
 
 ## 一场关于“大前端”的线下交流
 
@@ -48,7 +39,7 @@ seo:
 
 ### 卢依宁：前端监控如何影响业务
 
-卢依宁是货拉拉司机平台前端负责人。她从业务视角解释了为什么需要前端监控，并比较 Sentry、阿里云 ARMS、岳鹰和自研方案，进一步介绍货拉拉前端监控体系的建设路径。
+卢依宁是货拉拉司机平台前端负责人。受疫情影响，她从上海远程分享，从业务视角解释了为什么需要前端监控，并比较 Sentry、阿里云 ARMS、岳鹰和自研方案，进一步介绍货拉拉前端监控体系的建设路径。
 
 分享涉及三个关键层次：数据采集、日志上报和日志查询；SDK 的使用方式与上报设计；以及接口、JavaScript 报错、页面 PV 和资源加载等监控项的采集原理。最后，她通过真实案例说明监控系统如何参与问题定位和业务决策。
 
@@ -56,7 +47,7 @@ seo:
 
 ### 崔明辉：使用 Flutter 开发微信小程序
 
-开源项目 SVGA 作者崔明辉现场介绍了 MPFlutter 的整体架构，演示 Flutter 如何用于微信小程序开发。
+开源项目 SVGA 作者崔明辉现场介绍了 [MPFlutter](https://mpflutter.com/zh/) 的整体架构，演示 Flutter 如何用于微信小程序开发。
 
 除了方案本身，他也回应了 Flutter for Web 常见的工程问题，包括 JavaScript 包体积、滑动性能和异步渲染。对现场不少开发者而言，这是第一次系统看到 Flutter 与小程序结合的实现路径。
 
@@ -74,9 +65,9 @@ seo:
 
 《Flutter 开发实战详解》作者郭树煜从 Flutter 的诞生和跨平台框架演进讲起，逐步深入 Flutter Web 的构建、优化与渲染机制。
 
-分享讨论了不同平台 Engine 的实现方式、Canvas 文本绘制、BitmapCanvas 与 DomCanvas 的区别，以及 `hasArbitraryPaint` 等更具体的判断逻辑，为现场开发者提供了理解 Flutter Web 内部机制的入口。
+分享讨论了不同平台 Engine 的实现方式、Canvas 文本绘制、BitmapCanvas 与 DomCanvas 的区别，以及 `hasArbitraryPaint` 等更具体的判断逻辑，为现场开发者提供了理解 Flutter Web 内部机制的入口。他在 2022 年 5 月 8 日发布的[分享文字稿](https://juejin.cn/post/7095294020900880420)保留了具体实现分析，其中涉及 Flutter 2.10 时期的行为。
 
-![郭树煜远程分享 Flutter Web 构建与优化](/images/news/shenzhen-frontend-recap-05.jpg)
+![郭树煜关于 Flutter Web 构建与优化的分享](/images/news/shenzhen-frontend-recap-05.jpg)
 
 ### 范文杰：Webpack 性能优化指南
 
@@ -99,3 +90,9 @@ seo:
 活动举办时，深圳仍受到疫情影响。我们希望通过持续的技术交流，让开发者在不确定的环境里仍然能够见面、交换经验，并找到可以带回团队继续实践的内容。
 
 这也是 T Salon 整理活动内容的原因：活动会结束，但嘉宾的判断、方法和现场提出的问题，仍然值得被继续搜索、引用和讨论。
+
+## 原始记录与讲师资料
+
+- [2022 年 5 月 10 日公众号活动回顾](https://mp.weixin.qq.com/s/f3ayHlx2JFlxVYXa7ZfR2w)：活动背景、讲师介绍与现场照片。
+- [MPFlutter 项目官网](https://mpflutter.com/zh/)：崔明辉分享的项目入口；当前站点介绍的是后续版本。
+- [郭树煜 Flutter Web 分享文字稿（2022 年 5 月 8 日）](https://juejin.cn/post/7095294020900880420)：对应本次演讲的技术内容。

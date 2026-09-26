@@ -14,7 +14,8 @@ const contentRoot = fileURLToPath(new URL('./src/content/', import.meta.url));
 const readFrontmatterDate = (file) => {
   try {
     const raw = readFileSync(file, 'utf8');
-    const match = /^(?:publishedAt|startDate):\s*['"]?([^\n'"]+?)['"]?\s*$/m.exec(raw);
+    const match = /^updatedAt:\s*['"]?([^\n'"]+?)['"]?\s*$/m.exec(raw)
+      ?? /^(?:publishedAt|startDate):\s*['"]?([^\n'"]+?)['"]?\s*$/m.exec(raw);
     const value = match ? new Date(match[1]) : undefined;
     return value && !Number.isNaN(value.getTime()) ? value : undefined;
   } catch {
@@ -29,16 +30,16 @@ for (const dir of ['articles', 'events', 'articles-en', 'events-en']) {
   for (const file of readdirSync(target)) {
     if (!file.endsWith('.md')) continue;
     const date = readFrontmatterDate(join(target, file));
-    if (date) lastmodBySlug.set(file.replace(/\.md$/, ''), date);
+    const prefix = dir.endsWith('-en') ? '/en' : '';
+    const kind = dir.startsWith('articles') ? 'articles' : 'events';
+    if (date) lastmodBySlug.set(`${prefix}/${kind}/${file.replace(/\.md$/, '')}/`, date);
   }
 }
 
 const lastmodFor = (url) => {
   try {
     const pathname = new URL(url).pathname;
-    for (const [slug, date] of lastmodBySlug) {
-      if (pathname.includes(`/${slug}/`)) return date;
-    }
+    return lastmodBySlug.get(pathname);
   } catch {
     /* Ignore unparsable URLs and fall through without a lastmod. */
   }
@@ -59,7 +60,7 @@ export default defineConfig({
   integrations: [
     auth(),
     sitemap({
-      filter: (page) => !page.endsWith('/gallery/') && !page.endsWith('/join/'),
+      filter: (page) => !['/gallery/', '/join/', '/reset/', '/whenrest/'].some((suffix) => page.endsWith(suffix)),
       serialize: (item) => {
         const lastmod = lastmodFor(item.url);
         return lastmod ? { ...item, lastmod } : item;

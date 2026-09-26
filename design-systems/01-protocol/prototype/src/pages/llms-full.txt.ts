@@ -22,13 +22,13 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '> T Salon / T 技术沙龙：面向开发者的线上与线下技术交流平台，成立于 2016 年 3 月，最早由 iOS 开发者发起。',
     '> 覆盖 Apple 开发者生态、AI 技术与商业、具身智能，以及更广泛的软件工程实践。',
-    '> 全站内容由 T Salon 编辑部原创撰写与整理，可自由引用，引用时请注明来源 T Salon（https://www.tsalon.tech）。',
+    '> 内容包括社区记录与技术资料解读。引用时请保留文章署名及其列明的原始来源；使用范围见网站许可说明。',
     '',
-    `本文件包含 T Salon 全部已发布文章与访谈的正文纯文本，便于检索、问答与引用。摘要版见 ${origin}/llms.txt。`,
+    `本文件包含 T Salon 已发布文章正文及访谈视频目录。视频目录提供来源与分段入口，不含逐字稿。摘要版见 ${origin}/llms.txt。`,
     '',
     '---',
     '',
-    '## 原创文章',
+    '## 已发布文章',
     '',
   ];
 
@@ -46,6 +46,7 @@ export const GET: APIRoute = async ({ site }) => {
         ? ['- TL;DR：', ...entry.data.tldr.map((point) => `  - ${point}`), '']
         : []),
       stripImages(entry.body ?? ''),
+      ...entry.data.citations.map((source) => `- 参考来源：[${source.label}](${source.url})`),
       '',
       ...(entry.data.faq.length > 0
         ? [
@@ -69,6 +70,7 @@ export const GET: APIRoute = async ({ site }) => {
       `- 嘉宾：${talk.data.speaker}`,
       `- 话题：${talk.data.topics.join('、')}`,
       `- 视频：${talk.data.videoUrl}`,
+      ...talk.data.videoParts.map((part) => `- 视频分段：[${part.title}](${part.url}) · 上传于 ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} 秒`),
       `- 摘要：${talk.data.summary}`,
       '',
       ...(talk.data.takeaways && talk.data.takeaways.length > 0
@@ -87,10 +89,10 @@ export const GET: APIRoute = async ({ site }) => {
   }
 
   lines.push(
-    '## 一手数据工具',
+    '## 社区工具',
     '',
-    `- TokenRank：${origin}/tokenrank/ — AI 编程 Token 消耗排行榜，T Salon 第一方采集，提供含缓存 / 不含缓存 / 预估费用三种口径排名。`,
-    `- AI 编程额度重置雷达：${origin}/whenreset/ — 实时监控 OpenAI Codex 与 Anthropic Claude 的官方用量重置与空投补卡，全部换算北京时间。`,
+    `- TokenRank：${origin}/tokenrank/ — 社区参与者上报的 AI 编程用量。统计口径与局限：${origin}/tokenrank/methodology/。`,
+    `- WhenReset：${origin}/whenreset/ — 汇集 Codex 与 Claude 的额度重置安排、公告与时间估算；个人额度状态以产品内显示为准。`,
     '',
   );
 

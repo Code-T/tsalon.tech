@@ -5,27 +5,27 @@ import { getResetRadarData } from '../../lib/reset-radar';
 export const prerender = false;
 
 const radarData = await getResetRadarData();
-const { codex, claude, updatedAtBeijing } = radarData;
+const { codex, claude, updatedAtBeijing, status } = radarData;
 
 const stripTags = (html: string) => html.replace(/<[^>]*>/g, '');
 
 const faqItems = [
   {
-    q: '官方重置（Reset）与 5 小时窗口有什么区别',
-    a: '<strong>官方重置</strong>是平台运营方的全员福利或活动（例如新模型上线庆祝、服务故障补偿、发卡活动），通常由官方人员在 X 上官宣后生效。<strong>5 小时窗口</strong>则是每个账号系统固定的滑动限制，从你发起请求开始滚动计算 5 小时后自动释放部分配额。',
+    "q": "全局重置、指定范围重置和重置卡有什么区别？",
+    "a": "本页只将范围标为全部用户的重置记录称为全局重置；其他重置保留记录中的适用范围。重置卡记录表示发卡事件，不代表所有账号已自动重置。资格、使用方式和有效期请查看该条原帖。这些记录都不能确定你的个人剩余额度。"
   },
   {
-    q: '重置卡（Reset Card）怎么用',
-    a: '重置卡是官方空投给部分用户的额度应急券。在用量触顶时可以主动消耗一张卡，瞬间刷新个人额度。重置卡通常具有时效性或账号绑定属性，老号与新号发放规则以官方公告为准。',
+    "q": "能从触顶时间算出恢复时间吗？",
+    "a": "不能。触顶时刻不等于窗口起点。计算器只对你输入的<strong>已知窗口起点</strong>加 5 小时，结果仅表示该假设下的窗口结束时间。不同产品和套餐可能有不同或额外限额，请以产品内显示的时间和额度为准。"
   },
   {
-    q: '预测下次重置时间是如何计算的',
-    a: '该时间基于过去 10 次官方重置之间的<strong>间隔中位数</strong>（Median Gap）进行数学推算，仅作为社群经验参考，并非官方固定排期日程。官方突袭往往伴随模型重大升级或偶发技术故障。',
+    "q": "历史间隔参考点如何计算？",
+    "a": "从本次读取的记录中取最近最多 10 个不同的全局重置时刻，计算相邻间隔的中位数，再加到最近一次全局重置时刻上。重置卡和指定范围重置不参与计算。全局重置少于两次时不显示参考点。这只是历史时间计算，不是官方排期，也不是个人额度恢复预测。"
   },
   {
-    q: '被限额后如何继续高效工作',
-    a: '建议建立多工具互备策略（例如 Codex 与 Claude Code 双持）；合理利用 Thinking 开关与 Prompt 缓存；在等待 5 小时窗口冷却期间，可复盘架构或在 T Salon TokenRank 检查用量消耗分布。',
-  },
+    "q": "记录来自哪里？",
+    "a": "T Salon 在页面被请求时读取 <a href=\"https://whenreset.dev/api/resets\" target=\"_blank\" rel=\"noreferrer\">WhenReset.dev 记录接口</a>，缓存 5 分钟，各条记录附原帖链接。“读取时间”表示获取来源数据的时刻，不代表刚发生新重置。请求失败时显示暂不可用；来源记录可能不完整。"
+  }
 ];
 
 const pageUrl = new URL('/whenreset/', Astro.site).toString();
@@ -38,7 +38,7 @@ const jsonLd = [
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Web',
     description:
-      '实时监控 OpenAI Codex 与 Anthropic Claude 的官方用量重置（Reset）与空投补卡记录，全部换算为北京时间，并基于历史间隔中位数推算下次重置时间，另提供 5 小时滑动窗口推算器。',
+      '查看 WhenReset.dev 收录的 Codex 与 Claude 重置和重置卡记录、北京时间与原帖链接，提供历史间隔参考及基于已知窗口起点的五小时时间计算。',
     publisher: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
     inLanguage: 'zh-CN',
   },
@@ -57,8 +57,8 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="AI 编程额度重置雷达 · 实时监控 | T Salon"
-  description="实时监控 OpenAI Codex、Claude 等 AI 编程工具用量重置（Reset）倒计时、官方掉卡记录及北京时间恢复推算。"
+  title="AI 编程额度重置雷达 · 事件记录 | T Salon"
+  description="查看 WhenReset.dev 收录的 Codex、Claude 重置和重置卡记录及原帖，区分事件范围，并按已知窗口起点计算假设的五小时结束时间。"
   alternatePath="/en/whenreset/"
   locale="zh"
   jsonLd={jsonLd}
@@ -68,25 +68,23 @@ const jsonLd = [
       <!-- Top Title & Live Status -->
       <section class="reset-hero">
         <div class="hero-top-badge">
-          <span class="pulse-dot"></span>
-          <span>雷达监控中 · 北京时间 {updatedAtBeijing} 更新</span>
+          <span class:list={['pulse-dot', { unavailable: status === 'unavailable' }]}></span>
+          <span>{status === 'unavailable' ? '暂时无法读取 WhenReset.dev 记录' : status === 'empty' ? 'WhenReset.dev 暂无可用记录' : 'WhenReset.dev 事件记录'}{updatedAtBeijing && ` · 北京时间 ${updatedAtBeijing} 读取`}</span>
         </div>
         <h1 class="hero-title">AI 编程额度重置雷达</h1>
-        <p class="hero-desc">
-          全天候监控 OpenAI Codex 与 Claude 官方突发用量重置、空投补卡动态与周期规律。告别时差折算，全量换算北京时间。
-        </p>
+        <p class="hero-desc">记录来源为 <a href="https://whenreset.dev/" target="_blank" rel="noreferrer">WhenReset.dev</a>，原帖见各条记录，事件时间统一为北京时间。全局重置、指定范围重置与重置卡均不代表你的个人额度恢复时间。</p>
 
         <!-- Provider Switcher Tabs -->
         <div class="provider-tabs">
           <button class="tab-btn active" data-provider="codex">
             <span class="tab-icon">⚡️</span>
             <span class="tab-name">OpenAI Codex</span>
-            <span class="tab-badge">最频繁</span>
+            <span class="tab-badge">事件记录</span>
           </button>
           <button class="tab-btn" data-provider="claude">
             <span class="tab-icon">🧠</span>
             <span class="tab-name">Anthropic Claude</span>
-            <span class="tab-badge">周重置</span>
+            <span class="tab-badge">事件记录</span>
           </button>
         </div>
       </section>
@@ -97,15 +95,15 @@ const jsonLd = [
           <div class="alert-banner">
             <div class="alert-icon">🚨</div>
             <div class="alert-content">
-              <div class="alert-title">{codex.watchNotice.titleZh || "官方突袭重置预警"}</div>
+              <div class="alert-title">{codex.watchNotice.titleZh || "来源中的待发生通知"}</div>
               <p class="alert-text">{codex.watchNotice.text}</p>
               {codex.watchNotice.scheduledAtBeijing && (
-                <div class="alert-meta">预计落地：北京时间 {codex.watchNotice.scheduledAtBeijing}</div>
+                <div class="alert-meta">来源所列时间：北京时间 {codex.watchNotice.scheduledAtBeijing}</div>
               )}
             </div>
             {codex.watchNotice.tweetUrl && (
               <a href={codex.watchNotice.tweetUrl} target="_blank" rel="noreferrer" class="btn btn-dark alert-btn">
-                查看推特原文 <span>↗</span>
+                查看来源原帖 <span>↗</span>
               </a>
             )}
           </div>
@@ -114,56 +112,53 @@ const jsonLd = [
         <!-- 4 Stats Cards Bento -->
         <div class="stats-bento">
           <div class="bento-card">
-            <div class="card-label">距上次全局重置已过</div>
-            <div class="card-value highlight">{codex.sinceLastReset.textZh}</div>
-            <div class="card-sub">适用范围：{codex.lastReset.scopeZh}</div>
+            <div class="card-label">最近一条事件</div>
+            <div class="card-value highlight">{codex.latestEvent?.typeLabelZh || '暂无记录'}</div>
+            <div class="card-sub">{codex.latestEvent?.timeAgoZh || '—'}</div>
+            <div class="card-sub">适用范围：{codex.latestEvent?.scopeZh || '未说明'}</div>
           </div>
-
           <div class="bento-card">
-            <div class="card-label">上次重置落地时间</div>
-            <div class="card-value">{codex.lastReset.dateBeijing} <span class="time-sub">{codex.lastReset.timeBeijing}</span></div>
-            <div class="card-sub text-truncate">原因：{codex.lastReset.reasonZh}</div>
-            {codex.lastReset.postUrl && (
-              <a href={codex.lastReset.postUrl} target="_blank" rel="noreferrer" class="card-link">官方出处 ↗</a>
+            <div class="card-label">该事件时间（北京时间）</div>
+            <div class="card-value">{codex.latestEvent?.landedAtBeijing || '—'}</div>
+            <div class="card-sub">原因：{codex.latestEvent?.reasonZh || '该记录未说明'}</div>
+            {codex.latestEvent?.postUrl && (
+              <a href={codex.latestEvent.postUrl} target="_blank" rel="noreferrer" class="card-link">该事件原帖 ↗</a>
             )}
           </div>
-
           <div class="bento-card">
-            <div class="card-label">下次重置预测（经验模型）</div>
-            <div class={`card-value ${codex.nextEstimated.isOverdue ? 'warn' : 'accent'}`}>
-              {codex.nextEstimated.dateBeijing} <span class="time-sub">{codex.nextEstimated.timeBeijing}</span>
-            </div>
+            <div class="card-label">历史间隔参考点</div>
+            <div class="card-value">{codex.nextEstimated.dateBeijing} <span class="time-sub">{codex.nextEstimated.timeBeijing}</span></div>
             <div class="card-sub">{codex.nextEstimated.relativeTextZh}</div>
-            <div class="card-hint">基于最近 10 次重置中位数推算</div>
+            <div class="card-hint">基于 {codex.cadenceIntervalCount} 个全局重置间隔，不是官方排期</div>
           </div>
-
           <div class="bento-card">
-            <div class="card-label">历史节奏与发卡</div>
-            <div class="card-value">{codex.typicalGapDays} <span class="unit">天 / 次</span></div>
-            <div class="card-sub">近 30 天：已重置 {codex.resets30d} 次，空投补卡 {codex.cards30d} 次</div>
-            <div class="card-hint">数据源自 {codex.sourceAccount}</div>
+            <div class="card-label">全局重置间隔中位数</div>
+            <div class="card-value">{codex.typicalGapDays ?? '—'} <span class="unit">天</span></div>
+            <div class="card-sub">已读取的近 30 天记录：{status === 'unavailable' ? '—' : codex.resets30d} 次重置，{status === 'unavailable' ? '—' : codex.cards30d} 次发卡</div>
+            <div class="card-hint">来源：WhenReset.dev · 记录可能不完整</div>
           </div>
         </div>
 
-        <!-- 5-Hour Rolling Window Calculator -->
+        <!-- Window Time Calculator -->
         <div class="tool-card">
           <div class="tool-header">
             <div class="tool-icon">⏳</div>
             <div>
-              <h2 class="tool-title">个人 5 小时滑动窗口推算器</h2>
-              <p class="tool-sub">官方突发重置是全员福利；个人的用量上限遵循 5 小时滑动窗口。输入你触发限额的时间，自动推算恢复时刻</p>
+              <h2 class="tool-title">五小时窗口时间计算器</h2>
+              <p class="tool-sub">填写已知窗口起点，不是触顶时刻。这里只按五小时假设计算结束时间；个人实际重置时间请以产品内显示为准。</p>
             </div>
           </div>
           <div class="calc-row">
             <div class="calc-input-group">
-              <label for="codex-limit-time">触发限额时间（北京时间）</label>
-              <input type="time" id="codex-limit-time" class="time-input" />
+              <label for="codex-window-start">已知窗口起点（北京时间）</label>
+              <input type="datetime-local" id="codex-window-start" class="time-input" step="60" />
+              <button type="button" id="codex-calculate" class="btn btn-dark">按 5 小时计算</button>
             </div>
-            <div class="calc-arrow">➔</div>
-            <div class="calc-result-box">
-              <div class="result-label">预计第一波额度释放时刻</div>
-              <div class="result-time" id="codex-calc-result">--:--</div>
-              <div class="result-tips" id="codex-calc-tips">选择时间后自动推算</div>
+            <div class="calc-arrow" aria-hidden="true">➔</div>
+            <div class="calc-result-box" aria-live="polite">
+              <div class="result-label">假设窗口结束时间（北京时间）</div>
+              <div class="result-time" id="codex-calc-result">—</div>
+              <div class="result-tips" id="codex-calc-tips">输入已知起点后点击计算按钮。</div>
             </div>
           </div>
         </div>
@@ -171,8 +166,8 @@ const jsonLd = [
         <!-- Events Table -->
         <div class="history-section">
           <div class="history-header">
-            <h2 class="history-title">Codex 历史重置与掉卡记录</h2>
-            <span class="history-count">最近 30 次记录 · 全部换算为北京时间</span>
+            <h2 class="history-title">Codex 重置与重置卡记录</h2>
+            <span class="history-count">最多 30 条已读取记录 · 北京时间</span>
           </div>
 
           <div class="table-responsive">
@@ -188,6 +183,7 @@ const jsonLd = [
                 </tr>
               </thead>
               <tbody>
+                {codex.events.length === 0 && <tr><td colspan="6">暂无可用事件记录。</td></tr>}
                 {codex.events.map((e) => (
                   <tr>
                     <td class="cell-date">{e.landedAtBeijing}</td>
@@ -221,56 +217,53 @@ const jsonLd = [
         <!-- 4 Stats Cards Bento -->
         <div class="stats-bento">
           <div class="bento-card">
-            <div class="card-label">距上次周额度重置已过</div>
-            <div class="card-value highlight">{claude.sinceLastReset.textZh}</div>
-            <div class="card-sub">适用范围：{claude.lastReset.scopeZh}</div>
+            <div class="card-label">最近一条事件</div>
+            <div class="card-value highlight">{claude.latestEvent?.typeLabelZh || '暂无记录'}</div>
+            <div class="card-sub">{claude.latestEvent?.timeAgoZh || '—'}</div>
+            <div class="card-sub">适用范围：{claude.latestEvent?.scopeZh || '未说明'}</div>
           </div>
-
           <div class="bento-card">
-            <div class="card-label">上次重置落地时间</div>
-            <div class="card-value">{claude.lastReset.dateBeijing} <span class="time-sub">{claude.lastReset.timeBeijing}</span></div>
-            <div class="card-sub text-truncate">原因：{claude.lastReset.reasonZh}</div>
-            {claude.lastReset.postUrl && (
-              <a href={claude.lastReset.postUrl} target="_blank" rel="noreferrer" class="card-link">官方出处 ↗</a>
+            <div class="card-label">该事件时间（北京时间）</div>
+            <div class="card-value">{claude.latestEvent?.landedAtBeijing || '—'}</div>
+            <div class="card-sub">原因：{claude.latestEvent?.reasonZh || '该记录未说明'}</div>
+            {claude.latestEvent?.postUrl && (
+              <a href={claude.latestEvent.postUrl} target="_blank" rel="noreferrer" class="card-link">该事件原帖 ↗</a>
             )}
           </div>
-
           <div class="bento-card">
-            <div class="card-label">下次周重置预测</div>
-            <div class={`card-value ${claude.nextEstimated.isOverdue ? 'warn' : 'accent'}`}>
-              {claude.nextEstimated.dateBeijing} <span class="time-sub">{claude.nextEstimated.timeBeijing}</span>
-            </div>
+            <div class="card-label">历史间隔参考点</div>
+            <div class="card-value">{claude.nextEstimated.dateBeijing} <span class="time-sub">{claude.nextEstimated.timeBeijing}</span></div>
             <div class="card-sub">{claude.nextEstimated.relativeTextZh}</div>
-            <div class="card-hint">基于中位数周期（约 7.1 天）推算</div>
+            <div class="card-hint">基于 {claude.cadenceIntervalCount} 个全局重置间隔，不是官方排期</div>
           </div>
-
           <div class="bento-card">
-            <div class="card-label">30 天重置节奏</div>
-            <div class="card-value">{claude.typicalGapDays} <span class="unit">天 / 次</span></div>
-            <div class="card-sub">近 30 天：已重置 {claude.resets30d} 次</div>
-            <div class="card-hint">数据源自 {claude.sourceAccount}</div>
+            <div class="card-label">全局重置间隔中位数</div>
+            <div class="card-value">{claude.typicalGapDays ?? '—'} <span class="unit">天</span></div>
+            <div class="card-sub">已读取的近 30 天记录：{status === 'unavailable' ? '—' : claude.resets30d} 次重置，{status === 'unavailable' ? '—' : claude.cards30d} 次发卡</div>
+            <div class="card-hint">来源：WhenReset.dev · 记录可能不完整</div>
           </div>
         </div>
 
-        <!-- 5-Hour Rolling Window Calculator for Claude -->
+        <!-- Window Time Calculator for Claude -->
         <div class="tool-card">
           <div class="tool-header">
             <div class="tool-icon">⏳</div>
             <div>
-              <h2 class="tool-title">Claude Code 5 小时滑动窗口推算器</h2>
-              <p class="tool-sub">Claude Pro/Max 会员设有 5 小时动态消息上限。输入你提示达到上限的时间，推算配额恢复点</p>
+              <h2 class="tool-title">五小时窗口时间计算器</h2>
+              <p class="tool-sub">填写已知窗口起点，不是触顶时刻。这里只按五小时假设计算结束时间；个人实际重置时间请以产品内显示为准。</p>
             </div>
           </div>
           <div class="calc-row">
             <div class="calc-input-group">
-              <label for="claude-limit-time">触发限额时间（北京时间）</label>
-              <input type="time" id="claude-limit-time" class="time-input" />
+              <label for="claude-window-start">已知窗口起点（北京时间）</label>
+              <input type="datetime-local" id="claude-window-start" class="time-input" step="60" />
+              <button type="button" id="claude-calculate" class="btn btn-dark">按 5 小时计算</button>
             </div>
-            <div class="calc-arrow">➔</div>
-            <div class="calc-result-box">
-              <div class="result-label">预计第一批额度释放时刻</div>
-              <div class="result-time" id="claude-calc-result">--:--</div>
-              <div class="result-tips" id="claude-calc-tips">选择时间后自动推算</div>
+            <div class="calc-arrow" aria-hidden="true">➔</div>
+            <div class="calc-result-box" aria-live="polite">
+              <div class="result-label">假设窗口结束时间（北京时间）</div>
+              <div class="result-time" id="claude-calc-result">—</div>
+              <div class="result-tips" id="claude-calc-tips">输入已知起点后点击计算按钮。</div>
             </div>
           </div>
         </div>
@@ -278,8 +271,8 @@ const jsonLd = [
         <!-- Events Table -->
         <div class="history-section">
           <div class="history-header">
-            <h2 class="history-title">Claude 历史重置记录</h2>
-            <span class="history-count">全部换算为北京时间</span>
+            <h2 class="history-title">Claude 重置与重置卡记录</h2>
+            <span class="history-count">最多 30 条已读取记录 · 北京时间</span>
           </div>
 
           <div class="table-responsive">
@@ -295,11 +288,12 @@ const jsonLd = [
                 </tr>
               </thead>
               <tbody>
+                {claude.events.length === 0 && <tr><td colspan="6">暂无可用事件记录。</td></tr>}
                 {claude.events.map((e) => (
                   <tr>
                     <td class="cell-date">{e.landedAtBeijing}</td>
                     <td>
-                      <span class="badge badge-reset">{e.typeLabelZh}</span>
+                      <span class={`badge ${e.type === 'reset' ? 'badge-reset' : 'badge-card'}`}>{e.typeLabelZh}</span>
                     </td>
                     <td class="cell-scope">{e.scopeZh}</td>
                     <td class="cell-reason">{e.reasonZh}</td>
@@ -338,6 +332,7 @@ const jsonLd = [
 </BaseLayout>
 
 <script>
+  import { initResetWindowCalculator } from '../../lib/reset-window';
   // Tab Switcher
   const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
   const sections = document.querySelectorAll<HTMLElement>('.provider-section');
@@ -358,50 +353,12 @@ const jsonLd = [
     });
   });
 
-  // 5-Hour Calculator Helper
-  function initCalculator(inputId: string, resultId: string, tipsId: string) {
-    const input = document.getElementById(inputId) as HTMLInputElement | null;
-    const result = document.getElementById(resultId);
-    const tips = document.getElementById(tipsId);
-    if (!input || !result || !tips) return;
-
-    // Set default to current time
-    const now = new Date();
-    const curH = String(now.getHours()).padStart(2, '0');
-    const curM = String(now.getMinutes()).padStart(2, '0');
-    input.value = `${curH}:${curM}`;
-
-    const calculate = () => {
-      const val = input.value;
-      if (!val) return;
-      const [h, m] = val.split(':').map(Number);
-      if (isNaN(h) || isNaN(m)) return;
-
-      const date = new Date();
-      date.setHours(h);
-      date.setMinutes(m);
-      date.setSeconds(0);
-
-      // Add 5 hours
-      const recoverDate = new Date(date.getTime() + 5 * 60 * 60 * 1000);
-      const rh = String(recoverDate.getHours()).padStart(2, '0');
-      const rm = String(recoverDate.getMinutes()).padStart(2, '0');
-
-      const isNextDay = recoverDate.getDate() !== date.getDate();
-      result.textContent = `${rh}:${rm} ${isNextDay ? '(次日)' : ''}`;
-      tips.textContent = `在 ${rh}:${rm} 左右，你的第一批 5 小时滑动额度将陆续回血`;
-    };
-
-    input.addEventListener('change', calculate);
-    input.addEventListener('input', calculate);
-    calculate();
-  }
-
-  initCalculator('codex-limit-time', 'codex-calc-result', 'codex-calc-tips');
-  initCalculator('claude-limit-time', 'claude-calc-result', 'claude-calc-tips');
+  initResetWindowCalculator('codex', 'zh');
+  initResetWindowCalculator('claude', 'zh');
 </script>
 
 <style>
+  .pulse-dot.unavailable { background: var(--text-tertiary); animation: none; }
   .reset-page {
     padding-top: var(--space-12);
     padding-bottom: var(--space-24);
@@ -637,7 +594,7 @@ const jsonLd = [
     text-overflow: ellipsis;
   }
 
-  /* 5-Hour Calculator Card */
+  /* Window time calculator */
   .tool-card {
     background: var(--background-subtle);
     border: 1px solid var(--border-default);
@@ -670,6 +627,7 @@ const jsonLd = [
   }
 
   .calc-row {
+    flex-wrap: wrap;
     display: flex;
     align-items: center;
     gap: var(--space-6);
@@ -679,6 +637,7 @@ const jsonLd = [
   }
 
   .calc-input-group {
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -691,7 +650,8 @@ const jsonLd = [
   }
 
   .time-input {
-    font-size: 1.5rem;
+    max-width: 100%;
+    font-size: 1rem;
     font-family: var(--font-mono);
     font-weight: var(--font-weight-bold);
     padding: var(--space-2) var(--space-3);
@@ -705,6 +665,8 @@ const jsonLd = [
   }
 
   .calc-result-box {
+    flex: 1 1 240px;
+    min-width: 0;
     display: flex;
     flex-direction: column;
   }
@@ -716,7 +678,8 @@ const jsonLd = [
   }
 
   .result-time {
-    font-size: 1.75rem;
+    overflow-wrap: anywhere;
+    font-size: 1.4rem;
     font-weight: var(--font-weight-bold);
     color: #059669;
     font-family: var(--font-mono);
@@ -879,6 +842,9 @@ const jsonLd = [
   }
 
   @media (max-width: 768px) {
+    .provider-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tab-btn { min-width: 0; justify-content: center; padding: var(--space-3); }
+    .tab-badge { display: none; }
     .stats-bento {
       grid-template-columns: 1fr;
     }

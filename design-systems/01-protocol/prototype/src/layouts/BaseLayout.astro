@@ -12,6 +12,8 @@ interface Props {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   locale?: SiteLocale;
   alternatePath?: string | null;
+  // Navigation can preserve filters while hreflang points to the canonical translation.
+  languageSwitchPath?: string;
   autoDetectLocale?: boolean;
   keywords?: string;
 }
@@ -24,6 +26,7 @@ const {
   jsonLd,
   locale = localeFromPath(Astro.url.pathname),
   alternatePath,
+  languageSwitchPath,
   autoDetectLocale = false,
   keywords = locale === 'zh'
     ? 'T Salon, 开发者社区, 技术沙龙, Apple 开发者, iOS 研发, AI Agent, 具身智能, TokenRank, WhenReset, 软件工程'
@@ -89,7 +92,7 @@ const enUrl = locale === 'en' ? canonical : alternate;
   </head>
   <body>
     <a class="skip-link" href="#main-content">{locale === 'zh' ? '跳到主要内容' : 'Skip to main content'}</a>
-    <Header locale={locale} alternatePath={resolvedAlternatePath} hasTranslation={Boolean(resolvedAlternatePath)} />
+    <Header locale={locale} alternatePath={languageSwitchPath ?? resolvedAlternatePath} hasTranslation={Boolean(resolvedAlternatePath)} />
     <div id="main-content" tabindex="-1"><slot /></div>
     <Footer locale={locale} />
     <script is:inline define:vars={{ autoDetectLocale, locale }}>

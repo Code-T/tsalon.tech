@@ -16,12 +16,13 @@ const jsonLd = {
     <header class="container about-hero"><div><p class="eyebrow">关于 / T SALON</p><h1>&lt; 从开发者中来<br />到真实问题中去 &gt;</h1></div><div><p>我们深度理解技术趋势与开发者需求。T Salon 不以某个技术栈定义自己，而以高质量内容、真实交流和长期社区关系连接开发者。</p></div></header>
 
     <section class="about-stats"><div class="container"><div><strong>2016</strong><span>社区成立</span></div><div><strong>100+</strong><span>累计线下活动</span></div><div><strong>10万+</strong><span>服务开发者</span></div><div><strong>50+</strong><span>合作科技企业与社区</span></div></div></section>
+    <p class="container community-stats-note">社区数据截至 2026 年 9 月。</p>
 
     <section class="container about-story"><aside><span class="mono">01 / 我们是谁</span></aside><div><h2>从 iOS 开发者组织，发展为面向下一代技术的开放社区</h2><p>T 技术沙龙成立于 2016 年 3 月，最早由一群 iOS 开发者发起。社区从 Apple 开发者生态出发，逐步扩展到 AI 技术与商业、具身智能，以及更广泛的工程实践。</p><p>我们在北京、上海、深圳、广州、杭州等城市持续组织线下活动，也通过直播、访谈和在线圆桌让讨论跨越城市。技术主题会变化，但我们始终关心：正在做事的人遇到了什么问题，又做出了怎样的选择。</p></div></section>
 
     <section class="container partner-section"><header class="section-heading"><span class="mono">02 / 社区伙伴</span><h2>社区不是独立完成的</h2><p class="section-note">以下为 T Salon 历年合作企业、开发者社区、媒体与出版伙伴。</p></header><div class="partner-logo-grid">{partners.map((partner) => <figure><img src={partner.data.logo} alt={partner.data.logoAlt} loading="lazy" /><figcaption>{partner.data.name}</figcaption></figure>)}</div></section>
 
-    <section class="container about-history-link"><figure><img src="/images/gallery/gallery-12.jpeg" alt="2017 年 T Salon 与饿了么合作活动现场" loading="lazy" /></figure><div><p class="eyebrow">社区年鉴</p><h2>九年不是一个数字<br />而是一连串真实现场</h2><p>社区年鉴收录 2016 年以来的活动照片与城市轨迹。每一张照片，都来自开发者真正见面和交流的现场。</p><a class="btn btn-dark" href="/history/">进入社区年鉴 <span>→</span></a></div></section>
+    <section class="container about-history-link"><figure><img src="/images/gallery/gallery-12.jpeg" alt="2017 年 T Salon 与饿了么合作活动现场" loading="lazy" /></figure><div><p class="eyebrow">社区年鉴</p><h2>从 2016 年开始<br />记录每一次真实相聚</h2><p>社区年鉴收录 2016 年以来的活动照片与城市轨迹。每一张照片，都来自开发者真正见面和交流的现场。</p><a class="btn btn-dark" href="/history/">进入社区年鉴 <span>→</span></a></div></section>
 
     <section class="about-next-section" id="join"><div class="container about-next-history"><div><p class="eyebrow">下一段 / 社区</p><h2>下一段社区历史<br />希望有你</h2><p>从三位发起者，到更多愿意分享经验、促成交流、一起把事情做成的人。社区的下一页，仍然由真实参与者写下。</p></div><div class="about-founder-signature"><div class="about-founder-heads" aria-label="T Salon 三位发起者">{team.map((member) => <img src={member.data.avatar} alt={member.data.handle || member.data.name} loading="lazy" />)}<span aria-hidden="true">＋</span></div><p><strong>MM · EyreFree · Black</strong><br />和下一位社区共建者</p><a href="#participate">看看如何参与 <span>↓</span></a></div></div></section>
 

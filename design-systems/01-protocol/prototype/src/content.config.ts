@@ -152,6 +152,13 @@ const talks = defineCollection({
     cover: z.string(),
     coverAlt: z.string(),
     videoUrl: z.url(),
+    uploadedAt: z.iso.datetime({ offset: true }).optional(),
+    videoParts: z.array(z.object({
+      title: z.string(),
+      url: z.url(),
+      uploadedAt: z.iso.datetime({ offset: true }),
+      durationSeconds: z.number().int().positive(),
+    })).default([]),
     topics: z.array(z.string()),
     contentType: z.literal('interview').default('interview'),
     mode: z.literal('online').default('online'),

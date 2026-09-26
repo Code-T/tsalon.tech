@@ -176,13 +176,13 @@ const aiUnit = aiTimeMinutes >= 60 ? 'h' : 'm';
 const dailyAiUnit = dailyAiTimeMinutes >= 60 ? 'h' : 'm';
 ---
 
-<BaseLayout alternatePath={`/tokenrank/?time=${timeFilter}&metric=${metricFilter}`} title="Token Leaderboard — T Salon" description="A live leaderboard of AI developers’ token consumption — tracking local AI code generation across the community in real time." image="/images/home-community-group.webp" jsonLd={seoJsonLd}>
+<BaseLayout alternatePath="/tokenrank/" languageSwitchPath={`/tokenrank/?time=${timeFilter}&metric=${metricFilter}`} title="Token Leaderboard — T Salon" description="AI coding usage reported by community participants, shown with cache, without cache, and as estimated cost, with methodology and data notes." image="/images/home-community-group.webp" jsonLd={seoJsonLd}>
   <main class="container page-content">
 
     <header class="page-title" style="margin-bottom: 1.5rem; border-bottom: none; padding-bottom: 0;">
       <div class="page-title-main">
         <h1>Token Leaderboard</h1>
-        <p class="page-subtitle">Developers ranked by AI token usage</p>
+        <p class="page-subtitle">AI coding usage reported by community contributors</p><p><a href="/en/tokenrank/methodology/">Methodology & data definitions →</a></p>
       </div>
       <div class="page-title-side">
         <span class="mono">STATS / TOKEN RANK</span>

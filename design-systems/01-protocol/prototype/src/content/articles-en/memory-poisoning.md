@@ -1,55 +1,59 @@
 ---
-title: "Memory Poisoning: Long-Term Memory Controls for Agents"
-summary: "If a system records a fake contact as a trusted supplier, the impact extends beyond the current conversation. Memory Poisoning is a critical risk for AI Agents."
+title: "Memory Poisoning: How Untrusted Information Persists Across Agent Tasks"
+summary: Prompt injection can lead to memory poisoning when manipulated content is stored and reused. We distinguish malicious poisoning from accidental contamination and outline six checks for agents that retain information across tasks.
 type: news
 publishedAt: 2026-09-01
-readingMinutes: 3
+readingMinutes: 5
 author: editorial-team
 topics:
   - AI
   - Agent
   - Security
-cover: "/images/articles/memory-poisoning-cover.jpg"
-coverAlt: "Memory Poisoning"
+cover: /images/articles/memory-poisoning-cover.jpg
+coverAlt: Memory poisoning and long-term controls for agents
 citations:
-  - label: SegmentFault Original
+  - label: Forcepoint X-Labs — Persistent Memory Poisoning in AI Agents
+    url: https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents
+  - label: Public SegmentFault article cited by the original edition
     url: https://segmentfault.com/a/1190000048255404
+  - label: MemOS Cloud — Add Message
+    url: https://memos-docs.openmem.net/cn/memos_cloud/mem_operations/add_message/
+  - label: MemOS Cloud — isolation and filters
+    url: https://memos-docs.openmem.net/memos_cloud/introduction/isolation_filters/
+  - label: MemOS changelog
+    url: https://memos-docs.openmem.net/changelog/
 featured: true
 draft: false
 translationOf: memory-poisoning
 translationStatus: reviewed
 tldr:
-  - "Memory Poisoning is when untrusted, incorrect, or manipulated information enters persistent memory and is recalled in later sessions, tasks, and multi-agent collaboration."
-  - "Unlike Prompt Injection, which affects only the current interaction, poisoning persists along the memory lifecycle for days or weeks."
-  - "Memory governance must answer six questions: source, write permission, old/new coexistence, visibility scope, error handling, and anomaly detection."
-  - "MemOS offers write/search/feedback/delete entry points, but private deployment does not replace governance; IAM, least privilege, approval, DLP, and SIEM are still required."
+  - Prompt injection can lead to persistent memory poisoning; content may be written during an interaction and reused in later tasks.
+  - Malicious poisoning differs from accidental extraction or summarization errors, although some controls are shared.
+  - The six checks are editorial recommendations. Memory APIs and private deployment do not automatically establish effective protection.
 faq:
-  - question: "How is Memory Poisoning different from Prompt Injection?"
-    answer: "Prompt Injection mainly affects the current task; Memory Poisoning lets untrusted information enter persistent memory and keep influencing later tasks."
-  - question: "Does private deployment solve memory poisoning?"
-    answer: "Private deployment shrinks the data-exposure surface, but untrusted sources, over-broad permissions, and wrong writes still require memory governance."
-  - question: "Which memory metrics should enterprises monitor?"
-    answer: "At minimum: write volume, source type, cross-scope access, conflict rate, feedback rate, deletion rate, anomalous recall, and high-risk tool calls."
-  - question: "What problems can MemOS solve?"
-    answer: "It provides system entry points for memory write, search, feedback, delete, and module orchestration to bring memory governance into Agent workflows; permissions, approval, monitoring, and incident response still depend on the enterprise's own architecture."
+  - question: Does a deletion API prove that cleanup is complete?
+    answer: No. Check related summaries, caches and copies, retest retrieval and trace affected tasks according to the system’s retention rules.
+  - question: Must a small application buy a full security platform?
+    answer: "This article makes no such requirement. Match controls to write scope and action risk: establish who can write, how to suspend errors and which tasks reused them, then integrate existing authorization and monitoring."
 seo:
-  title: "Memory Poisoning: Long-Term Memory Controls for Agents"
-  description: "If a system records a fake contact as a trusted supplier, the impact extends beyond the current conversation. Memory Poisoning is a critical risk for AI Agents."
+  title: "Memory Poisoning Across Agent Tasks: Six Practical Checks"
+  description: How prompt injection can reach persistent memory, how poisoning differs from accidental contamination, and six checks for source, scope, correction and monitoring.
+updatedAt: 2026-09-26
 ---
 
-If a system writes a fake contact from a web page as a "trusted supplier," the impact does not stop at the current conversation. The next time procurement runs, the task may recall this information, and other Agents may reuse it to keep executing.
+[Forcepoint X-Labs’ August 4, 2026 proof of concept](https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents) examines indirect prompt injection into persistent agent memory. This English adaptation of [T Salon’s Chinese edition](/articles/memory-poisoning/) draws on that research and the [public SegmentFault article cited by the original edition](https://segmentfault.com/a/1190000048255404). The recommendations are editorial analysis; we have not reproduced the attack or security-tested MemOS.
 
-Memory Poisoning refers to untrusted, incorrect, or manipulated information entering persistent memory and then being recalled in later sessions, tasks, and multi-Agent collaboration. The problem is not just a single off-target answer, but erroneous information beginning to participate in later judgment and action.
+*Correction, September 26, 2026: prompt injection is not limited to the current interaction, and poisoned memory need not be written after a session ends. The two can form one attack chain. Accidental contamination and product protection claims are also clarified.*
 
-As Agents work across sessions, call tools, and share task experience, memory has become a system resource that needs separate management. Enterprises need controls around source, write, update, isolation, recall, and deletion, and these controls must work together with identity permissions, input validation, approval, monitoring, and security operations.
+Imagine a fake contact on a web page being saved as a trusted supplier. A later procurement task might retrieve it, and other agents might reuse it. This is an illustrative scenario, not a customer incident reported here.
 
-In its Agentic AI security article in August this year, Forcepoint listed Memory Poisoning and state pollution as major risks. The core problem is that Agents keep using memory: once erroneous information is saved, it may cause impact through later tasks days or weeks later.
+We use “memory poisoning” for deliberate manipulation of persistent memory, and “memory contamination” for accidental extraction errors, omitted context or unchecked inferences. Some responses overlap, but a data-quality failure is not necessarily an attack.
 
-## How a single error becomes long-term pollution
+## How untrusted information persists
 
-Prompt Injection affects the current interaction. An attacker tries to make the Agent ignore its original instructions and instead execute requirements embedded in web pages, emails, or tool-returned content.
+Prompt injection attempts to change how an agent handles untrusted input, such as instructions embedded in pages, emails or tool results. If that content enters persistent memory, its influence may carry into later tasks.
 
-Memory Poisoning happens after that interaction ends. The system writes unverified information into persistent memory, then later retrieves it as historical fact, user preference, or verified experience.
+Poisoned content may be written during an interaction or later memory processing. Memory poisoning emphasizes the contaminated persistent state and its reuse; it is not a mutually exclusive stage that begins only after prompt injection ends.
 
 For example, a forged contact on a web page may be recorded as a trusted supplier, and an anomalous operation may be summarized as reusable experience. Malicious instructions may also be written as user preferences and spread through task summaries, shared memory, or cross-Agent collaboration.
 
@@ -64,45 +68,32 @@ For a long-running Agent, the risk keeps propagating along the memory lifecycle.
 | Action | Whether the Agent will execute high-risk operations based on it | Least privilege, critical-action confirmation, tool-call monitoring |
 | Propagation | Whether erroneous information enters other Agents or business domains | Provenance tagging, cross-domain limits, tracing and batch cleanup |
 
-## Memory governance must answer six questions
+## Six editorial checks
 
-First, where does this memory come from. The system needs to distinguish user input, internal documents, external web pages, tool returns, and the Agent's own summaries, and preserve source information.
+These questions organize the memory lifecycle; they are not a certification standard. Systems sharing memory across tenants or taking consequential actions need stronger controls than a personal preference store.
 
-Second, who can write or modify. Not every conversation, web page, or tool call should enter long-term memory directly. Write permissions should match business risk.
+1. **Source.** Distinguish user statements, documents, pages, tool results and model summaries, retaining the supporting record.
+2. **Writing.** Define who may add or change a memory, what may be saved automatically and what needs checking.
+3. **Updating.** Distinguish supplementation, correction, replacement and conflict so stale records do not remain current facts.
+4. **Scope.** Define what tenants, users, agents and projects can read, modify or share.
+5. **Response.** Locate and suspend a bad record, then trace derived summaries, caches and copies.
+6. **Monitoring.** Connect writes, retrieval, feedback and deletion to actual tasks so affected results can be identified.
 
-Third, how old and new memories coexist. New information may supplement, correct, replace, or conflict with old records. The system needs explicit rules to keep old and new content from fighting each other at recall time.
+## Which MemOS operations can support a response
 
-Fourth, who can see the memory. Clear isolation boundaries are needed between tenants, users, Agents, projects, and business systems.
+MemOS Cloud exposes write, search, feedback and deletion operations. Its [write documentation](https://memos-docs.openmem.net/cn/memos_cloud/mem_operations/add_message/) and [scope documentation](https://memos-docs.openmem.net/memos_cloud/introduction/isolation_filters/) describe storing selected information with metadata and retrieving within relevant identity and task scopes. Feedback and deletion provide correction entry points. They do not establish automatic poisoning detection, complete removal of every derived record or prevention of recurrence.
 
-Fifth, what happens after an error is found. The system must be able to locate the original memory, correct or delete it, and check whether it has already been summarized, derived, or propagated into other states.
+Applications still need authorization, input validation, approval and monitoring appropriate to their risks. Larger deployments may integrate existing security operations tools, but no particular commercial product category is a prerequisite for every application.
 
-Sixth, how to detect anomalies. Enterprises should continuously record write, retrieval, conflict, feedback, deletion, and cross-scope access events, and feed them into existing security monitoring and audit systems.
-
-## How MemOS helps enterprises avoid similar problems
-
-MemOS places memory between the Agent and the model, providing system entries for write, retrieval, feedback, deletion, and memory module orchestration. Applications can use it to control what enters memory, what is recalled in the current task, and how erroneous information is handled.
-
-| Capability | Role in governance |
-| --- | --- |
-| Add Message | Makes write an explicit action; the application decides which messages enter memory |
-| Search Memory | Retrieves relevant memory by query and scope |
-| Add Feedback | Feeds "inaccurate," "has changed," "should not be reused" feedback into the memory handling flow |
-| Delete Memory | Deletes specified memory to support correction and incident response |
-| Memory Module Orchestration | Orchestrates different memory modules to fit different tasks and storage forms |
-
-MemOS Cloud now provides search, write, delete, and feedback interfaces, making it easy to connect these operations into Agent workflows.
-
-These interfaces provide control entry points at the memory layer. Enterprises still need to combine IAM, least privilege, input validation, approval, DLP, SIEM, business logs, and incident response processes to handle production risks together.
-
-Feedback and deletion especially need to become system capabilities. When a user finds a memory expired, wrong, or no longer fit for use, the system should be able to receive feedback, locate the corresponding content, and stop it from continuing to participate in later tasks.
+In the supplier example, a response can suspend the record, trace tasks that retrieved it, then inspect related summaries and copies. Completion depends on subsequent retrieval no longer returning the false information, derived records being handled and any affected business actions being reviewed. A successful deletion request alone does not answer all of these questions.
 
 ## Different memory layers need different governance
 
-Text memory is usually easier to view, modify, and delete. Activated memory and parametric memory have lower visibility and higher correction costs.
+Text memory is usually easier to view, modify, and delete. Activation memory and parametric memory have lower visibility and higher correction costs.
 
 Real systems may also contain caches, knowledge graphs, summaries, Skills, and reusable task states. Before governing, teams should inventory these memory forms and confirm their write sources, retention periods, recall scope, and deletion paths.
 
-Privatized or on-device deployment can change data storage boundaries, but cannot replace memory governance. Wrong writes, over-broad authorization, unclear sources, and internal poisoning can also happen in local environments.
+Self-hosted or on-device deployment can change data storage boundaries, but cannot replace memory governance. Wrong writes, over-broad authorization, unclear sources, and internal poisoning can also happen in local environments.
 
 ## Different industries need different memory rules
 
@@ -116,59 +107,10 @@ Industrial scenarios need to distinguish device facts, expert experience, and on
 
 Whatever the business, teams should first define four things: which content can be written automatically and which must be approved; which memories can be shared and which must be isolated; how long memories are kept and when they expire; and on receiving correction feedback, whether to update, immediately stop use, or enter manual audit.
 
-## Pre-launch checklist
+## Evaluate outcomes, not just operation counts
 
-| Check item | What to confirm before launch |
-| --- | --- |
-| Source info | Whether source, operator, time, scope, and validity period are recorded |
-| Permission model | Whether read, write, modify, delete, and share permissions are distinguished |
-| External input | Whether web pages, emails, attachments, and tool returns are treated as untrusted by default |
-| High-risk writes | Whether secondary confirmation or manual approval is required |
-| Conflict handling | Which rule applies when old and new memories conflict |
-| Recall tracing | Whether a task's actually recalled memories are visible |
-| Incident response | Whether erroneous memory and its derived states can be cleaned up |
-| Security monitoring | Whether write, retrieval, conflict, feedback, deletion, and tool calls are covered |
-| Red-team testing | Whether injection, cross-tenant access, expired memory, and error propagation are tested |
-| Responsibility boundary | Whether responsibility is clear across cloud, privatized, and edge environments |
+Alongside write, retrieval and deletion volume, teams can track the share of unverified memories entering final results, repeated errors after correction, and the time from discovery to completed response. Feedback and deletion rates are not inherently better when higher or lower.
 
-## Frequently Asked Questions
+Interpret metrics in context. A batch deletion may reflect a routine retention policy or incident cleanup; the reason matters.
 
-### How is Memory Poisoning different from Prompt Injection?
-
-Prompt Injection mainly affects the current task. Memory Poisoning lets untrusted information enter persistent memory and keep influencing later tasks.
-
-### Can privatized deployment solve memory poisoning?
-
-Privatized deployment can shrink the data-exposure surface. Problems like untrusted sources, over-broad permissions, and wrong writes still require memory governance.
-
-### Which metrics should enterprises monitor?
-
-At minimum: memory write volume, source types, cross-scope access, conflict rate, feedback rate, deletion rate, anomalous recall, and high-risk tool calls.
-
-### What problems can MemOS solve?
-
-MemOS provides system entries for memory write, retrieval, feedback, deletion, and module orchestration, helping developers connect memory governance into Agent workflows. Specific permissions, approval, monitoring, and incident response still depend on the enterprise's own architecture.
-
-## Conclusion
-
-As Agents work long-term, memory begins to affect the quality and security of later tasks. Enterprises need to know where a memory comes from, why it was written, which tasks have called it, and whether it can be corrected or deleted promptly once a problem is found.
-
-Long-term memory is not just about preserving history. It needs to stay controllable, traceable, and actionable in every write, recall, and update.
-
-## Related links
-
-MemOS official site: [memos.openmem.net](https://memos.openmem.net)
-
-GitHub: [github.com/MemTensor/MemOS](https://github.com/MemTensor/MemOS)
-
-Documentation: [memos-docs.openmem.net](https://memos-docs.openmem.net)
-
----
-
-#### About MemTensor
-
-MemTensor (Shanghai) Technology Co., Ltd. ("MemTensor") is a new-generation large-model and long-term intelligence infrastructure enterprise incubated by the Shanghai AI Innovation Institute, with an academician of the Chinese Academy of Sciences as chief advisor.
-
-With "low hallucination, personalization, and self-learning evolution" as its core, the company has long focused on large-model long-term memory and continual learning, building a progressive technical route from theory through systems engineering to the model layer, around Memory3-related memory mechanism research, the MemOS memory operating system, Agent and memory infrastructure productization, and memory-native general foundation models, pushing AI from one-time generation toward long-term intelligence.
-
-The company has established deep collaboration with partners such as China Merchants, HaiCheng, and Honor, and achieved commercial deployment in key industries including AI companionship, gaming, on-device intelligent hardware, finance, and industry, with nearly 200 million RMB in cumulative financing from investors including CICC, Futeng, Huawei Hubble, SenseTime, and Heyu.
+Private deployment changes where data is held but does not automatically resolve incorrect writes or excessive permissions. Evaluation should establish who can write, who can reuse information, whether errors can be suspended and whether affected tasks can be traced.

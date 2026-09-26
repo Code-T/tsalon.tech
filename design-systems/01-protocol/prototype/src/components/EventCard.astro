@@ -1,15 +1,15 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { formatEventDate, getEventState } from '../lib/event-display';
 
 interface Props { event: CollectionEntry<'events'>; }
 const { event } = Astro.props;
-const ended = event.data.endDate.getTime() < Date.now() || event.data.registration.status === 'archived';
-const registrationOpen = !ended && ['open', 'waitlist'].includes(event.data.registration.status);
+const { ended, registrationOpen, status } = getEventState(event.data.endDate, event.data.registration);
 const href = `/events/${event.id}/`;
-const cta = ended ? '活动回顾' : registrationOpen ? '立即报名' : '活动详情';
-const state = ended ? '已结束' : registrationOpen ? '正在报名' : '即将开始';
+const cta = ended ? '活动档案' : status === 'waitlist' ? '候补报名' : registrationOpen ? '立即报名' : '活动详情';
+const state = ended ? '已结束' : status === 'waitlist' ? '候补报名' : registrationOpen ? '正在报名' : '报名已关闭';
 const stateClass = ended ? 'is-ended' : registrationOpen ? 'is-open' : 'is-upcoming';
-const date = event.data.startDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replaceAll('/', '.');
+const date = formatEventDate(event.data.startDate, 'zh-CN', event.data.timezone).replaceAll('/', '.');
 const mode = event.data.attendanceMode === 'offline' ? '线下' : event.data.attendanceMode === 'online' ? '线上' : '线上 + 线下';
 ---
 <a

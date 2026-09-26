@@ -3,6 +3,7 @@ title: Why We Started T Chat — Inside Real Engineering Work
 summary: T Salon and Laosiji Weekly launched T Chat, an online conversation series where experienced engineers share the reality of their teams, systems and individual practice.
 type: news
 publishedAt: 2022-04-25
+updatedAt: 2026-09-26
 readingMinutes: 4
 author: editorial-team
 topics:
@@ -14,26 +15,12 @@ relatedEvents:
 cover: /images/news/tchat-launch-1.jpg
 coverAlt: Launch poster for the T Chat engineering conversation series
 citations:
-  - label: Original T Salon article in Chinese
-    url: https://www.tsalon.tech/2022/04/25/1.TChat/
+  - label: T Chat series archive and video directory
+    url: https://www.tsalon.tech/en/events/series/t-chat/
 featured: true
 draft: false
 translationOf: tchat-launch
 translationStatus: reviewed
-tldr:
-  - "T Salon and Laosiji Weekly launched T Chat, an online series where engineers from major tech companies share real team and individual practice."
-  - "Each episode pairs a 30-minute talk with a 30-minute one-to-one conversation, streaming every other Thursday since 28 April 2022."
-  - "T Chat extends T Salon (founded 2016) from offline salons to an online archive that stays findable after the live session."
-  - "The series completed 17 episodes, archived on T Salon's Bilibili channel."
-faq:
-  - question: "What is T Chat?"
-    answer: "An online conversation series by T Salon and Laosiji Weekly inviting engineers from leading internet companies to share real engineering practice."
-  - question: "What is the format of each T Chat episode?"
-    answer: "A 30-minute guest talk followed by a 30-minute one-to-one host-guest conversation that preserves follow-up questions and context."
-  - question: "Which community does T Chat belong to?"
-    answer: "It extends T Salon, founded in March 2016, which has run 30+ offline events in Beijing, Shanghai, Chengdu, Hangzhou, and Shenzhen."
-  - question: "How many T Chat episodes exist and where are they?"
-    answer: "The series completed 17 episodes, archived on T Salon's Bilibili channel and findable via the site's articles and T Chat series pages."
 seo:
   title: Introducing the T Chat Engineering Conversation Series
   description: T Salon and Laosiji Weekly created T Chat to document the real engineering practices of teams and individuals at major technology companies.
@@ -42,26 +29,28 @@ seo:
 
 What are engineering teams inside major technology companies actually working on? What do experienced engineers pay attention to? T Chat began with these two questions.
 
-## A long-running conversation about real engineering work
+## The plan announced in April 2022
 
 T Salon and Laosiji Weekly created T Chat to invite engineers from leading internet companies to talk openly about the systems they build, the choices they make and the constraints behind those choices.
 
-The series began on 28 April 2022 and met online every other Thursday evening.
+The launch announcement planned at least 24 episodes, starting on April 28, 2022, every other Thursday from 20:00 to 21:00 China Standard Time. This describes the original schedule, rather than a continuing live programme.
 
 ## A 30 + 30 format
 
-Each episode paired a 30-minute presentation with a 30-minute one-to-one conversation between the host and guest. The second half made room for context, follow-up questions and the judgement that often disappears from a conventional talk.
+The planned format paired an approximately 30-minute presentation with an approximately 30-minute one-to-one conversation between the host and guest. The second half made room for context, follow-up questions and the judgement that often disappears from a conventional talk.
 
 ![The format of the T Chat series](/images/news/tchat-launch-2.jpg)
 
 ## From local salons to an online series
 
-T Salon began in March 2016 and has organised developer gatherings in Beijing, Shanghai, Chengdu, Hangzhou and Shenzhen. T Chat extended those conversations beyond a single room or city.
+T Salon began in March 2016. The April 2022 introduction reported more than 30 offline events in Beijing, Shanghai, Chengdu, Hangzhou and Shenzhen. T Chat extended those conversations beyond a single room or city.
 
-Laosiji Weekly is a mobile technology community that has published more than 200 issues since 2018.
+The same 2022 introduction described Laosiji Weekly as a mobile technology community with more than 200 issues published since 2018 and over six million cumulative reads. These are historical figures from the launch period.
 
 ![Guests from the T Chat engineering series](/images/news/tchat-launch-3.jpg)
 
-## Letting each conversation keep growing
+## Archive update — September 26, 2026
 
-T Chat was designed as more than a livestream. Its guests, topics, videos and questions form a public archive that developers can continue to find and discuss after the live session has ended.
+The [T Chat series directory](/en/events/series/t-chat/) now contains 17 archived episodes, distinct from the original plan for at least 24. Episode pages link to the available bilibili talks, interviews and Q&A segments with their original titles and durations. Uploaded recordings do not all follow the planned 30 + 30 length.
+
+April 25, 2022 is retained as the original announcement date. This English archive adaptation was updated on September 26, 2026.

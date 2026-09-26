@@ -31,14 +31,12 @@ agenda:
     title: One-to-one conversation
     description: Follow-up questions about the team’s work, decisions and constraints.
 faq:
-  - question: "Is T Chat live only, or can I watch it later?"
-    answer: "Each episode streams live on bilibili, and after the livestream the video enters T Salon's public archive where it stays findable and replayable."
-  - question: "What is the format of each T Chat episode?"
-    answer: "Every episode pairs a 30-minute guest talk with a 30-minute one-to-one host-guest conversation, preserving follow-up questions and context that a one-way talk usually loses."
-  - question: "Who should join or watch T Chat?"
-    answer: "Developers, tech leads, and students who care about real engineering practice, team methods, and personal growth; the content favors genuine experience over product promotion."
-  - question: "How do I get notified about future episodes?"
-    answer: "Follow T Salon's bilibili channel and the on-site T Chat series page; new episodes are announced through community channels when they go live."
+  - question: "Where can I find archived T Chat videos?"
+    answer: "The on-site T Chat series page lists 17 episodes. Episode pages link to the talks, interviews or Q&A segments on bilibili. Refer to the individual video pages for their titles, durations and available recordings."
+  - question: "What format was planned at the series launch?"
+    answer: "The launch described an approximately 30-minute guest talk followed by an approximately 30-minute one-to-one conversation. Uploaded recordings may separate talks, interviews and Q&A, and their durations vary."
+  - question: "Who may find these historical recordings useful?"
+    answer: "Developers interested in engineering practice, team methods and career experience can choose by guest and original video topic. The recordings reflect their historical technical context, rather than current product capabilities or universal best practices."
 featured: false
 draft: false
 translationOf: tchat-series-launch
@@ -56,3 +54,7 @@ What are engineering teams inside major technology companies working on? What do
 ## The format
 
 Each episode paired a 30-minute guest presentation with a 30-minute conversation. After the livestream, the guest, topic, video and wider series remained part of a public community archive.
+
+## Archived content
+
+[Browse the 17-episode T Chat directory and video segments](/en/events/series/t-chat/). The introduction above preserves the launch description; consult the individual uploads for their actual format and duration.

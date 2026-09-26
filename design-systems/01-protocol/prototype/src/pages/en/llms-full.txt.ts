@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { talkSpeakerEn, talkTitleEn } from '../../data/en';
 
 const stripImages = (markdown: string) =>
   markdown
@@ -22,13 +23,13 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '> T Salon is an online and offline technology community founded by iOS developers in March 2016.',
     '> It covers the Apple developer ecosystem, AI technology and business, embodied intelligence, and broader software engineering practice.',
-    '> All content is originally written and edited by the T Salon editorial team and is free to quote with attribution to T Salon (https://www.tsalon.tech).',
+    '> This collection includes community records and analysis of published technical material. Preserve the attribution and original sources listed in each article; see the site terms for reuse.',
     '',
-    `This file contains the full plain text of every published T Salon article and interview, for retrieval, question answering and citation. For a summary, see ${origin}/en/llms.txt.`,
+    `This file contains published T Salon articles and an interview video directory. The directory provides source links and video parts, not transcripts. For a summary, see ${origin}/en/llms.txt.`,
     '',
     '---',
     '',
-    '## Original articles',
+    '## Published articles',
     '',
   ];
 
@@ -46,6 +47,7 @@ export const GET: APIRoute = async ({ site }) => {
         ? ['- TL;DR:', ...entry.data.tldr.map((point) => `  - ${point}`), '']
         : []),
       stripImages(entry.body ?? ''),
+      ...entry.data.citations.map((source) => `- Source: [${source.label}](${source.url})`),
       '',
       ...(entry.data.faq.length > 0
         ? [
@@ -63,13 +65,12 @@ export const GET: APIRoute = async ({ site }) => {
   lines.push('Episode summaries from the T Chat interview series. Full content is available in the linked videos.', '');
   for (const talk of talks) {
     lines.push(
-      `### Episode ${talk.data.episode}: ${talk.data.title}`,
+      `### Episode ${talk.data.episode}: ${talkTitleEn[talk.id]}`,
       '',
       `- URL: ${origin}/articles/${talk.id}/`,
-      `- Guest: ${talk.data.speaker}`,
-      `- Topics: ${talk.data.topics.join(', ')}`,
+      `- Guest: ${talkSpeakerEn[talk.id]}`,
       `- Video: ${talk.data.videoUrl}`,
-      `- Summary: ${talk.data.summary}`,
+      ...talk.data.videoParts.map((part, index) => `- [Video part ${index + 1} (Chinese)](${part.url}) · Uploaded ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} seconds`),
       '',
       '---',
       '',
@@ -77,10 +78,10 @@ export const GET: APIRoute = async ({ site }) => {
   }
 
   lines.push(
-    '## First-party data tools',
+    '## Community tools',
     '',
-    `- TokenRank: ${origin}/en/tokenrank/ — T Salon's own leaderboard of AI coding token consumption, collected first-party, with rankings on total (with cache), normalized (excluding cache), and estimated cost.`,
-    `- AI coding quota reset radar: ${origin}/en/whenreset/ — Real-time monitoring of official usage resets and airdropped reset cards for OpenAI Codex and Anthropic Claude, all converted to Beijing time (UTC+8).`,
+    `- TokenRank: ${origin}/en/tokenrank/ — AI coding usage reported by community contributors. Methodology and limitations: ${origin}/en/tokenrank/methodology/.`,
+    `- WhenReset: ${origin}/en/whenreset/ — Collected Codex and Claude quota reset schedules, notices and time estimates; check the product for your account's quota status.`,
     '',
   );
 

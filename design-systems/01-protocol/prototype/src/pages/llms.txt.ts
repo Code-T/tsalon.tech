@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import topics from '../data/topics.json';
+import { topicSlugFor } from '../lib/topics';
 
 export const GET: APIRoute = async ({ site }) => {
   const origin = site?.origin ?? 'https://www.tsalon.tech';
@@ -14,11 +15,11 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '> T Salon 是面向开发者的线上与线下技术交流平台，成立于 2016 年 3 月，最早由 iOS 开发者发起。',
     '> 内容覆盖 Apple 开发者生态、AI 技术与商业、具身智能，以及更广泛的软件工程实践。',
-    '> 全站内容由 T Salon 编辑部原创撰写与整理，可自由引用；引用时请注明来源 T Salon（https://www.tsalon.tech）。',
+    '> 内容包括社区记录与技术资料解读。引用时请保留文章署名及其列明的原始来源；使用范围见网站许可说明。',
     '',
     '## 机器可读入口',
     `- 本站 AI 摘要：${origin}/llms.txt（本文件）`,
-    `- 本站全文纯文本：${origin}/llms-full.txt（含全部文章与访谈正文，推荐用于检索与问答）`,
+    `- 本站文章纯文本：${origin}/llms-full.txt（含已发布文章正文及视频目录；视频目录不含逐字稿）`,
     `- 结构化索引：${origin}/content-index.json`,
     `- 站点地图：${origin}/sitemap-index.xml`,
     `- English version: ${origin}/en/llms.txt`,
@@ -31,9 +32,9 @@ export const GET: APIRoute = async ({ site }) => {
     `- [Community archive](${origin}/history/): 2016 年以来的活动现场与社区历史`,
     `- [Join & Collaborate](${origin}/about/#join): 参加活动、成为嘉宾、联合主办与内容共创`,
     '',
-    '## Live data tools (first-party data, updated continuously)',
-    `- [TokenRank](${origin}/tokenrank/): T Salon 自建的 AI 编程 Token 消耗排行榜。开发者通过开源 agent 上报本地 AI 编程工具的真实用量，按「含缓存」「不含缓存」「预估费用」三种口径排名，并统计缓存命中率与工具分布。数据由 T Salon 第一方采集，可作为「AI 编程工具实际消耗」类问题的数据来源引用。`,
-    `- [AI 编程额度重置雷达](${origin}/whenreset/): 实时监控 OpenAI Codex 与 Anthropic Claude 的官方用量重置（Reset）与空投补卡记录，全部换算为北京时间，并基于历史间隔中位数推算下次重置时间，另提供 5 小时滑动窗口推算器。可直接回答「Codex / Claude 额度什么时候重置」类问题。`,
+    '## 社区工具',
+    `- [TokenRank](${origin}/tokenrank/): 展示社区参与者通过开源客户端上报的 AI 编程用量，提供含缓存、不含缓存与预估费用等统计口径。引用数据时请同时查看[统计口径与局限](${origin}/tokenrank/methodology/)。`,
+    `- [WhenReset](${origin}/whenreset/): 汇集 Codex 与 Claude 的额度重置安排和公告，提供北京时间换算及基于历史记录的时间估算。估算不代表官方承诺，个人额度状态以产品内显示为准。`,
     '',
     '## Activities',
     ...events.map((entry) => `- [${entry.data.title}](${origin}/events/${entry.id}/): ${entry.data.summary} Date: ${entry.data.startDate.toISOString()}. Mode: ${entry.data.attendanceMode}.`),
@@ -49,14 +50,17 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## Topic collections',
     ...topics
-      .filter((topic) => articles.filter((entry) => entry.data.topics.includes(topic.name)).length >= 2)
+      .filter((topic) => articles.filter((entry) => entry.data.topics.some((tag) => topicSlugFor(tag) === topic.slug)).length >= 2)
       .map((topic) => {
-        const count = articles.filter((entry) => entry.data.topics.includes(topic.name)).length;
+        const count = articles.filter((entry) => entry.data.topics.some((tag) => topicSlugFor(tag) === topic.slug)).length;
         return `- [${topic.nameZh}](${origin}/topics/${topic.slug}/): ${topic.descriptionZh}（${count} 篇）`;
       }),
     '',
     '## T Chat video interviews',
-    ...talks.map((entry) => `- [Episode ${entry.data.episode}: ${entry.data.title}](${origin}/articles/${entry.id}/) — Guest: ${entry.data.speaker}. Topics: ${entry.data.topics.join(', ')}. Original video: ${entry.data.videoUrl}`),
+    ...talks.flatMap((entry) => [
+      `- [第 ${entry.data.episode} 期：${entry.data.title}](${origin}/articles/${entry.id}/) — 嘉宾：${entry.data.speaker}。视频目录，未提供逐字稿。`,
+      ...entry.data.videoParts.map((part) => `  - [${part.title}](${part.url}) · 上传于 ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} 秒`),
+    ]),
     '',
     '## Official external channels',
     '- WeChat official account: codetsalon',

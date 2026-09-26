@@ -1,5 +1,5 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import topicsData from '../../../data/topics.json';
 
@@ -37,6 +37,7 @@ const jsonLd = {
   publisher: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
   inLanguage: 'en',
   about: article.data.topics,
+  citation: article.data.citations.map((source) => ({ '@type': 'CreativeWork', name: source.label, url: source.url })),
 };
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
@@ -58,14 +59,16 @@ const faqJsonLd = article.data.faq.length > 0
       })),
     }
   : null;
-const alternatePath = article.data.translationOf ? `/articles/${article.data.translationOf}/` : null;
+const original = article.data.translationOf ? await getEntry('articles', article.data.translationOf) : undefined;
+const alternatePath = original && !original.data.draft ? `/articles/${original.id}/` : null;
 const pageJsonLd = [jsonLd, breadcrumbJsonLd, ...(faqJsonLd ? [faqJsonLd] : [])];
 ---
 <BaseLayout locale="en" alternatePath={alternatePath} title={article.data.seo.title} description={article.data.seo.description} image={article.data.cover} noindex={article.data.seo.noindex} jsonLd={pageJsonLd}>
   <main class="content-detail-page">
     <nav class="content-detail-shell content-detail-breadcrumb" aria-label="Breadcrumb"><a href="/en/articles/">Stories</a><span aria-hidden="true">/</span><span>{labels[article.data.type]}</span></nav>
     <header class="content-detail-shell content-detail-header"><div class="content-detail-kicker"><p class="eyebrow">{labels[article.data.type]} / T SALON</p><span class="mono">EDITORIAL</span></div><h1>{article.data.title}</h1><p class="content-detail-summary">{article.data.summary}</p><div class="content-detail-byline"><span class="content-detail-avatar" aria-hidden="true">TS</span><div><strong>T Salon Editorial</strong><span>{article.data.publishedAt.toISOString().slice(0, 10)} · {article.data.readingMinutes} min read</span></div></div></header>
-    <figure class="content-detail-shell content-detail-cover"><div><img src={article.data.cover} alt={article.data.coverAlt} /></div><figcaption class="mono">T SALON / COMMUNITY ARCHIVE</figcaption></figure>
+    {article.data.updatedAt && <p class="content-detail-shell mono">Revised {article.data.updatedAt.toISOString().slice(0, 10)}</p>}
+    {article.data.cover !== '/images/default-cover.svg' && <figure class="content-detail-shell content-detail-cover"><div><img src={article.data.cover} alt={article.data.coverAlt} /></div><figcaption class="mono">{article.data.coverAlt}</figcaption></figure>}
     <section class="content-detail-shell content-detail-body">
       <article class="prose content-detail-prose">
         {article.data.tldr.length > 0 && (
