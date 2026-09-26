@@ -1,0 +1,65 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  return (await getCollection('recordings')).map(recording => ({ params: { id: recording.id }, props: { recording } }));
+}
+interface Props { recording: CollectionEntry<'recordings'>; }
+const { recording } = Astro.props;
+const data = recording.data;
+const articles = await getCollection('articles', ({ data }) => !data.draft && !data.seo.noindex);
+const recaps = articles.filter(article => article.data.relatedRecordings.some(ref => ref.id === recording.id));
+const pageUrl = new URL(`/recordings/${recording.id}/`, Astro.site).toString();
+const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${String(seconds % 60).padStart(2, '0')}秒`;
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '首页', item: new URL('/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 2, name: '录播档案', item: new URL('/recordings/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 3, name: data.title, item: pageUrl },
+  ] },
+  ...data.videoParts.map(part => ({
+    '@context': 'https://schema.org', '@type': 'VideoObject', name: part.title,
+    description: `${data.title}，原发布账号：${part.owner.name}。`,
+    thumbnailUrl: [part.thumbnailUrl], url: part.url,
+    embedUrl: `https://player.bilibili.com/player.html?bvid=${part.bvid}&page=${part.page}&danmaku=0`,
+    mainEntityOfPage: pageUrl, uploadDate: part.uploadedAt, duration: `PT${part.durationSeconds}S`,
+    publisher: { '@type': 'Organization', name: part.owner.name, url: `https://space.bilibili.com/${part.owner.uid}` },
+    inLanguage: 'zh-CN', about: data.topics,
+  })),
+];
+---
+<BaseLayout title={`${data.title}｜录播档案 — T Salon`} description={data.summary} image={data.cover} alternatePath={null} jsonLd={jsonLd}>
+  <main class="content-detail-page">
+    <nav class="content-detail-shell content-detail-breadcrumb" aria-label="面包屑"><a href="/articles/">内容</a><span>/</span><a href="/recordings/">录播档案</a></nav>
+    <header class="content-detail-shell content-detail-header">
+      <div class="content-detail-kicker"><p class="eyebrow">T SALON / VIDEO ARCHIVE</p><span class="mono">{data.series ?? '社区录播'}</span></div>
+      <h1>{data.title}</h1><p class="content-detail-summary">{data.summary}</p>
+      <p>{data.videoParts.length} 段原视频 · 共 {durationLabel(data.durationSeconds)}{data.guests.length ? ` · ${data.guests.join('、')}` : ''}</p>
+    </header>
+    <section class="content-detail-shell content-detail-body">
+      <article class="prose content-detail-prose">
+        {recaps.length > 0 && <section aria-label="文字回顾"><h2>文字回顾</h2><ul>{recaps.map(article => <li><a href={`/articles/${article.id}/`}>{article.data.title}</a><p>{article.data.summary}</p></li>)}</ul></section>}
+        <h2 id="videos">视频回看</h2>
+        <p>按原视频分段选择观看。日期为 B 站稿件发布日期，同一稿件的分段共用该日期。</p>
+        <ol>{data.videoParts.map(part => <li>
+          <a href={part.url} target="_blank" rel="noopener noreferrer">{part.title} ↗</a>
+          <p>{durationLabel(part.durationSeconds)} · 稿件发布于 <time datetime={part.uploadedAt}>{part.uploadedAt.slice(0, 10)}</time></p>
+          <p>原发布账号：<a href={`https://space.bilibili.com/${part.owner.uid}`} target="_blank" rel="noopener noreferrer">{part.owner.name}</a></p>
+        </li>)}</ol>
+        <h2>相关主题</h2><p>{data.topics.join(' · ')}</p>
+      </article>
+      <aside class="content-detail-aside">
+        <div class="content-detail-aside-section"><strong class="mono">录播信息</strong><dl>
+          <div><dt>类型</dt><dd>原视频档案</dd></div>
+          {data.series && <div><dt>系列</dt><dd>{data.series}</dd></div>}
+          {data.eventDate && <div><dt>活动日期</dt><dd>{data.eventDate}</dd></div>}
+          {data.guests.length > 0 && <div><dt>嘉宾</dt><dd>{data.guests.join('、')}</dd></div>}
+          <div><dt>视频分段</dt><dd>{data.videoParts.length} 段</dd></div>
+          <div><dt>总时长</dt><dd>{durationLabel(data.durationSeconds)}</dd></div>
+        </dl></div>
+        <a class="content-detail-source" href="#videos">查看全部原片 <span>↓</span></a>
+        <a class="content-detail-source" href="/recordings/">全部录播档案 <span>→</span></a>
+      </aside>
+    </section>
+  </main>
+</BaseLayout>

@@ -10,6 +10,7 @@ export const GET: APIRoute = async ({ site }) => {
   const archiveEvents = (await getCollection('activityArchive')).sort((a, b) => a.data.order - b.data.order);
   const articles = await getCollection('articles', ({ data }) => !data.draft);
   const talks = (await getCollection('talks')).sort((a, b) => b.data.order - a.data.order);
+  const recordings = await getCollection('recordings');
   const lines = [
     '# T Salon / T 技术沙龙',
     '',
@@ -60,6 +61,14 @@ export const GET: APIRoute = async ({ site }) => {
     ...talks.flatMap((entry) => [
       `- [第 ${entry.data.episode} 期：${entry.data.title}](${origin}/articles/${entry.id}/) — 嘉宾：${entry.data.speaker}。视频目录，未提供逐字稿。`,
       ...entry.data.videoParts.map((part) => `  - [${part.title}](${part.url}) · 上传于 ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} 秒`),
+    ]),
+    '',
+    '## 录播档案',
+    `- [全部录播](${origin}/recordings/): 技术分享、社区活动与合作录播的原片和已发布文字回顾。`,
+    ...recordings.flatMap(entry => [
+      `- [${entry.data.title}](${origin}/recordings/${entry.id}/): ${entry.data.summary}`,
+      ...entry.data.videoParts.map(part => `  - [${part.title}](${part.url}) · 稿件发布于 ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} 秒 · 原发布账号：${part.owner.name}`),
+      ...articles.filter(article => !article.data.seo.noindex && article.data.relatedRecordings.some(ref => ref.id === entry.id)).map(article => `  - 文字回顾：[${article.data.title}](${origin}/articles/${article.id}/)`),
     ]),
     '',
     '## Official external channels',

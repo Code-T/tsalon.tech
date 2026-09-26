@@ -6,6 +6,8 @@ publishedAt: 2022-05-10
 updatedAt: 2026-09-26
 readingMinutes: 9
 author: editorial-team
+relatedRecordings:
+  - shenzhen-frontend-challenges
 topics:
   - Frontend
   - Flutter
@@ -78,6 +80,8 @@ seo:
 ![范文杰分享 Webpack 核心工作流程与性能优化](/images/news/shenzhen-frontend-recap-06.jpg)
 
 ## 技术交流之外的现场
+
+五场分享另有按完整录播整理的专题回顾，可继续阅读：[卢依宁谈前端监控](/articles/shenzhen-lu-yining-frontend-monitoring-recap/)、[崔明辉谈 MPFlutter](/articles/shenzhen-cui-minghui-mpflutter-recap/)、[张泽亚谈工程化](/articles/shenzhen-zhang-zeya-engineering-recap/)、[郭树煜谈 Flutter Web](/articles/shenzhen-guo-shuyu-flutter-web-recap/)、[范文杰谈 webpack 性能](/articles/shenzhen-fan-wenjie-webpack-performance-recap/)。[B 站完整原片](https://www.bilibili.com/video/BV1HY4y1r7rJ?p=1)保留全部五个分段。
 
 一场社区活动的价值不只发生在舞台上。签到、茶歇、提问和活动结束后的交流，让不同团队的开发者有机会交换各自正在面对的问题。
 

@@ -15,17 +15,23 @@ export const GET: APIRoute = async ({ site }) => {
     (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
   );
 
-  const items = articles
+  const recordings = await getCollection('recordings');
+  const feedEntries = [
+    ...articles.map(entry => ({ title: entry.data.title, summary: entry.data.summary, date: entry.data.publishedAt, topics: entry.data.topics, url: `${origin}/articles/${entry.id}/` })),
+    ...recordings.map(entry => ({ title: `视频档案｜${entry.data.title}`, summary: entry.data.summary, date: new Date(entry.data.uploadedAt), topics: entry.data.topics, url: `${origin}/recordings/${entry.id}/` })),
+  ].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  const items = feedEntries
     .map((entry) => {
-      const url = `${origin}/articles/${entry.id}/`;
+      const url = entry.url;
       return [
         '    <item>',
-        `      <title>${escapeXml(entry.data.title)}</title>`,
+        `      <title>${escapeXml(entry.title)}</title>`,
         `      <link>${url}</link>`,
         `      <guid isPermaLink="true">${url}</guid>`,
-        `      <pubDate>${entry.data.publishedAt.toUTCString()}</pubDate>`,
-        `      <description>${escapeXml(entry.data.summary)}</description>`,
-        `      <category>${escapeXml(entry.data.topics.join('、'))}</category>`,
+        `      <pubDate>${entry.date.toUTCString()}</pubDate>`,
+        `      <description>${escapeXml(entry.summary)}</description>`,
+        `      <category>${escapeXml(entry.topics.join('、'))}</category>`,
         '    </item>',
       ].join('\n');
     })

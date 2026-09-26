@@ -16,6 +16,7 @@ export const GET: APIRoute = async ({ site }) => {
     (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
   );
   const talks = (await getCollection('talks')).sort((a, b) => b.data.order - a.data.order);
+  const recordings = await getCollection('recordings');
 
   const lines: string[] = [
     '# T Salon — 全文内容（llms-full.txt）',
@@ -85,6 +86,17 @@ export const GET: APIRoute = async ({ site }) => {
         : []),
       '---',
       '',
+    );
+  }
+
+  lines.push('## 录播档案', '');
+  for (const recording of recordings) {
+    lines.push(
+      `### ${recording.data.title}`, '', `- 网址：${origin}/recordings/${recording.id}/`,
+      `- 摘要：${recording.data.summary}`,
+      ...recording.data.videoParts.map(part => `- 原片：[${part.title}](${part.url}) · 稿件发布于 ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} 秒 · 原发布账号：${part.owner.name}`),
+      ...articles.filter(article => !article.data.seo.noindex && article.data.relatedRecordings.some(ref => ref.id === recording.id)).map(article => `- 文字回顾：[${article.data.title}](${origin}/articles/${article.id}/)`),
+      '', '---', '',
     );
   }
 
