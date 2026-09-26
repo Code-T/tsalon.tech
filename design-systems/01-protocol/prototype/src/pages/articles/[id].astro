@@ -1,7 +1,6 @@
 ---
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TranscriptResources from '../../components/TranscriptResources.astro';
 import topicsData from '../../data/topics.json';
 
 const topicSlugMap = new Map<string, string>();
@@ -196,7 +195,6 @@ const relatedTalks = article ? publishedTalks.filter(entry => article.data.relat
                 <p>{durationLabel(part.durationSeconds)} · 稿件发布于 <time datetime={part.uploadedAt}>{part.uploadedAt.slice(0, 10)}</time></p>
               </li>)}
             </ol>
-            <TranscriptResources talkId={talk.id} />
 
             {bvid && (
               <div class="talk-video-embed">
@@ -246,7 +244,7 @@ const relatedTalks = article ? publishedTalks.filter(entry => article.data.relat
               </section>
             )}
             <ArticleContent />
-            {relatedTalks.map(related => <><p><a href={`/articles/${related.id}/`}>查看本期原视频与分段信息：{related.data.title} →</a></p><TranscriptResources talkId={related.id} /></>)}
+            {relatedTalks.map(related => <><p><a href={`/articles/${related.id}/`}>查看本期原视频与分段信息：{related.data.title} →</a></p></>)}
             {article!.data.faq.length > 0 && (
               <section class="article-faq" aria-label="常见问题">
                 <h2>常见问题（FAQ）</h2>
