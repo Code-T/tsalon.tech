@@ -1,6 +1,6 @@
 ---
 title: 范文杰谈 Webpack 源码与前端成长：从调试主流程到建立技术深度
-summary: 回顾 T Chat 第 11 期两段完整录播：范文杰演示如何定位 Webpack 入口、跟踪 Compiler 与 Compilation、跨越插件钩子理解构建，再谈前端成长阶段、框架选择、技术写作、工作取舍与团队培养。
+summary: 回顾 T Chat 第 11 期两段录播：范文杰演示如何定位 Webpack 入口、跟踪 Compiler 与 Compilation、跨越插件钩子理解构建，再谈前端成长阶段、框架选择、技术写作、工作取舍与团队培养。
 type: interview
 publishedAt: 2026-09-26
 updatedAt: 2026-09-26
@@ -33,12 +33,12 @@ featured: false
 draft: false
 allowSingleLocale: true
 seo:
-  title: 范文杰谈 Webpack 源码与前端成长｜T Chat 完整回顾
-  description: 整理 T Chat 第 11 期两段录播，覆盖 Webpack 源码结构、断点调试、Compiler、Compilation、插件钩子与构建流程，以及前端成长、框架选择、写作、工作取舍和团队培养，附原片时间码。
+  title: 范文杰谈 Webpack 源码与前端成长｜T Chat 回顾
+  description: 整理 T Chat 第 11 期两段录播，覆盖 Webpack 源码结构、断点调试、Compiler、Compilation、插件钩子与构建流程，以及前端成长、框架选择、写作、工作取舍和团队培养。
   noindex: false
 ---
 
-> 本文整理自 2022 年的 T Chat 录播，按主题编排，内容有所删节。文中经历、观点与技术状态以录制时为准，原片链接附于各节。
+> 本期视频发布于 2022 年。文中的技术状态、个人经历与观点均为当时情况。
 
 准备一本 Webpack 技术小册，让范文杰花了很长时间阅读源码，也积累了一套与复杂代码打交道的方法。在 T Chat 第 11 期，他以一次最简单的构建为线索，演示怎样把源码运行起来、找到关键步骤，再处理插件架构带来的间接调用。当期自我介绍中，他在字节跳动飞书前端团队工作。[第一段 00:02–01:51](https://www.bilibili.com/video/BV1vD4y1v7ok?t=2)
 

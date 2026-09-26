@@ -11,7 +11,7 @@ const { Content } = await render(event);
 const { ended, registrationOpen, status } = getEventState(event.data.endDate, event.data.registration);
 const statusLabel = ended ? 'Ended' : status === 'waitlist' ? 'Waitlist open' : registrationOpen ? 'Registration open' : 'Registration closed';
 const statusClass = ended ? 'is-ended' : registrationOpen ? 'is-open' : 'is-upcoming';
-const visibleFaq = getVisibleEventFaq(event.data.faq, registrationOpen);
+const visibleFaq = ended ? [] : getVisibleEventFaq(event.data.faq, registrationOpen);
 const relatedArticles = (await getCollection('articlesEn', ({ data }) => !data.draft)).filter((article) => article.data.relatedEvents.includes(event.data.translationOf));
 const time = formatEventTimeRange(event.data.startDate, event.data.endDate, event.data.timezone);
 const date = formatEventDate(event.data.startDate, 'en', event.data.timezone, { year: 'numeric', month: 'long', day: 'numeric' });

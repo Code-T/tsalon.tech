@@ -82,7 +82,8 @@ const pageUrl = new URL(`/articles/${currentId}/`, Astro.site).toString();
 const bvidMatch = talk?.data.videoUrl?.match(/BV[a-zA-Z0-9]+/);
 const bvid = bvidMatch ? bvidMatch[0] : null;
 
-const jsonLd = talk ? talk.data.videoParts.map((part) => ({
+// Only the first video part is embedded on this page; the other parts link to Bilibili.
+const jsonLd = talk ? talk.data.videoParts.slice(0, 1).map((part) => ({
   '@context': 'https://schema.org',
   '@type': 'VideoObject',
   name: `${talk.data.speaker}：${part.title}`,

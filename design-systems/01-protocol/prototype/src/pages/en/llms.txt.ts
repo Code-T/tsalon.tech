@@ -19,7 +19,7 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## Machine-readable entry points',
     `- Site summary for AI: ${origin}/en/llms.txt (this file)`,
-    `- Article plain text: ${origin}/en/llms-full.txt (published articles and a video directory; the directory does not contain transcripts)`,
+    `- Article plain text: ${origin}/en/llms-full.txt (published articles and a video directory)`,
     `- Structured index: ${origin}/en/content-index.json`,
     `- Sitemap: ${origin}/sitemap-index.xml`,
     `- Chinese version: ${origin}/llms.txt`,
@@ -52,7 +52,7 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## T Chat video interviews (recorded in Chinese)',
     ...talks.flatMap((entry) => [
-      `- [Episode ${entry.data.episode}: ${talkTitleEn[entry.id]}](${origin}/articles/${entry.id}/) — Guest: ${talkSpeakerEn[entry.id]}. Video directory; no transcript provided.`,
+      `- [Episode ${entry.data.episode}: ${talkTitleEn[entry.id]}](${origin}/articles/${entry.id}/) — Guest: ${talkSpeakerEn[entry.id]}.`,
       ...entry.data.videoParts.map((part, index) => `  - [Video part ${index + 1} (Chinese)](${part.url}) · Uploaded ${part.uploadedAt.slice(0, 10)} · ${part.durationSeconds} seconds`),
     ]),
     '',

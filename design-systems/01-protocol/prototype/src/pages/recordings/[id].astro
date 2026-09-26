@@ -17,15 +17,6 @@ const jsonLd = [
     { '@type': 'ListItem', position: 2, name: '录播档案', item: new URL('/recordings/', Astro.site).toString() },
     { '@type': 'ListItem', position: 3, name: data.title, item: pageUrl },
   ] },
-  ...data.videoParts.map(part => ({
-    '@context': 'https://schema.org', '@type': 'VideoObject', name: part.title,
-    description: `${data.title}，原发布账号：${part.owner.name}。`,
-    thumbnailUrl: [part.thumbnailUrl], url: part.url,
-    embedUrl: `https://player.bilibili.com/player.html?bvid=${part.bvid}&page=${part.page}&danmaku=0`,
-    mainEntityOfPage: pageUrl, uploadDate: part.uploadedAt, duration: `PT${part.durationSeconds}S`,
-    publisher: { '@type': 'Organization', name: part.owner.name, url: `https://space.bilibili.com/${part.owner.uid}` },
-    inLanguage: 'zh-CN', about: data.topics,
-  })),
 ];
 ---
 <BaseLayout title={`${data.title}｜录播档案 — T Salon`} description={data.summary} image={data.cover} alternatePath={null} jsonLd={jsonLd}>

@@ -1,6 +1,6 @@
 ---
 title: 于航谈 WebAssembly 与前端成长：从运行原理到长期积累
-summary: 回顾 2022 年 T Chat 的两段完整录播：从 WebAssembly 的运行原理、语言生态、生产案例与提案进展，写到于航的技术经历、写书与表达、团队协作、职业选择，以及学习、架构能力和成长机会。
+summary: 回顾 2022 年 T Chat 的两段录播：从 WebAssembly 的运行原理、语言生态、生产案例与提案进展，写到于航的技术经历、写书与表达、团队协作、职业选择，以及学习、架构能力和成长机会。
 type: interview
 publishedAt: 2026-09-26
 readingMinutes: 18
@@ -31,11 +31,11 @@ featured: false
 draft: false
 allowSingleLocale: true
 seo:
-  title: 于航谈 WebAssembly 与前端成长｜T Chat 完整回顾
-  description: 整理 2022 年 T Chat 两段录播的技术分享与成长对谈，覆盖 WebAssembly 原理、案例、提案、WASI，以及写作、表达、工作环境、职业选择、架构和成长机会，附原片时间码。
+  title: 于航谈 WebAssembly 与前端成长｜T Chat 回顾
+  description: 整理 2022 年 T Chat 两段录播的技术分享与成长对谈，覆盖 WebAssembly 原理、案例、提案、WASI，以及写作、表达、工作环境、职业选择、架构和成长机会。
   noindex: false
 ---
-> 本文整理自 2022 年的 T Chat 录播，按主题编排，内容有所删节。文中经历、观点与技术状态以录制时为准，原片链接附于各节。
+> 本期视频发布于 2022 年。文中的技术状态、个人经历与观点均为当时情况。
 
 这场 T Chat 先讨论技术，再回到做技术的人。第一段是于航的 WebAssembly 年度分享，从 JavaScript 的执行过程讲到模块、工具链、应用案例与生态进展；第二段通过主持人提问，展开他进入前端行业、写书、练习表达，以及对工作环境和长期成长的看法。
 
@@ -91,7 +91,7 @@ seo:
 
 eBay 的网页商品条码识别案例，把代码复用讲得更具体。分享中的架构图列出 ZBar、自有库和 JavaScript 库，由不同 Worker 执行。eBay 的原始工程文章说明，这些实现有各自擅长和不足的情况，因此最终方案组合多种识别方式，让能够取得有效结果的实现提供结果。
 
-WebAssembly 在这里帮助已有的原生库进入网页流程，JavaScript 实现则继续参与其中。工程价值同时来自代码复用与方案组合，并不只取决于单个函数是否运行得更快。当期幻灯片将场景称作二维码扫描，本文依据 eBay 原始文章统一为更准确的 UPC 商品条码识别。[第一段 40:50–44:10](https://www.bilibili.com/video/BV1cD4y147QN?t=2450)；[eBay 原始案例](https://innovation.ebayinc.com/stories/webassembly-at-ebay-a-real-world-use-case/)
+WebAssembly 在这里帮助已有的原生库进入网页流程，JavaScript 实现则继续参与其中。工程价值同时来自代码复用与方案组合，并不只取决于单个函数是否运行得更快。当期幻灯片称作二维码扫描；eBay 原始工程文章描述的是 UPC 商品条码识别。[第一段 40:50–44:10](https://www.bilibili.com/video/BV1cD4y147QN?t=2450)；[eBay 原始案例](https://innovation.ebayinc.com/stories/webassembly-at-ebay-a-real-world-use-case/)
 
 ### Shopify：性能、执行边界与语言选择
 
@@ -210,10 +210,3 @@ WASI 与核心计算指令的讨论由此形成分工：前者关注程序怎样
 谈到行业未来，他没有给出确定的热点押注。他以技术发展常常慢于早期预期为例，说明预测某个方向何时爆发并不容易。在这种不确定中，能主动推进的是积累基础能力、硬技能与软技能，保持解决问题的竞争力。
 
 与此同时，能力提升也不自动兑换成某个职位。于航讨论了组织结构与岗位空间的影响：即使一个人已经具备能力，也可能暂时没有适合的角色或机会。因此，个人能做的是持续准备、理解环境，并在机会出现时争取承担相应责任。这段回答将成长放回了个人努力与组织条件共同作用的现实中。[第二段 46:45–49:53](https://www.bilibili.com/video/BV1J841187sH?t=2805)
-
-## 完整录播与资料说明
-
-- [第一段：WebAssembly Annual Report 2022](https://www.bilibili.com/video/BV1cD4y147QN)
-- [第二段：于航谈前端专家成长](https://www.bilibili.com/video/BV1J841187sH)
-
-两段时间码分别从各自视频起点计算。本文覆盖两段的主要论述与主持人问答，合并口头重复，省去不能可靠辨认的专名、精确数值及无关枝节。案例用当期画面和原始资料校正；访谈中的个人经历与判断按连续问答转述，未作为现行技术教程、公司政策或经嘉宾审定的逐字发言。

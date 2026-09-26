@@ -1,6 +1,6 @@
 ---
 title: 新宿与宗心谈闲鱼 Flutter：图片库、工程体系与团队选择
-summary: 回顾第 2 期两段完整录播，从新宿讲解 PowerImage 的 Texture、FFI 与缓存设计，延伸到富文本、宗心分享的 Flutter 选型、核心链路迁移、多引擎探索、团队成长与构建优化。
+summary: 回顾第 2 期两段录播，从新宿讲解 PowerImage 的 Texture、FFI 与缓存设计，延伸到富文本、宗心分享的 Flutter 选型、核心链路迁移、多引擎探索、团队成长与构建优化。
 type: interview
 publishedAt: 2026-09-26
 readingMinutes: 16
@@ -32,12 +32,12 @@ featured: false
 draft: false
 allowSingleLocale: true
 seo:
-  title: 新宿与宗心谈闲鱼 Flutter 工程实践｜T Chat 完整回顾
-  description: 梳理第 2 期约 85 分钟完整分享与对谈，覆盖 PowerImage 的双渲染方案、缓存、动图与接入，以及 Flutter 选型、核心业务迁移、开源贡献、团队能力和构建提效，附原片时间码。
+  title: 新宿与宗心谈闲鱼 Flutter 工程实践｜T Chat 回顾
+  description: 梳理第 2 期约 85 分钟分享与对谈，覆盖 PowerImage 的双渲染方案、缓存、动图与接入，以及 Flutter 选型、核心业务迁移、开源贡献、团队能力和构建提效。
   noindex: false
 ---
 
-> 本文整理自 2022 年的 T Chat 录播，按主题编排，内容有所删节。文中经历、观点与技术状态以录制时为准，原片链接附于各节。
+> 本期视频发布于 2022 年。文中的技术状态、个人经历与观点均为当时情况。
 
 第 2 期 T Chat 的前半场，新宿介绍了在闲鱼开发 Flutter 业务和中间件的经历，重点讲解图片库 PowerImage，并简要展示富文本编辑器。后半场，闲鱼客户端团队负责人于佳（宗心）加入，与新宿和主持人讨论团队为什么选择 Flutter、怎样推进核心业务迁移，以及工程师在这个过程中如何成长。两段录播合计约 85 分钟。宗心的身份也可在[闲鱼团队公开访谈](https://developer.aliyun.com/article/819373)中核对。
 

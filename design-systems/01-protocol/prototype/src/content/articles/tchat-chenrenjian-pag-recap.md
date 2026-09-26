@@ -1,6 +1,6 @@
 ---
 title: 陈仁健谈 PAG：动效工作流、底层引擎与技术成长
-summary: 完整回顾陈仁健在 2022 年 T Chat 的 PAG 技术分享与对谈，串起四个版本的演进、文件压缩、混合导出和 TGFX，再展开项目实践、技术管理、代码质量、开源参与及交互动效的未来设想。
+summary: 回顾陈仁健在 2022 年 T Chat 的 PAG 技术分享与对谈，串起四个版本的演进、文件压缩、混合导出和 TGFX，再展开项目实践、技术管理、代码质量、开源参与及交互动效的未来设想。
 type: interview
 publishedAt: 2026-09-26
 readingMinutes: 19
@@ -34,11 +34,11 @@ featured: false
 draft: false
 allowSingleLocale: true
 seo:
-  title: 陈仁健谈 PAG 动效与技术成长｜T Chat 完整回顾
-  description: 回顾陈仁健在 2022 年 T Chat 的完整分享与对谈：PAG 四版演进、压缩与渲染、BMP 预合成、TGFX，以及实践学习、技术管理、团队文化、开源和交互动效，附两段原片时间码。
+  title: 陈仁健谈 PAG 动效与技术成长｜T Chat 回顾
+  description: 回顾陈仁健在 2022 年 T Chat 的分享与对谈：PAG 四版演进、压缩与渲染、BMP 预合成、TGFX，以及实践学习、技术管理、团队文化、开源和交互动效。
   noindex: false
 ---
-> 本文整理自 2022 年的 T Chat 录播，按主题编排，内容有所删节。文中经历、观点与技术状态以录制时为准，原片链接附于各节。
+> 本期视频发布于 2022 年。文中的技术状态、个人经历与观点均为当时情况。
 
 一个动效从设计师的电脑进入真实产品，中间需要多少研发工作？陈仁健在这场 T Chat 中讨论的 PAG，首先要解决的是这个生产过程，而后才是支撑它的文件格式、渲染架构与工具。
 
@@ -217,10 +217,3 @@ PAG 并不是一开始就对外开源。按陈仁健的回顾，项目早期主�
 谈到 Flash 在移动时代的退场，他更强调平台规则与商业利益的影响，并讨论了跨平台工具与应用分发生态之间的关系。这是他在访谈中的历史解读。可以独立核实的是，Apple 在 2010 年确曾调整并随后放宽应用开发工具限制；Adobe 在 2017 年宣布 Flash Player 的终止计划时，也将开放 Web 标准的成熟和浏览器生态变化列为背景。两份历史材料可以帮助读者避免把一段复杂的产业变迁简化为单一原因。[第二段 52:45–55:30](https://www.bilibili.com/video/BV1mM411m7C9?t=3165)；[Apple 2010 年声明](https://www.apple.com/newsroom/2010/09/09Statement-by-Apple-on-App-Store-Review-Guidelines/)；[Adobe 2017 年说明](https://blog.adobe.com/en/publish/2017/07/25/adobe-flash-update)
 
 回到 PAG，他认为当时动效方案主要还在图形内容输出阶段，下一步是把交互能力接入工作流。他在录播中谈到后续版本和工具协作的计划，希望先做好这一步；至于再往后是否成为更完整的应用开发平台，他保留了可能性，没有把它作为已经确定的结果。[第二段 55:30–56:50](https://www.bilibili.com/video/BV1mM411m7C9?t=3330)
-
-## 完整录播
-
-- [第一段：消除动效研发成本](https://www.bilibili.com/video/BV11A411X7K5)
-- [第二段：陈仁健一对一访谈](https://www.bilibili.com/video/BV1mM411m7C9)
-
-时间码分别从各自视频起点计算，可通过链接观看对应片段。
