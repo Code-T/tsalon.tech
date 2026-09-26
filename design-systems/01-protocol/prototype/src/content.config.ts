@@ -94,6 +94,7 @@ const articles = defineCollection({
     author: reference('people'),
     topics: z.array(z.string()).min(1),
     relatedEvents: z.array(reference('events')).default([]),
+    relatedTalks: z.array(reference('talks')).default([]),
     cover: z.string(),
     coverAlt: z.string().min(10),
     citations: z.array(z.object({

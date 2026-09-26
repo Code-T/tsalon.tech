@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TranscriptResources from '../../components/TranscriptResources.astro';
 import topicsData from '../../data/topics.json';
 
 const topicSlugMap = new Map<string, string>();
@@ -88,7 +89,7 @@ const jsonLd = talk ? talk.data.videoParts.map((part) => ({
   name: `${talk.data.speaker}：${part.title}`,
   description: talk.data.summary,
   thumbnailUrl: [new URL(talk.data.cover, Astro.site).toString()],
-  embedUrl: `https://player.bilibili.com/player.html?bvid=${part.url.match(/BV[a-zA-Z0-9]+/)?.[0]}&page=1&danmaku=0`,
+  embedUrl: `https://player.bilibili.com/player.html?bvid=${part.url.match(/BV[a-zA-Z0-9]+/)?.[0]}&page=${new URL(part.url).searchParams.get('p') ?? '1'}&danmaku=0`,
   url: part.url,
   mainEntityOfPage: pageUrl,
   uploadDate: part.uploadedAt,
@@ -150,6 +151,8 @@ const pageDescription = talk
   : article!.data.seo.description;
 const translation = article ? (await getCollection('articlesEn', ({ data }) => !data.draft)).find((entry) => entry.data.translationOf === article.id) : undefined;
 const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${String(seconds % 60).padStart(2, '0')}秒`;
+const relatedRecaps = talk ? publishedArticles.filter(entry => entry.data.relatedTalks.some(ref => ref.id === talk.id)) : [];
+const relatedTalks = article ? publishedTalks.filter(entry => article.data.relatedTalks.some(ref => ref.id === entry.id)) : [];
 ---
 
 <BaseLayout alternatePath={translation ? `/en/articles/${translation.id}/` : null} title={pageTitle} description={pageDescription} image={cover} noindex={article?.data.seo.noindex ?? false} jsonLd={pageJsonLd}>
@@ -184,14 +187,16 @@ const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${Stri
       <article class="prose content-detail-prose">
         {talk ? (
           <>
+            {relatedRecaps.length > 0 && <section aria-label="文字回顾"><h2>文字回顾</h2><ul>{relatedRecaps.map(recap => <li><a href={`/articles/${recap.id}/`}>{recap.data.title}</a></li>)}</ul></section>}
             <h2 id="videos">视频回看</h2>
-            <p>按原视频分段观看主题分享与对谈。下面标注的是 B 站视频上传日期。</p>
+            <p>按原视频分段观看主题分享与对谈。下面标注的是 B 站稿件发布日期；同一稿件下各分 P 共用该日期，不代表各分 P 的独立上传时间。</p>
             <ol class="video-parts">
               {talk.data.videoParts.map((part) => <li>
                 <a href={part.url} target="_blank" rel="noopener noreferrer">{part.title} ↗</a>
-                <p>{durationLabel(part.durationSeconds)} · 上传于 <time datetime={part.uploadedAt}>{part.uploadedAt.slice(0, 10)}</time></p>
+                <p>{durationLabel(part.durationSeconds)} · 稿件发布于 <time datetime={part.uploadedAt}>{part.uploadedAt.slice(0, 10)}</time></p>
               </li>)}
             </ol>
+            <TranscriptResources talkId={talk.id} />
 
             {bvid && (
               <div class="talk-video-embed">
@@ -230,7 +235,7 @@ const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${Stri
             <h2>本期讨论主题</h2>
             <ul>{talk.data.topics.map((topic: string) => <li>{topic}</li>)}</ul>
             <h2>关于「我在大厂做研发」</h2>
-            <p>T Chat 由 T Salon 与老司机周报共同发起，通过主题分享与一对一交流，记录一线互联网研发团队与工程师的真实实践。系列共完成 17 期。</p>
+            <p>T Chat 由 T Salon 与老司机周报共同发起，通过主题分享与一对一交流，记录一线互联网研发团队与工程师的真实实践。本目录目前收录 {publishedTalks.length} 期原视频。</p>
           </>
         ) : (
           <>
@@ -241,6 +246,7 @@ const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${Stri
               </section>
             )}
             <ArticleContent />
+            {relatedTalks.map(related => <><p><a href={`/articles/${related.id}/`}>查看本期原视频与分段信息：{related.data.title} →</a></p><TranscriptResources talkId={related.id} /></>)}
             {article!.data.faq.length > 0 && (
               <section class="article-faq" aria-label="常见问题">
                 <h2>常见问题（FAQ）</h2>
