@@ -95,6 +95,7 @@ const articles = defineCollection({
     topics: z.array(z.string()).min(1),
     relatedEvents: z.array(reference('events')).default([]),
     relatedTalks: z.array(reference('talks')).default([]),
+    relatedRecordings: z.array(reference('recordings')).default([]),
     cover: z.string(),
     coverAlt: z.string().min(10),
     citations: z.array(z.object({
@@ -172,6 +173,42 @@ const talks = defineCollection({
       answer: z.string(),
     })).default([]),
   }),
+});
+
+const recordings = defineCollection({
+  loader: file('./src/data/recordings.json'),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string().min(30),
+    series: z.string().nullable(),
+    guests: z.array(z.string()).default([]),
+    eventDate: z.iso.date().nullable(),
+    uploadedAt: z.iso.datetime({ offset: true }),
+    durationSeconds: z.number().int().positive(),
+    topics: z.array(z.string()).min(1),
+    cover: z.string(),
+    coverAlt: z.string(),
+    videoParts: z.array(z.object({
+      bvid: z.string().regex(/^BV[0-9A-Za-z]+$/),
+      page: z.number().int().positive(),
+      cid: z.number().int().positive(),
+      title: z.string(),
+      url: z.url(),
+      uploadedAt: z.iso.datetime({ offset: true }),
+      durationSeconds: z.number().int().positive(),
+      ownership: z.enum(['primary', 'collaboration']),
+      thumbnailUrl: z.url(),
+      owner: z.object({ uid: z.number().int().positive(), name: z.string() }),
+    }).refine((part) => {
+      try {
+        const url = new URL(part.url);
+        return url.protocol === 'https:' && url.hostname === 'www.bilibili.com'
+          && url.pathname === `/video/${part.bvid}`
+          && url.searchParams.get('p') === String(part.page);
+      } catch { return false; }
+    }, { message: 'Video source must identify its exact Bilibili BV and page.' })).min(1),
+  }).refine((entry) => entry.durationSeconds === entry.videoParts.reduce((n, part) => n + part.durationSeconds, 0),
+    { message: 'Archive duration must equal the sum of its video parts.' }),
 });
 
 const eventSeries = defineCollection({
@@ -256,4 +293,4 @@ const gallery = defineCollection({
   }),
 });
 
-export const collections = { people, events, eventsEn, activityArchive, articles, articlesEn, talks, gallery, eventSeries, team, partners };
+export const collections = { people, events, eventsEn, activityArchive, articles, articlesEn, talks, recordings, gallery, eventSeries, team, partners };

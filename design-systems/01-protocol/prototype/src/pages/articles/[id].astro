@@ -152,6 +152,7 @@ const translation = article ? (await getCollection('articlesEn', ({ data }) => !
 const durationLabel = (seconds: number) => `${Math.floor(seconds / 60)}分${String(seconds % 60).padStart(2, '0')}秒`;
 const relatedRecaps = talk ? publishedArticles.filter(entry => entry.data.relatedTalks.some(ref => ref.id === talk.id)) : [];
 const relatedTalks = article ? publishedTalks.filter(entry => article.data.relatedTalks.some(ref => ref.id === entry.id)) : [];
+const relatedRecordings = article ? (await getCollection('recordings')).filter(entry => article.data.relatedRecordings.some(ref => ref.id === entry.id)) : [];
 ---
 
 <BaseLayout alternatePath={translation ? `/en/articles/${translation.id}/` : null} title={pageTitle} description={pageDescription} image={cover} noindex={article?.data.seo.noindex ?? false} jsonLd={pageJsonLd}>
@@ -245,6 +246,7 @@ const relatedTalks = article ? publishedTalks.filter(entry => article.data.relat
             )}
             <ArticleContent />
             {relatedTalks.map(related => <><p><a href={`/articles/${related.id}/`}>查看本期原视频与分段信息：{related.data.title} →</a></p></>)}
+            {relatedRecordings.map(related => <p><a href={`/recordings/${related.id}/`}>查看原视频与分段信息：{related.data.title} →</a></p>)}
             {article!.data.faq.length > 0 && (
               <section class="article-faq" aria-label="常见问题">
                 <h2>常见问题（FAQ）</h2>

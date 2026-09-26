@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const recordings = (await getCollection('recordings')).sort((a, b) => Date.parse(b.data.uploadedAt) - Date.parse(a.data.uploadedAt));
+const articles = await getCollection('articles', ({ data }) => !data.draft && !data.seo.noindex);
+const recapsFor = (id: string) => articles.filter(article => article.data.relatedRecordings.some(ref => ref.id === id));
+const talks = await getCollection('talks');
+const entries = [
+  ...recordings.map(entry => ({
+    id: entry.id, title: entry.data.title, summary: entry.data.summary,
+    series: entry.data.series ?? '社区录播', url: `/recordings/${entry.id}/`,
+    videoParts: entry.data.videoParts, uploadedAt: entry.data.uploadedAt,
+    hasRecap: recapsFor(entry.id).length > 0,
+  })),
+  ...talks.map(entry => ({
+    id: entry.id, title: `T Chat ${entry.data.episode} · ${entry.data.speaker}：${entry.data.title}`,
+    summary: entry.data.summary, series: 'T Chat', url: `/articles/${entry.id}/`,
+    videoParts: entry.data.videoParts, uploadedAt: entry.data.uploadedAt ?? entry.data.videoParts[0].uploadedAt,
+    hasRecap: articles.some(article => article.data.relatedTalks.some(ref => ref.id === entry.id)),
+  })),
+].sort((a, b) => Date.parse(b.uploadedAt) - Date.parse(a.uploadedAt));
+const pageUrl = new URL('/recordings/', Astro.site).toString();
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: '录播档案', url: pageUrl,
+  mainEntity: { '@type': 'ItemList', itemListElement: entries.map((entry, index) => ({
+    '@type': 'ListItem', position: index + 1, name: entry.title,
+    url: new URL(entry.url, Astro.site).toString(),
+  })) },
+};
+---
+<BaseLayout title="录播档案：技术分享与社区活动 — T Salon" description="回看 T Salon 技术分享、社区活动与合作录播，按原视频分段浏览嘉宾、发布账号和时长，并阅读已发布的文字回顾。" alternatePath={null} jsonLd={jsonLd}>
+  <main class="content-index-page">
+    <header class="content-index-shell archive-header">
+      <p class="eyebrow">T SALON / VIDEO ARCHIVE</p><h1>录播档案</h1>
+      <p>技术分享、社区活动与合作录播。选择原片分段观看，或阅读已经发布的文字回顾。</p>
+      <p><a href="/articles/">内容与观点</a> · <a href="/articles/#tchat">T Chat 访谈</a></p>
+    </header>
+    <section class="content-published" aria-label="全部录播"><div class="content-index-shell">
+      <header class="content-published-head"><h2>原片与回顾</h2><p>{entries.length} 组 · {entries.reduce((n, item) => n + item.videoParts.length, 0)} 段视频</p></header>
+      <div class="content-published-list">{entries.map((entry, index) => <a href={entry.url}>
+        <span class="content-published-number mono">{String(index + 1).padStart(2, '0')}</span>
+        <div><p class="mono">{entry.series} · {entry.videoParts.length} 段 · {Math.round(entry.videoParts.reduce((n, part) => n + part.durationSeconds, 0) / 60)} 分钟</p>
+          <h3>{entry.title}</h3><p>{entry.summary}</p>
+          <p>{entry.hasRecap ? '原视频 · 文字回顾' : '原视频档案'} · 最早稿件发布于 {entry.uploadedAt.slice(0, 10)}</p>
+        </div><span class="content-published-arrow" aria-hidden="true">→</span>
+      </a>)}</div>
+    </div></section>
+  </main>
+</BaseLayout>
+<style>.archive-header { padding-block: 4rem 2rem; } .archive-header h1 { margin-block: 1rem; } .archive-header a { text-decoration: underline; }</style>
