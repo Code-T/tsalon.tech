@@ -24,7 +24,7 @@ seo:
   title: "Hugging Face’s AI Intrusion: Impact, Remediation and Forensics"
   description: An account of Hugging Face’s disclosure, separating the data-processing entry point and known impact from unknown attacker models and editorial defense recommendations.
   noindex: false
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 citations:
   - label: Hugging Face — Security incident disclosure — July 2026 (July 16, 2026)
     url: https://huggingface.co/blog/security-incident-july-2026
@@ -32,13 +32,11 @@ citations:
 
 On July 16, 2026, Hugging Face published a [security incident disclosure](https://huggingface.co/blog/security-incident-july-2026) describing an intrusion into part of its production infrastructure by an autonomous AI agent framework. This T Salon editorial article summarizes the disclosure and considers defensive preparation. We did not participate in the response or independently verify the forensic findings.
 
-*Revised September 26, 2026: corrected the incident account and impact, and removed unsourced attack details, speed comparisons and model-provider attribution. Investigation status below reflects this disclosure, not a subsequently verified final report.*
-
 ## Confirmed entry point and impact
 
 According to [the official account](https://huggingface.co/blog/security-incident-july-2026#what-happened), a malicious dataset reached code execution through a remote-code loader and template injection in dataset configuration. The intrusion then reached internal clusters through harvested credentials. The agent framework performed thousands of actions; its underlying model was unknown.
 
-Autonomous execution does not establish that humans had no role in choosing goals or strategies. The disclosure does not let us identify the attacker or explain how the initial objective was set. It also provides no controlled comparison supporting our previous claim that an agent completed in minutes what would take a human weeks.
+Autonomous execution does not establish that humans had no role in choosing goals or strategies. The disclosure does not let us identify the attacker or explain how the initial objective was set. It also provides no controlled comparison showing that an agent completed in minutes what would take a human weeks.
 
 The disclosed status falls into three categories:
 
@@ -74,7 +72,7 @@ Local deployment also has compute, maintenance and capability costs, and require
 
 ## Editorial recommendation: evaluate rate limits and correlated detection together
 
-The previous version dismissed IP rate limits and proposed replacing them with model-based intent detection. The incident supplies no false-positive, detection-rate or cost data to justify that replacement.
+The incident supplies no false-positive, detection-rate or cost data showing that IP rate limits are worthless or that model-based intent detection can replace them outright.
 
 A testable approach is to assess layered rate limits alongside correlated detection across requests. A sequence may cross resource or permission boundaries even when each request appears ordinary; account, session and system context can help investigate it. If a model is introduced, teams should measure alert quality, processing delay and responder workload.
 

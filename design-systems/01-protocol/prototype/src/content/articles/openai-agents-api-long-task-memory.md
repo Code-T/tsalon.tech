@@ -32,16 +32,14 @@ citations:
     url: https://memos-docs.openmem.net/memos_cloud/introduction/isolation_filters/
   - label: MemOS 更新日志
     url: https://memos-docs.openmem.net/changelog/
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 ---
 
-> 导语：OpenAI Agents API 把“持续运行数天”的 Agent 推向标准化，也暴露了长任务的另一面：上下文可以被压缩，进程可以被恢复，但一条状态为什么值得长期保留、何时失效、谁有权使用，仍然需要独立的系统判断。
+> OpenAI Agents API 把“持续运行数天”的 Agent 推向标准化，也暴露了长任务的另一面：上下文可以被压缩，进程可以被恢复，但一条状态为什么值得长期保留、何时失效、谁有权使用，仍然需要独立的系统判断。
 
 2026 年 9 月 10 日，OpenAI [发布 Agents API 公开测试版](https://openai.com/index/introducing-the-agents-api/)，将会话编排、上下文压缩和任务恢复等能力整合到托管的 Agent 运行框架（harness）中。开发者可以通过 API 启动 Agent，配置工具调用与子 Agent 协作，并在后续交互中继续推进已有任务。
 
 本文由 T Salon 编辑部根据 OpenAI 发布说明与 MemOS 公开文档整理，未独立测试这些服务。下文分工是编辑部用于说明的管理视角，并非行业统一标准。
-
-*2026 年 9 月 26 日修订：补充来源、澄清作者视角及隔离范围，保留成本与配置条件。*
 
 当 Agent 的工作从单轮问答扩展到跨会话、跨工具的连续执行，系统就需要持续跟踪任务进度、用户要求和阶段性结果。模型的推理能力、工具执行能力与状态管理能力，共同影响长任务的完成质量。
 

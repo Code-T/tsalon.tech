@@ -25,15 +25,13 @@ seo:
   title: "Cursor’s SQLite Agent Swarm: Coordination and Benchmark Limits"
   description: An analysis of Cursor’s SQLite experiment, its five coordination problems and engineering responses, with clear limits on what sqllogictest results establish.
   noindex: false
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 citations:
   - label: Cursor / Wilson Lin — Agent swarms and the new model economics (July 20, 2026)
     url: https://cursor.com/blog/agent-swarm-model-economics
 ---
 
 On July 20, 2026, Cursor’s Wilson Lin published [Agent swarms and the new model economics](https://cursor.com/blog/agent-swarm-model-economics), describing a swarm building a Rust implementation from SQLite documentation. This T Salon editorial analysis focuses on coordination across design, code and shared experience. We have not independently reproduced the experiment.
-
-*Revised September 26, 2026: added primary sources and test scope, and narrowed claims about Git, review effectiveness and production readiness.*
 
 ## What the test results measure
 
@@ -96,7 +94,7 @@ This relies on traceable reasoning and meaningful compile checks. Applying it el
 
 ## Review perspectives and shared experience
 
-**Review Lenses** give reviewers different views: the full work transcript, the output or the codebase, with different models also tested. Multiple perspectives may find complementary problems. The article supplies no human vulnerability-detection baseline that would justify our previous claim of superior-to-human security review.
+**Review Lenses** give reviewers different views: the full work transcript, the output or the codebase, with different models also tested. Multiple perspectives may find complementary problems. The reported experiment supplies no human vulnerability-detection baseline for a claim of superior-to-human security review.
 
 The **Field Guide** is a shared directory maintained by the agents. Its `index.md` is loaded at startup, and a line budget limits the accumulated notes. This makes environmental knowledge available to later tasks; the author still describes it as an early experiment.
 

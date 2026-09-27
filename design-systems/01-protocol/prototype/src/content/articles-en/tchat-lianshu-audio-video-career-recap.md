@@ -201,4 +201,4 @@ He described two lines in his own plans. To navigate later career stages, he wan
 
 The second line remained personal interest. If life allowed it, he wanted to keep writing code, exploring new technology, and making things he found exciting. Professional capability and personal exploration could reinforce one another. The conversation thus returned to its starting point: interest lasts longer when it is joined to real problems and action.
 
-The [Episode 8 archive page](/en/articles/tchat-8/) has the original recordings and segment information.
+The [Episode 8 archive page (Chinese)](/articles/tchat-8/) has the original recordings and segment information.

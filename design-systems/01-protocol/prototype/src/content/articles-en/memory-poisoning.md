@@ -38,10 +38,10 @@ faq:
 seo:
   title: "Memory Poisoning Across Agent Tasks: Six Practical Checks"
   description: How prompt injection can reach persistent memory, how poisoning differs from accidental contamination, and six checks for source, scope, correction and monitoring.
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 ---
 
-[Forcepoint X-Labs’ August 4, 2026 proof of concept](https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents) examines indirect prompt injection into persistent agent memory. This English adaptation of [T Salon’s Chinese edition](/articles/memory-poisoning/) draws on that research and the [public SegmentFault article cited by the original edition](https://segmentfault.com/a/1190000048255404). The recommendations are editorial analysis; we have not reproduced the attack or security-tested MemOS.
+[Forcepoint X-Labs’ August 4, 2026 proof of concept](https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents) examines indirect prompt injection into persistent agent memory. This article draws on that research and a [related SegmentFault discussion](https://segmentfault.com/a/1190000048255404). The recommendations are editorial analysis; we have not reproduced the attack or security-tested MemOS.
 
 *Correction, September 26, 2026: prompt injection is not limited to the current interaction, and poisoned memory need not be written after a session ends. The two can form one attack chain. Accidental contamination and product protection claims are also clarified.*
 

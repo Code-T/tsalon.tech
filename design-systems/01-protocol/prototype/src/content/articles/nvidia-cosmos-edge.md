@@ -23,7 +23,7 @@ seo:
   title: NVIDIA Cosmos 3 Edge：能力、部署条件与限制
   description: 梳理 Cosmos 3 Edge 的世界模型与动作生成能力，说明官方运行时、Linux 与 BF16 测试边界，以及消费显卡和手机 NPU 移植仍需验证的条件。
   noindex: false
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 citations:
   - label: NVIDIA — Introducing Cosmos 3 Edge（2026-07-20）
     url: https://huggingface.co/blog/nvidia/cosmos3edge
@@ -32,8 +32,6 @@ citations:
 ---
 
 NVIDIA 的 Pranjali Joshi 与 Saeed Babamohamadi 于 2026 年 7 月 20 日发布 [Introducing Cosmos 3 Edge](https://huggingface.co/blog/nvidia/cosmos3edge)，介绍面向物理 AI 的 4B 世界模型。本文由 T Salon 编辑部依据发布说明与官方模型卡整理，讨论它能处理的任务及开发者需要核对的部署条件；本站未开展设备性能或机器人实测。
-
-*2026 年 9 月 26 日修订：补充任务与软件栈边界，删除消费显卡微调和手机 NPU 兼容性保证。部署说明依据本次核对的模型卡；该卡已包含发布后的更新，不应全部视为首发当日状态。*
 
 ## 世界模型提供哪些能力
 

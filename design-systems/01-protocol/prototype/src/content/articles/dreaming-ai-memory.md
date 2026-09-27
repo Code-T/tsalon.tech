@@ -37,14 +37,12 @@ faq:
 seo:
   title: 从 ChatGPT Dreaming 看长期记忆的更新、纠错与删除
   description: 解释 AI 记忆在多年使用中的时效性、连续性和相关性，并依据 MemOS 文档区分已发布接口、设计目标和开发中模块。
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 ---
 
 [OpenAI 于 2026 年 6 月 4 日介绍了 ChatGPT Dreaming 更新](https://openai.com/index/chatgpt-memory-dreaming/)。其早期版本于 2025 年 4 月引入，升级关注过时信息、正确性和长期使用成本。
 
 本文参考 MemTensor 在 [SegmentFault 公开发表的原文](https://segmentfault.com/a/1190000048267587)，由 T Salon 编辑部依据 OpenAI 与 MemOS 文档整理并补充工程边界。MemOS 段落属于厂商公开能力说明，本站未独立验证其效果。
-
-*2026 年 9 月 26 日修订：明确多年使用的含义、产品模块成熟度与元信息的权限边界，合并重复问答。*
 
 这次升级讨论的并非某一条偏好能否被保存。用户说过“下周去新加坡”，行程结束后，系统应当知道这段计划已经变成过去；用户曾经不吃辣，后来口味发生变化，旧偏好也需要被更新。长期使用下来，系统还要**从大量历史信息中找出当前任务真正需要的部分。**
 

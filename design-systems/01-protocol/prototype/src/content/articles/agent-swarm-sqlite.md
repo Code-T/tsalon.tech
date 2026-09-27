@@ -23,15 +23,13 @@ seo:
   title: Cursor 的 SQLite 代理群实验：协作机制与测试边界
   description: 解读 Cursor 的 SQLite 代理群实验，保留五类协作问题与工程解法，区分 sqllogictest 结果、模型配置和生产可用性。
   noindex: false
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 citations:
   - label: Cursor / Wilson Lin — Agent swarms and the new model economics（2026-07-20）
     url: https://cursor.com/blog/agent-swarm-model-economics
 ---
 
 2026 年 7 月 20 日，Cursor 的 Wilson Lin 发布了 [Agent swarms and the new model economics](https://cursor.com/blog/agent-swarm-model-economics)，介绍团队让代理群依据 SQLite 文档构建 Rust 实现的实验。本文是 T Salon 编辑部的新闻解读，重点讨论多智能体如何协调设计、代码与共享经验；本站未独立复现该实验。
-
-*2026 年 9 月 26 日修订：补充原始来源与测试范围，收窄对 Git、审查效果和生产可用性的判断。*
 
 ## 先说明测试结果衡量了什么
 

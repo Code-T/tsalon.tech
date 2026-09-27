@@ -14,7 +14,7 @@ coverAlt: 记忆投毒与 Agent 长期记忆控制主题封面
 citations:
   - label: Forcepoint X-Labs — Persistent Memory Poisoning in AI Agents
     url: https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents
-  - label: 原稿引用的 SegmentFault 公开文章
+  - label: SegmentFault 相关文章
     url: https://segmentfault.com/a/1190000048255404
   - label: MemOS Cloud — Add Message
     url: https://memos-docs.openmem.net/cn/memos_cloud/mem_operations/add_message/
@@ -36,10 +36,10 @@ faq:
 seo:
   title: 记忆投毒与后续任务：Agent 长期记忆的六项检查
   description: 解释提示注入如何进入持久记忆，区分恶意投毒与无意污染，并整理来源、写入、更新、范围、纠错和监测的检查方法。
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 ---
 
-[Forcepoint X-Labs 于 2026 年 8 月 4 日发布的概念验证](https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents)讨论了间接提示注入如何污染 Agent 的持久记忆。本文结合该研究与[原稿引用的 SegmentFault 公开文章](https://segmentfault.com/a/1190000048255404)，由 T Salon 编辑部整理记忆治理建议；本站未复现攻击，也未对 MemOS 开展安全评测。
+[Forcepoint X-Labs 于 2026 年 8 月 4 日发布的概念验证](https://www.forcepoint.com/blog/x-labs/persistent-memory-poisoning-ai-agents)讨论了间接提示注入如何污染 Agent 的持久记忆。本文结合该研究与[SegmentFault 相关文章](https://segmentfault.com/a/1190000048255404)，由 T Salon 编辑部整理记忆治理建议；本站未复现攻击，也未对 MemOS 开展安全评测。
 
 *2026 年 9 月 26 日更正：提示注入不限于当前交互，记忆投毒也不必等会话结束才发生；两者可处于同一攻击链。同步区分无意污染并收窄产品防护表述。*
 

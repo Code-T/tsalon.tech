@@ -29,16 +29,14 @@ citations:
     url: https://ppio.com/blogs/post/guan-wang-ban-deepseek-v4-1-flash-geng-xin-hou-qi-ye-ru-he-guan-li-mo-xing-ban-ben-cheng-ben-yu-wen-ding-xing
   - label: PPIO 企业 Token Plan 公开资料
     url: https://resource.ppio.com/token-plan
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 ---
 
-> 导语：新模型上线、旧模型下线、模型别名迁移和价格调整同时发生时，企业面对的已经不只是一次“模型升级”。即使 API 地址和业务代码没有变化，实际处理请求的模型、输出行为和单位经济性也可能已经改变。比抢先接入更重要的，是建立一套可验证、可回退的模型变更机制。
+> 新模型上线、旧模型下线、模型别名迁移和价格调整同时发生时，企业面对的已经不只是一次“模型升级”。即使 API 地址和业务代码没有变化，实际处理请求的模型、输出行为和单位经济性也可能已经改变。比抢先接入更重要的，是建立一套可验证、可回退的模型变更机制。
 
 2026 年 9 月 10 日，DeepSeek 发布 V4.1-Flash 并同步更新 API 服务。根据[官方更新日志](https://api-docs.deepseek.com/updates/)，原 V4 Flash 与 V4 Flash Vision Exp 下线，旧模型名称暂时路由至 V4.1-Flash，API 价格也随之调整。
 
 本文由 T Salon 编辑部依据官方日志与公开产品资料整理，属于模型变更管理建议，未开展独立迁移实测。另参考 [PPIO 于 2026 年 9 月 17 日发布的同题文章](https://ppio.com/blogs/post/guan-wang-ban-deepseek-v4-1-flash-geng-xin-hou-qi-ye-ru-he-guan-li-mo-xing-ban-ben-cheng-ben-yu-wen-ding-xing)；其中产品能力按厂商资料核对，服务效果未实测。
-
-*2026 年 9 月 26 日修订：补充新闻与产品来源，收窄行为变化断言，并明确退役后的退出方案。*
 
 这次更新同时触及了模型版本、兼容关系和成本。它提醒所有使用模型 API 的团队：接口还能调用，不等于业务可以无感迁移。
 

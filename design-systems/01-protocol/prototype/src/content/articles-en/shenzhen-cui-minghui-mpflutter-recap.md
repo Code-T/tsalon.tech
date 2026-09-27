@@ -64,7 +64,7 @@ This is more specific than saying that any Flutter tree can be converted to JSON
 
 ## A mini program has no ordinary browser DOM
 
-The mini-program host does not expose a complete browser DOM. Cui discusses a DOM-simulation library supplied for the WeChat environment to bridge this layer. The transcription does not identify the library name reliably enough to pin it down here; the important call chain is clear. Flutter emits layout information, an adapter turns node operations into a form the mini program accepts, and the host displays and updates components. Shared business code does not mean zero work per platform.
+The mini-program host does not expose a complete browser DOM. Cui discusses a DOM-simulation layer in the WeChat environment to bridge this gap. Flutter emits layout information, an adapter turns node operations into a form the mini program accepts, and the host displays and updates components. Shared business code does not mean zero work per platform.
 
 He cites the mini program Yidoutang from an earlier company as a practical example. In his account, the team used Flutter across iOS, Android, Web, and the mini program, aiming to support four ends with one codebase. He explicitly acknowledges that the mini-program experience was worse than a native mini program. The benefit was shared code and coordinated team effort; whether that tradeoff is attractive depends on performance, compatibility, and interaction requirements on the target platform.
 

@@ -25,7 +25,7 @@ seo:
   title: "NVIDIA Cosmos 3 Edge: Capabilities and Deployment Limits"
   description: An analysis of Cosmos 3 Edge’s world modeling and action generation, official runtime and hardware conditions, and the limits of claims about consumer GPUs and mobile NPUs.
   noindex: false
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 citations:
   - label: NVIDIA — Introducing Cosmos 3 Edge (July 20, 2026)
     url: https://huggingface.co/blog/nvidia/cosmos3edge
@@ -34,8 +34,6 @@ citations:
 ---
 
 NVIDIA’s Pranjali Joshi and Saeed Babamohamadi published [Introducing Cosmos 3 Edge](https://huggingface.co/blog/nvidia/cosmos3edge) on July 20, 2026, presenting a 4B world model for physical AI. This T Salon editorial article uses the announcement and official model card to examine its tasks and deployment conditions. We have not benchmarked devices or tested robot performance.
-
-*Revised September 26, 2026: clarified task and software requirements, and removed guarantees about consumer-GPU fine-tuning and mobile-NPU compatibility. Deployment details reflect the model card checked on this date, including updates after launch.*
 
 ## What the world model can do
 

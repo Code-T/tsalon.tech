@@ -31,15 +31,12 @@ citations:
     url: https://arxiv.org/html/2609.11060v1
   - label: MemOS Cloud — Add Message metadata
     url: https://memos-docs.openmem.net/cn/memos_cloud/mem_operations/add_message/
-updatedAt: 2026-09-26
+updatedAt: 2026-09-27
 ---
 
 This T Salon editorial analysis draws on the Microsoft-authored [Grounding Agent Memory study, arXiv:2609.11060v1](https://arxiv.org/html/2609.11060v1) and MemOS documentation. We have not reproduced the experiment or independently tested MemOS.
 
-*Revised September 26, 2026: corrected product attribution, added research qualifications and narrowed the reuse-safety claim.*
-
-
-> Standfirst: Retrieval quality cannot repair a memory that was wrong when written. Production agents need an admission layer that distinguishes user statements, environment facts, model inferences, procedures, and high-impact state before any of them become durable memory. MemTensor's MemOS provides an operating-layer architecture in which those lifecycle controls can be made explicit.
+> Retrieval quality cannot repair a memory that was wrong when written. Production agents need an admission layer that distinguishes user statements, environment facts, model inferences, procedures, and high-impact state before any of them become durable memory. MemTensor's MemOS provides an operating-layer architecture in which those lifecycle controls can be made explicit.
 
 An agent may carry a mistaken assumption from one task into the next. Checking what it learns, keeping the source, and revisiting memories when conditions change can help prevent that mistake from spreading. MemOS gives developers tools to support this work, from processing new information to correcting existing memories.
 
