@@ -38,6 +38,7 @@ const resolvedAlternatePath = alternatePath === null ? undefined : (alternatePat
 const alternate = resolvedAlternatePath ? new URL(resolvedAlternatePath, Astro.site) : undefined;
 const zhUrl = locale === 'zh' ? canonical : alternate;
 const enUrl = locale === 'en' ? canonical : alternate;
+const ga4MeasurementId = 'G-E2TDGW26H0';
 ---
 <!doctype html>
 <html lang={locale === 'zh' ? 'zh-CN' : 'en'} data-locale={locale}>
@@ -89,6 +90,13 @@ const enUrl = locale === 'en' ? canonical : alternate;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`} />
+    <script is:inline define:vars={{ ga4MeasurementId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', ga4MeasurementId);
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">{locale === 'zh' ? '跳到主要内容' : 'Skip to main content'}</a>
