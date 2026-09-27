@@ -25,7 +25,7 @@ featured: true
 draft: false
 seo:
   title: 大前端时代的挑战与机遇｜T Salon 深圳活动回顾
-  description: 回顾 T Salon深圳场的五场技术分享，内容覆盖前端监控、Flutter 小程序、前端工程化、Flutter Web 与 Webpack 性能优化。
+  description: 回顾 T Salon 深圳场的五场技术分享，内容覆盖前端监控、Flutter 小程序、前端工程化、Flutter Web 与 Webpack 性能优化。
   noindex: false
 ---
 
