@@ -31,6 +31,7 @@ run('node_modules/astro/bin/astro.mjs', 'build');
 run('scripts/postbuild-sitemap.mjs');
 run('scripts/site-locale-check.mjs');
 run('scripts/site-heading-check.mjs');
+run('scripts/site-markdown-check.mjs');
 if (existsSync(localOutput)) {
   rmSync(deployOutput, { recursive: true, force: true });
   mkdirSync(dirname(deployOutput), { recursive: true });
