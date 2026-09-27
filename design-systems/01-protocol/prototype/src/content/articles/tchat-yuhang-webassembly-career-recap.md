@@ -29,7 +29,6 @@ tldr: []
 faq: []
 featured: false
 draft: false
-allowSingleLocale: true
 seo:
   title: 于航谈 WebAssembly 与前端成长｜T Chat 回顾
   description: 整理 2022 年 T Chat 两段录播的技术分享与成长对谈，覆盖 WebAssembly 原理、案例、提案、WASI，以及写作、表达、工作环境、职业选择、架构和成长机会。
