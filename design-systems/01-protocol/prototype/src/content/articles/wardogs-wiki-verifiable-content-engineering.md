@@ -1,7 +1,7 @@
 ---
 title: 从 54 个主题到 6 种语言：WARDOGS Wiki 的可验证内容工程
 summary: 以 WARDOGS Wiki 为例，复盘如何把来源、版本、可信度、多语言同步、静态导出和发布验证写进内容系统，而不是依赖人工记忆维持资料准确性。
-type: field-note
+type: insight
 publishedAt: 2026-09-29
 readingMinutes: 9
 author: editorial-team

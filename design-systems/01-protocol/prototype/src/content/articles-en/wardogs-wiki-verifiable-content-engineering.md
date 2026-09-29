@@ -1,7 +1,7 @@
 ---
 title: "From 54 Topics to Six Languages: Engineering a Verifiable WARDOGS Wiki"
 summary: "A field report on turning sources, versions, confidence labels, localization parity, static export and production verification into enforceable content-system rules."
-type: field-note
+type: insight
 publishedAt: 2026-09-29
 readingMinutes: 9
 author: editorial-team
