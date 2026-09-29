@@ -17,8 +17,6 @@ citations:
     url: https://www.wardogswiki.com/en
   - label: WARDOGS Wiki editorial policy
     url: https://www.wardogswiki.com/en/editorial-policy
-  - label: WARDOGS Wiki open-source repository
-    url: https://github.com/Blackdcp/wardogs
 tldr:
   - A useful knowledge base starts with the decision a reader must make, not with keyword volume or page count.
   - Every changing claim needs a source, verification date, applicable build, confidence level and current status; when evidence is missing, say unknown.
@@ -243,4 +241,4 @@ If two of the three are true, establish a minimum trustworthy-content contract b
 
 WARDOGS Wiki's useful output is not simply 324 localized guides. It is a set of enforceable rules for what can be claimed, where the claim applies and how the team proves that readers received the new version. All of that engineering serves one reader outcome: after opening a page, a person knows what they can safely do next.
 
-Explore the live [WARDOGS Wiki](https://www.wardogswiki.com/en) or inspect the content contracts, tests and release implementation in its [GitHub repository](https://github.com/Blackdcp/wardogs).
+Explore the live [WARDOGS Wiki](https://www.wardogswiki.com/en) and use its public editorial policy to assess how the site presents sources, freshness and uncertainty.

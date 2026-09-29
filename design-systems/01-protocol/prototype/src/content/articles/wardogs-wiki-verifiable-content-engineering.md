@@ -17,8 +17,6 @@ citations:
     url: https://www.wardogswiki.com/en
   - label: WARDOGS Wiki 编辑规范
     url: https://www.wardogswiki.com/en/editorial-policy
-  - label: WARDOGS Wiki 开源仓库
-    url: https://github.com/Blackdcp/wardogs
 tldr:
   - 内容系统的起点不是关键词和页面数量，而是读者读完一个答案后能否安全地做出下一步决定。
   - 每条会变化的事实都应携带来源、核验日期、适用版本、可信度和当前状态；证据不足时明确写“未知”。
@@ -241,4 +239,4 @@ IndexNow 返回 accepted，只表示通知被接收；它不等于抓取、收�
 
 WARDOGS Wiki 的意义不在于做出了 324 份本地化指南，而在于把“什么可以说、在什么范围内有效、如何证明已经上线”变成了可以检查的规则。对读者来说，这些规则最终只服务一个结果：打开页面后，知道自己下一步可以安全地做什么。
 
-你可以查看 [WARDOGS Wiki](https://www.wardogswiki.com/en) 的实际页面，也可以在 [GitHub 仓库](https://github.com/Blackdcp/wardogs)中查看内容契约、测试与发布实现。
+你可以直接查看 [WARDOGS Wiki](https://www.wardogswiki.com/en) 的实际页面，并结合其公开的编辑政策判断页面如何呈现来源、时效与不确定性。
