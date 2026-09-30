@@ -18,6 +18,7 @@ const jsonLd = {
   hasPart: [
     ...events.map((event) => ({
       '@type': 'Event',
+      eventStatus: 'https://schema.org/EventScheduled',
       name: event.data.title,
       description: event.data.summary,
       image: new URL(event.data.cover, Astro.site).toString(),
@@ -33,6 +34,7 @@ const jsonLd = {
     })),
     ...archiveEvents.map((event) => ({
       '@type': 'Event',
+      eventStatus: 'https://schema.org/EventScheduled',
       name: event.data.title,
       description: event.data.summary,
       image: new URL(event.data.cover, Astro.site).toString(),

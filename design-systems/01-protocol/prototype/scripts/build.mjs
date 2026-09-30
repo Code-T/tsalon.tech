@@ -36,4 +36,6 @@ if (existsSync(localOutput)) {
   rmSync(deployOutput, { recursive: true, force: true });
   mkdirSync(dirname(deployOutput), { recursive: true });
   renameSync(localOutput, deployOutput);
+  run('scripts/postbuild-vercel-config.mjs');
+  run('--test', 'scripts/vercel-output.test.mjs');
 }

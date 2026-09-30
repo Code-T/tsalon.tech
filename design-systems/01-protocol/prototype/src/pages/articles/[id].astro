@@ -95,7 +95,7 @@ const jsonLd = talk ? talk.data.videoParts.slice(0, 1).map((part) => ({
   uploadDate: part.uploadedAt,
   duration: `PT${part.durationSeconds}S`,
   publisher: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
-  author: { '@type': 'Person', name: talk.data.speaker },
+  author: { '@type': 'Person', name: talk.data.speaker, url: `${pageUrl}#speaker` },
   about: talk.data.topics,
   inLanguage: 'zh-CN',
 })) : {
@@ -172,14 +172,25 @@ const relatedRecordings = article ? (await getCollection('recordings')).filter(e
       <div class="content-detail-byline">
         <span class="content-detail-avatar" aria-hidden="true">{talk ? String(talk.data.episode).padStart(2, '0') : 'TS'}</span>
         <div>
-          <strong>{talk ? talk.data.speaker : author!.data.name}</strong>
+          <strong id={talk ? 'speaker' : undefined}>{talk ? talk.data.speaker : author!.data.name}</strong>
           <span>{talk ? `「我在大厂做研发」· T Salon` : `${article!.data.publishedAt.toISOString().slice(0, 10)} · ${article!.data.readingMinutes} 分钟阅读`}</span>
           {article?.data.updatedAt && <span>修订于 {article.data.updatedAt.toISOString().slice(0, 10)}</span>}
         </div>
       </div>
     </header>
 
-    {cover !== '/images/default-cover.svg' && <figure class="content-detail-shell content-detail-cover">
+            {bvid && (
+              <div class="content-detail-shell talk-video-embed">
+                <iframe
+                  src={`https://player.bilibili.com/player.html?bvid=${bvid}&page=1&high_quality=1&danmaku=0`}
+                  allowfullscreen
+                  title={title}
+                  loading="eager"
+                ></iframe>
+              </div>
+            )}
+
+    {!bvid && cover !== '/images/default-cover.svg' && <figure class="content-detail-shell content-detail-cover">
       <div><img src={cover} alt={coverAlt} /></div>
       <figcaption class="mono">{coverAlt}</figcaption>
     </figure>}
@@ -198,16 +209,7 @@ const relatedRecordings = article ? (await getCollection('recordings')).filter(e
               </li>)}
             </ol>
 
-            {bvid && (
-              <div class="talk-video-embed">
-                <iframe
-                  src={`https://player.bilibili.com/player.html?bvid=${bvid}&page=1&high_quality=1&danmaku=0`}
-                  allowfullscreen
-                  title={talk.data.title}
-                  loading="lazy"
-                ></iframe>
-              </div>
-            )}
+
 
             {talk.data.takeaways && talk.data.takeaways.length > 0 && (
               <section class="article-tldr" aria-label="核心实践看点">

@@ -20,6 +20,7 @@ const eventUrl = new URL(`/events/archive/${event.id}/`, Astro.site).toString();
 const eventJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Event',
+      eventStatus: 'https://schema.org/EventScheduled',
   name: event.data.title,
   description: event.data.summary,
   startDate: event.data.startDate.toISOString(),

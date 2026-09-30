@@ -45,14 +45,14 @@
       "permanent": true
     },
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "tsalon.tech"
         }
       ],
-      "destination": "https://www.tsalon.tech/:path*",
+      "destination": "https://www.tsalon.tech/$1",
       "permanent": true
     },
     {
@@ -76,7 +76,7 @@
       "permanent": true
     },
     {
-      "source": "/archives",
+      "source": "/archives{/}?",
       "destination": "/articles/",
       "permanent": true
     },
@@ -86,7 +86,7 @@
       "permanent": true
     },
     {
-      "source": "/en/archives",
+      "source": "/en/archives{/}?",
       "destination": "/en/articles/",
       "permanent": true
     },
@@ -96,7 +96,7 @@
       "permanent": true
     },
     {
-      "source": "/join",
+      "source": "/join{/}?",
       "destination": "/about/#join",
       "permanent": true
     },
@@ -106,7 +106,7 @@
       "permanent": true
     },
     {
-      "source": "/gallery",
+      "source": "/gallery{/}?",
       "destination": "/history/",
       "permanent": true
     },
@@ -116,7 +116,7 @@
       "permanent": true
     },
     {
-      "source": "/en/gallery",
+      "source": "/en/gallery{/}?",
       "destination": "/en/history/",
       "permanent": true
     },
@@ -126,7 +126,7 @@
       "permanent": true
     },
     {
-      "source": "/stories",
+      "source": "/stories{/}?",
       "destination": "/events/",
       "permanent": true
     },
@@ -136,13 +136,108 @@
       "permanent": true
     },
     {
-      "source": "/en/stories",
+      "source": "/en/stories{/}?",
       "destination": "/en/events/",
       "permanent": true
     },
     {
       "source": "/en/stories/(.*)",
       "destination": "/en/events/$1",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)/index.html",
+      "destination": "/$1/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-15{/}?",
+      "destination": "/en/articles/tchat-bill-cross-platform-career-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-13{/}?",
+      "destination": "/en/articles/tchat-caolicheng-client-architecture-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-4{/}?",
+      "destination": "/en/articles/tchat-career-transition-roundtable-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-17{/}?",
+      "destination": "/en/articles/tchat-chenrenjian-pag-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-6{/}?",
+      "destination": "/en/articles/tchat-daiming-llvm-learning-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-11{/}?",
+      "destination": "/en/articles/tchat-fanwenjie-webpack-career-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-5{/}?",
+      "destination": "/en/articles/tchat-fengyadong-apm-engineering-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-3{/}?",
+      "destination": "/en/articles/tchat-kabi-mobile-architecture-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-1{/}?",
+      "destination": "/en/articles/tchat-laolv-engineering-quality-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-8{/}?",
+      "destination": "/en/articles/tchat-lianshu-audio-video-career-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-10{/}?",
+      "destination": "/en/articles/tchat-lizelei-reader-engine-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-9{/}?",
+      "destination": "/en/articles/tchat-longyi-internationalization-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-16{/}?",
+      "destination": "/en/articles/tchat-overtrue-open-source-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-2{/}?",
+      "destination": "/en/articles/tchat-xinsu-flutter-engineering-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-14{/}?",
+      "destination": "/en/articles/tchat-yuhang-webassembly-career-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-7{/}?",
+      "destination": "/en/articles/tchat-yuu-linkedin-mobile-recap/",
+      "permanent": true
+    },
+    {
+      "source": "/en/articles/tchat-12{/}?",
+      "destination": "/en/articles/tchat-zhihu-tracking-ab-recap/",
       "permanent": true
     }
   ]
