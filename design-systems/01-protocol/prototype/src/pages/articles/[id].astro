@@ -79,8 +79,12 @@ const coverAlt = talk?.data.coverAlt ?? article!.data.coverAlt;
 const topics = talk?.data.topics ?? article!.data.topics;
 const pageUrl = new URL(`/articles/${currentId}/`, Astro.site).toString();
 
-const bvidMatch = talk?.data.videoUrl?.match(/BV[a-zA-Z0-9]+/);
+const primaryVideoPart = talk?.data.videoParts[0];
+const bvidMatch = primaryVideoPart?.url.match(/BV[a-zA-Z0-9]+/);
 const bvid = bvidMatch ? bvidMatch[0] : null;
+const primaryEmbedUrl = bvid && primaryVideoPart
+  ? `https://player.bilibili.com/player.html?bvid=${bvid}&p=${new URL(primaryVideoPart.url).searchParams.get('p') ?? '1'}&autoplay=0&danmaku=0`
+  : null;
 
 // Only the first video part is embedded on this page; the other parts link to Bilibili.
 const jsonLd = talk ? talk.data.videoParts.slice(0, 1).map((part) => ({
@@ -89,7 +93,7 @@ const jsonLd = talk ? talk.data.videoParts.slice(0, 1).map((part) => ({
   name: `${talk.data.speaker}：${part.title}`,
   description: talk.data.summary,
   thumbnailUrl: [new URL(talk.data.cover, Astro.site).toString()],
-  embedUrl: `https://player.bilibili.com/player.html?bvid=${part.url.match(/BV[a-zA-Z0-9]+/)?.[0]}&page=${new URL(part.url).searchParams.get('p') ?? '1'}&danmaku=0`,
+  embedUrl: primaryEmbedUrl,
   url: part.url,
   mainEntityOfPage: pageUrl,
   uploadDate: part.uploadedAt,
@@ -162,7 +166,7 @@ const relatedRecordings = article ? (await getCollection('recordings')).filter(e
       <a href="/articles/">内容</a><span aria-hidden="true">/</span><span>{contentKind}</span>
     </nav>
 
-    <header class="content-detail-shell content-detail-header">
+    <header class:list={["content-detail-shell content-detail-header", { "recording-header": !!talk }]}>
       <div class="content-detail-kicker">
         <p class="eyebrow">{talk ? `T CHAT / EPISODE ${String(talk.data.episode).padStart(2, '0')}` : `${contentKind} / T SALON`}</p>
         <span class="mono">{talk ? '对谈' : '编辑内容'}</span>
@@ -182,7 +186,7 @@ const relatedRecordings = article ? (await getCollection('recordings')).filter(e
             {bvid && (
               <div class="content-detail-shell talk-video-embed">
                 <iframe
-                  src={`https://player.bilibili.com/player.html?bvid=${bvid}&page=1&high_quality=1&danmaku=0`}
+                  src={primaryEmbedUrl!}
                   allowfullscreen
                   title={title}
                   loading="eager"
@@ -365,8 +369,11 @@ const relatedRecordings = article ? (await getCollection('recordings')).filter(e
   .article-faq dl { margin: 0; }
   .article-faq dt { font-weight: 600; margin-top: 1rem; }
   .article-faq dd { margin: 0.25rem 0 0; opacity: 0.92; }
+  .recording-header { padding-block: var(--space-8) var(--space-4); }
+  .recording-header h1 { margin-block: var(--space-4); font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.15; }
+  .recording-header .content-detail-byline { margin-top: var(--space-5); }
   .talk-video-embed {
-    margin: 1.5rem 0 2rem;
+    margin-block: 1.25rem 2rem;
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;

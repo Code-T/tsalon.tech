@@ -72,6 +72,10 @@ await test('built event and video markup has the missing fields and a visible au
   for (const item of items) assert.equal(item.eventStatus, 'https://schema.org/EventScheduled');
   const recording = staticHtml('/articles/tchat-8/');
   assert.match(recording, /id="speaker"/);
+  const player = recording.match(/<iframe[^>]*src="([^"]+)"/)[1].replaceAll('&amp;', '&');
+  assert.equal(new URL(player).searchParams.get('autoplay'), '0');
+  assert.equal(new URL(player).searchParams.get('p'), '1');
+  assert.ok(recording.includes(JSON.stringify(player)), 'Video schema must describe the player actually displayed');
   assert.match(recording, /"author":\{"@type":"Person","name":"莲叔","url":"https:\/\/www\.tsalon\.tech\/articles\/tchat-8\/#speaker"\}/);
   assert.ok(recording.indexOf('<iframe') < recording.indexOf('content-detail-body'), 'Primary recording must precede secondary article content');
 });
