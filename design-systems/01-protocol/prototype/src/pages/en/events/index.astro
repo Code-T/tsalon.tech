@@ -6,8 +6,25 @@ import EventCardEn from '../../../components/EventCardEn.astro';
 import { formatEventDate } from '../../../lib/event-display';
 const archiveEvents = (await getCollection('activityArchive')).sort((a, b) => a.data.order - b.data.order);
 const events = (await getCollection('eventsEn', ({ data }) => !data.draft)).filter((event) => event.data.series !== 't-chat').sort((a, b) => b.data.startDate.getTime() - a.data.startDate.getTime());
+const directoryItems = [
+  { name: 'T Chat: Engineering Inside Major Technology Companies', url: 'https://www.tsalon.tech/en/events/series/t-chat/' },
+  ...events.map(event => ({ name: event.data.title, url: new URL(`/en/events/${event.id}/`, Astro.site).toString() })),
+  ...archiveEvents.map(event => ({ name: archiveEn[event.id]?.title ?? event.data.title, url: new URL(`/en/events/archive/${event.id}/`, Astro.site).toString() })),
+];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'T Salon Events',
+  description: 'Upcoming registrations, records from past gatherings, and technology events initiated or co-hosted by T Salon.',
+  url: 'https://www.tsalon.tech/en/events/',
+  inLanguage: 'en',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: directoryItems.map((item, index) => ({ '@type': 'ListItem', position: index + 1, ...item })),
+  },
+};
 ---
-<BaseLayout locale="en" alternatePath="/events/" title="Developer Events, T Chat Videos and Recaps — T Salon" description="Browse upcoming T Salon developer events, past gatherings and T Chat video recordings. Find conversations about AI, embodied intelligence and software engineering, plus ways to join or collaborate." image="/icon-512x512.png">
+<BaseLayout jsonLd={jsonLd} locale="en" alternatePath="/events/" title="Developer Events, T Chat Videos and Recaps — T Salon" description="Browse upcoming T Salon developer events, past gatherings and T Chat video recordings. Find conversations about AI, embodied intelligence and software engineering, plus ways to join or collaborate." image="/icon-512x512.png">
   <main class="event-directory-page">
     <header class="event-directory-masthead"><div class="container"><div><p class="eyebrow">T SALON / EVENTS</p><h1 class="display-lines"><span>Meet people doing the work</span><span>Explain the technology</span><span>Keep the experience</span></h1></div><div class="event-directory-intro"><p>Find upcoming registrations, records from past gatherings, and technology events initiated or co-hosted by T Salon.</p><button type="button" data-open-black-qr>Propose an event <span>↗</span></button></div></div></header>
     <section class="container event-directory" aria-labelledby="event-directory-title"><header class="event-directory-heading"><div><span class="mono">01 / ALL EVENTS</span><h2 id="event-directory-title">Event directory</h2></div></header><div class="event-directory-grid">

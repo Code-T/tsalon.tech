@@ -9,52 +9,23 @@ const events = (await getCollection('events', ({ data }) => !data.draft))
   .sort((a, b) => b.data.startDate.getTime() - a.data.startDate.getTime());
 const tChat = (await getCollection('eventSeries')).find((item) => item.id === 't-chat');
 const archiveEvents = (await getCollection('activityArchive')).sort((a, b) => a.data.order - b.data.order);
+// A directory links to each event's own page; it is not a ticket-booking page.
+const directoryItems = [
+  ...(tChat ? [{ name: 'T Chat「我在大厂做研发」完整回顾', url: 'https://www.tsalon.tech/events/series/t-chat/' }] : []),
+  ...events.map(event => ({ name: event.data.title, url: new URL(`/events/${event.id}/`, Astro.site).toString() })),
+  ...archiveEvents.map(event => ({ name: event.data.title, url: new URL(`/events/archive/${event.id}/`, Astro.site).toString() })),
+];
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'T Salon 活动',
   description: 'T Salon 发起或参与合作的开发者活动、报名入口与历史活动回顾，以及正在筹备的 AI 和具身智能主题。',
   url: 'https://www.tsalon.tech/events/',
-  hasPart: [
-    ...events.map((event) => ({
-      '@type': 'Event',
-      eventStatus: 'https://schema.org/EventScheduled',
-      name: event.data.title,
-      description: event.data.summary,
-      image: new URL(event.data.cover, Astro.site).toString(),
-      startDate: event.data.startDate.toISOString(),
-      endDate: event.data.endDate.toISOString(),
-      url: `https://www.tsalon.tech/events/${event.id}/`,
-      organizer: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
-      performer: { '@type': 'Organization', name: 'T Salon' },
-      eventAttendanceMode: event.data.attendanceMode === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : event.data.attendanceMode === 'hybrid' ? 'https://schema.org/MixedEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
-      location: event.data.attendanceMode === 'online'
-        ? { '@type': 'VirtualLocation', name: event.data.venue ?? 'T Salon 在线活动', url: 'https://space.bilibili.com/488340243' }
-        : { '@type': 'Place', name: event.data.venue ?? 'TBA', address: { '@type': 'PostalAddress', streetAddress: event.data.address ?? '', addressLocality: event.data.city ?? 'TBA', addressCountry: 'CN' } }
-    })),
-    ...archiveEvents.map((event) => ({
-      '@type': 'Event',
-      eventStatus: 'https://schema.org/EventScheduled',
-      name: event.data.title,
-      description: event.data.summary,
-      image: new URL(event.data.cover, Astro.site).toString(),
-      startDate: event.data.startDate.toISOString(),
-      endDate: event.data.endDate.toISOString(),
-      url: `https://www.tsalon.tech/events/archive/${event.id}/`,
-      sameAs: event.data.sourceUrl,
-      organizer: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
-      performer: { '@type': 'Organization', name: 'T Salon' },
-      eventAttendanceMode: event.data.mode === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
-      location: event.data.mode === 'online'
-        ? { '@type': 'VirtualLocation', name: '线上活动', url: event.data.sourceUrl }
-        : { '@type': 'Place', name: event.data.address ?? 'TBA', address: { '@type': 'PostalAddress', streetAddress: event.data.address ?? '', addressLocality: event.data.city ?? 'TBA', addressRegion: event.data.province ?? '', addressCountry: 'CN' } }
-    })),
-    ...(tChat ? [{
-      '@type': 'CreativeWorkSeries',
-      name: tChat.data.englishName,
-      url: 'https://www.tsalon.tech/events/series/t-chat/',
-    }] : []),
-  ],
+  inLanguage: 'zh-CN',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: directoryItems.map((item, index) => ({ '@type': 'ListItem', position: index + 1, ...item })),
+  },
 };
 ---
 <BaseLayout

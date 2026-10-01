@@ -65,11 +65,34 @@ await test('production artifact retains redirects before filesystem lookup, incl
   assert.ok(output.routes.some(route => route.status === 404), 'Unknown URLs must retain a real 404');
 });
 await test('built event and video markup has the missing fields and a visible author target', () => {
-  const events = staticHtml('/events/');
-  const schemas = [...events.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1])).flat();
-  const items = schemas.find(schema => schema['@type'] === 'CollectionPage').hasPart.filter(item => item['@type'] === 'Event');
-  assert.ok(items.length > 2);
-  for (const item of items) assert.equal(item.eventStatus, 'https://schema.org/EventScheduled');
+  const schemasOf = html => [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1])).flat();
+  for (const prefix of ['', '/en']) {
+    const directorySchemas = schemasOf(staticHtml(`${prefix}/events/`));
+    const directorySchema = directorySchemas.find(schema => schema['@type'] === 'CollectionPage');
+    assert.equal(directorySchema.mainEntity['@type'], 'ItemList');
+    const items = directorySchema.mainEntity.itemListElement;
+    assert.equal(items.length, 10);
+    assert.equal(new Set(items.map(item => item.url)).size, items.length);
+    for (const [index, item] of items.entries()) {
+      assert.equal(item['@type'], 'ListItem');
+      assert.equal(item.position, index + 1);
+      const path = new URL(item.url).pathname;
+      assert.ok(path.startsWith(`${prefix}/events/`));
+      assert.ok(existsSync(join(directory, 'static', path, 'index.html')));
+    }
+    assert.ok(!JSON.stringify(directorySchemas).includes('"@type":"Event"'), 'Event directories must not claim to be individual ticket offers');
+    const archivePaths = ['hdx-4876922233100', 'hdx-2873441823200', 'hdx-7870619038900', 'tchat-series-launch', ...['hdx-7732324341700', 'hdx-3711187585200', 'hdx-6704677921900', 'hdx-1703870201300', 'hdx-4704118639500', 'hdx-8699104705200'].map(id => 'archive/' + id)];
+    for (const id of archivePaths) {
+      const path = `${prefix}/events/${id}/`;
+      const html = staticHtml(path);
+      const archiveSchemas = schemasOf(html);
+      assert.ok(!JSON.stringify(archiveSchemas).includes('"@type":"Event"'), 'Past-event records must not advertise current ticket offers: ' + path);
+      assert.ok(archiveSchemas.some(schema => schema['@type'] === 'WebPage' && schema.url === 'https://www.tsalon.tech' + path));
+      assert.match(html, /<h1[\s>]/);
+      assert.ok(html.includes('已结束') || html.includes('Ended'));
+      assert.ok(!html.includes('name="robots" content="noindex"'));
+    }
+  }
   const recording = staticHtml('/articles/tchat-8/');
   assert.match(recording, /id="speaker"/);
   const player = recording.match(/<iframe[^>]*src="([^"]+)"/)[1].replaceAll('&amp;', '&');

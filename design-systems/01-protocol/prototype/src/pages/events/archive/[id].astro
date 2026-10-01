@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getEventPageSchema } from '../../../lib/event-page-schema';
 import { formatEventDate, formatEventTimeRange } from '../../../lib/event-display';
 
 export async function getStaticPaths() {
@@ -17,7 +18,7 @@ const timeLabel = formatEventTimeRange(start, event.data.endDate);
 const locationLabel = event.data.mode === 'online' ? '线上活动' : `${event.data.province} · ${event.data.city}`;
 const description = event.data.summary;
 const eventUrl = new URL(`/events/archive/${event.id}/`, Astro.site).toString();
-const eventJsonLd = {
+const eventJsonLd = getEventPageSchema({
   '@context': 'https://schema.org',
   '@type': 'Event',
       eventStatus: 'https://schema.org/EventScheduled',
@@ -44,7 +45,7 @@ const eventJsonLd = {
   organizer: { '@type': 'Organization', name: 'T Salon', url: 'https://www.tsalon.tech/' },
   performer: { '@type': 'Organization', name: 'T Salon' },
   image: new URL(event.data.cover, Astro.site).toString(),
-};
+}, true, 'zh-CN');
 ---
 <BaseLayout alternatePath={`/en/events/archive/${event.id}/`} title={`${event.data.title}｜T Salon 活动详情`} description={description} image={event.data.cover} jsonLd={eventJsonLd}>
   <main>
